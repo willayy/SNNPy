@@ -4,24 +4,21 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Project name
-project(snnpy)
+project(SNNpy
+VERSION 1.0
+LANGUAGES C)
 
-# Add source files from the 'src' folder
-file(GLOB SOURCES src/*.c)
+# Doxygen docs
+find_package(Doxygen)
+  if(Doxygen_FOUND)
+    add_subdirectory(docs)
+  else()
+    message(STATUS "Doxygen not found, not building docs")
+endif()
 
-# Add source files to a library or executable
-add_library(SNNpy
- src/main.c)
-# or add_executable(MyExecutable ${SOURCES})
+# Add source files to a library that can be linked with other code
+add_library(SNNpy src/neuron.c)
 
-# Optionally, specify include directories
-target_include_directories(SNNpy
-    PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+# Add files that the exe will be built from
+add_executable(Main src/main.c)
 
-# Optionally, link external libraries
-target_link_libraries(SNNpy
-    PUBLIC
-    SomeExternalLibrary
-)
