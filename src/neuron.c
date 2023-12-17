@@ -10,6 +10,7 @@ struct Neuron
 /**
  * Initialize a starting vector of neurons
  * @param num_inputs The number of parameters
+ * @return The initialized parameter layer pointer
 */
 struct Neuron* makeParameterLayer(int num_inputs) {
     struct Neuron* parameterLayer = malloc(sizeof(struct Neuron) * num_inputs);
@@ -17,6 +18,7 @@ struct Neuron* makeParameterLayer(int num_inputs) {
     {
         parameterLayer[i] = initializeNeuron(0);
     }
+    return parameterLayer;
 }
 
 /**
