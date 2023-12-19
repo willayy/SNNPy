@@ -1,5 +1,5 @@
-#include "../include/neuralNetworkFuncs.h"
-#include "../include/neuralNetworkStructs.h"
+#include "neuralNetworkFuncs.h"
+#include "neuralNetworkStructs.h"
 
 /**      
  * Creates a parameter layer.
