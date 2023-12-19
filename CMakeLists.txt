@@ -21,7 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 # Add files that the exe will be built from
 add_executable(
 Main src/main.c
-src/neuron.c
+src/neuralNetworkFuncs.c
 src/sigmoid.c
 )
 target_compile_features(Main PRIVATE c_std_11)
