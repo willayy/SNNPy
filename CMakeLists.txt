@@ -16,17 +16,13 @@ find_package(Doxygen)
     message(STATUS "Doxygen not found, not building docs")
 endif()
 
-# Add source files to a library that can be linked with other code
-add_library(
-SNNpy 
-src/neuron.c
-src/neuron.h
-src/sigmoid.c
-)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 # Add files that the exe will be built from
 add_executable(
-Main 
-src/main.c
+Main src/main.c
+src/neuron.c
+src/sigmoid.c
 )
-
+target_compile_features(Main PRIVATE c_std_11)
+target_include_directories(Main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
