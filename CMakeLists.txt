@@ -19,10 +19,14 @@ endif()
 # Add source files to a library that can be linked with other code
 add_library(
 SNNpy 
-src/neuron.c 
+src/neuron.c
+src/neuron.h
 src/sigmoid.c
 )
 
 # Add files that the exe will be built from
-add_executable(Main src/main.c)
+add_executable(
+Main 
+src/main.c
+)
 
