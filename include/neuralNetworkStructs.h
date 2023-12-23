@@ -26,14 +26,19 @@
      * @param nrOfParameters: the number of parameters in the network.
      * @param nrOfLayers: the number of layers in the network.
      * @param neuronsPerLayer: the number of neurons per layer in the network.
+     * @param nrOfOutputs: the number of outputs in the network.
      * @param parameter: the parameter layer of the network.
-     * @param layers: Pointer to the first layer of the network. */
+     * @param layers: Pointer to the first layer of the network. 
+     * @param output: the output layer of the network.
+     * */
     struct NeuralNetwork {
         int nrOfParameters;
         int nrOfLayers;
         int neuronsPerLayer;
+        int nrOfOutputs;
         struct ParameterLayer parameter;
         struct NeuronLayer * layers;
+        struct NeuronLayer output;
     };
 
 #endif
