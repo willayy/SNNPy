@@ -24,14 +24,16 @@
     /**
      * A neural network
      * @param nrOfParameters: the number of parameters in the network.
-     * @param layersByteSize: the number of layers in the network.
-     * @param parameter: Pointer to the parameter layer of the network.
+     * @param nrOfLayers: the number of layers in the network.
+     * @param neuronsPerLayer: the number of neurons per layer in the network.
+     * @param parameter: the parameter layer of the network.
      * @param layers: Pointer to the first layer of the network. */
     struct NeuralNetwork {
         int nrOfParameters;
-        int layersByteSize;
+        int nrOfLayers;
+        int neuronsPerLayer;
         struct ParameterLayer parameter;
-        struct NeuronLayer layers[];
+        struct NeuronLayer * layers;
     };
 
 #endif
