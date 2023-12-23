@@ -40,6 +40,27 @@ struct NeuronLayer createNeuronLayer(int edgesPerNeuron, int nrOfNeurons) {
 }
 
 /**
+ * Creates a neural network.
+ * @param nrOfParameters: the number of parameters in the network.
+ * @param nrOfLayers: the number of layers in the network.
+ * @param neuronsPerLayer: the number of neurons per layer in the network. */
+struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int neuronsPerLayer) {
+    struct NeuralNetwork neuralNetwork;
+    neuralNetwork.nrOfParameters = nrOfParameters;
+    neuralNetwork.nrOfLayers = nrOfLayers;
+    neuralNetwork.neuronsPerLayer = neuronsPerLayer;
+
+    neuralNetwork.parameter = createParameterLayer(nrOfParameters);
+    neuralNetwork.layers = (struct NeuronLayer *) malloc(nrOfLayers * sizeof(struct NeuronLayer));
+
+    for (int i = 0; i < nrOfLayers; i++) {
+        neuralNetwork.layers[i] = createNeuronLayer(neuronsPerLayer, neuronsPerLayer);
+    }
+
+    return neuralNetwork;
+}
+
+/**
  * Frees a neuron layer from memory.
  * @param neuronLayer: the neuron layer to free from memory. 
 */
@@ -54,4 +75,19 @@ void freeNeuronLayer(struct NeuronLayer neuronLayer) {
 */
 void freeParameterLayer(struct ParameterLayer parameterLayer) {
     free(parameterLayer.parameters);
+}
+
+/**
+ * Frees a neural network from memory.
+ * @param neuralNetwork: the neural network to free from memory. 
+*/
+void freeNeuralNetwork(struct NeuralNetwork neuralNetwork) {
+    freeParameterLayer(neuralNetwork.parameter);
+    int i = 0;
+    for (int _ = 0; _ < neuralNetwork.nrOfLayers; _++) {
+        for (int _ = 0; _ < neuralNetwork.neuronsPerLayer; _++) {
+            freeNeuronLayer(neuralNetwork.layers[i]);
+            i++;
+        }
+    }
 }
