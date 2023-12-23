@@ -43,19 +43,25 @@ struct NeuronLayer createNeuronLayer(int edgesPerNeuron, int nrOfNeurons) {
  * Creates a neural network.
  * @param nrOfParameters: the number of parameters in the network.
  * @param nrOfLayers: the number of layers in the network.
- * @param neuronsPerLayer: the number of neurons per layer in the network. */
-struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int neuronsPerLayer) {
+ * @param neuronsPerLayer: the number of neurons per layer in the network.
+ * @param nrOfOutputs: the number of outputs in the network. */
+struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs) {
     struct NeuralNetwork neuralNetwork;
+
     neuralNetwork.nrOfParameters = nrOfParameters;
     neuralNetwork.nrOfLayers = nrOfLayers;
     neuralNetwork.neuronsPerLayer = neuronsPerLayer;
+    neuralNetwork.nrOfOutputs = nrOfOutputs;
 
     neuralNetwork.parameter = createParameterLayer(nrOfParameters);
+
     neuralNetwork.layers = (struct NeuronLayer *) malloc((nrOfLayers * neuronsPerLayer * neuronsPerLayer)*sizeof(double));
 
     for (int i = 0; i < nrOfLayers; i++) {
         neuralNetwork.layers[i] = createNeuronLayer(neuronsPerLayer, neuronsPerLayer);
     }
+
+    neuralNetwork.output = createNeuronLayer(neuronsPerLayer, nrOfOutputs);
 
     return neuralNetwork;
 }
