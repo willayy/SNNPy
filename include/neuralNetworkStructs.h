@@ -36,9 +36,9 @@
         int nrOfLayers;
         int neuronsPerLayer;
         int nrOfOutputs;
-        struct ParameterLayer parameter;
-        struct NeuronLayer * layers;
-        struct NeuronLayer output;
+        struct ParameterLayer parameterLayer;
+        struct NeuronLayer * intermediateLayers;
+        struct NeuronLayer outputLayer;
     };
 
 #endif
