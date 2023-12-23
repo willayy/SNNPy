@@ -1,3 +1,4 @@
+#include "sigmoid.h"
 #include <math.h>
 
 
