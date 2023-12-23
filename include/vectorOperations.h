@@ -3,6 +3,6 @@
 
 double dotProduct(double *a, double *b, int vectorSize);
 
-double * matrixMul(double *a, int rowsA, int colsA, double *b, int rowsB, int colsB);
+double * vectorMatrixMul(double * vector, double * matrix, int vectorSize, int matrixCols);
 
 #endif
