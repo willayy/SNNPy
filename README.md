@@ -1,5 +1,5 @@
 # SNNPy
-This is a Python module with api's to a simple C implemented neural network. This repo contains the C source code in SNNpy/src and the Python module source code in SNNPy/snnpy.
+This is a Python module with api's to a simple C implemented FFN neural network. This repo contains the C source code in SNNpy/src and the Python module source code in SNNPy/snnpy.
 
 #### This project was developed and tested using:
 
