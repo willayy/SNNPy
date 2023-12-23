@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "neuralNetworkFuncs.h"
+#include "neuralNetworkInit.h"
 #include "neuralNetworkStructs.h"
 
 /**      
@@ -12,7 +12,7 @@ struct ParameterLayer createParameterLayer(int nrOfParameters) {
     parameterLayer.parameters = (double *) malloc(nrOfParameters * sizeof(double));
 
     for (int i = 0; i < nrOfParameters; i++) {
-        parameterLayer.parameters[i] = 69.00;
+        parameterLayer.parameters[i] = 1.00;
     }
 
     return parameterLayer;
@@ -30,10 +30,10 @@ struct NeuronLayer createNeuronLayer(int edgesPerNeuron, int nrOfNeurons) {
     neuronLayer.output = (double *) malloc(nrOfNeurons * sizeof(double));
 
     for (int i = 0; i < edgesPerNeuron * nrOfNeurons; i++) {
-        neuronLayer.edges[i] = 69.00;
+        neuronLayer.edges[i] = 1.00;
     }
     for (int i = 0; i < nrOfNeurons; i++) {
-        neuronLayer.output[i] = 69.00;
+        neuronLayer.output[i] = 1.00;
     }
 
     return neuronLayer;
@@ -51,7 +51,7 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.neuronsPerLayer = neuronsPerLayer;
 
     neuralNetwork.parameter = createParameterLayer(nrOfParameters);
-    neuralNetwork.layers = (struct NeuronLayer *) malloc(nrOfLayers * sizeof(struct NeuronLayer));
+    neuralNetwork.layers = (struct NeuronLayer *) malloc((nrOfLayers * neuronsPerLayer * neuronsPerLayer)*sizeof(double));
 
     for (int i = 0; i < nrOfLayers; i++) {
         neuralNetwork.layers[i] = createNeuronLayer(neuronsPerLayer, neuronsPerLayer);
