@@ -23,6 +23,7 @@ add_executable(
 Main src/main.c
 src/neuralNetworkInit.c
 src/neuralNetworkTraining.c
+src/vectorOperations.c
 src/sigmoid.c
 )
 target_compile_features(Main PRIVATE c_std_11)
