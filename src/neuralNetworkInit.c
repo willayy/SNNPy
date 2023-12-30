@@ -12,7 +12,7 @@ struct ParameterLayer createParameterLayer(int nrOfParameters) {
     parameterLayer.parameters = (double *) malloc(nrOfParameters * sizeof(double));
 
     for (int i = 0; i < nrOfParameters; i++) {
-        parameterLayer.parameters[i] = 1.00;
+        parameterLayer.parameters[i] = 0;
     }
 
     return parameterLayer;
@@ -27,13 +27,15 @@ struct NeuronLayer createNeuronLayer(int edgesPerNeuron, int nrOfNeurons) {
     neuronLayer.size = nrOfNeurons;
 
     neuronLayer.edges = (double *) malloc(edgesPerNeuron * nrOfNeurons * sizeof(double));
+    neuronLayer.biases = (double *) malloc(nrOfNeurons * sizeof(double));
     neuronLayer.output = (double *) malloc(nrOfNeurons * sizeof(double));
 
     for (int i = 0; i < edgesPerNeuron * nrOfNeurons; i++) {
-        neuronLayer.edges[i] = 1.00;
+        neuronLayer.edges[i] = 0.00;
     }
     for (int i = 0; i < nrOfNeurons; i++) {
-        neuronLayer.output[i] = 1.00;
+        neuronLayer.biases[i] = 0.00;
+        neuronLayer.output[i] = 0.00;
     }
 
     return neuronLayer;
@@ -46,6 +48,7 @@ struct NeuronLayer createNeuronLayer(int edgesPerNeuron, int nrOfNeurons) {
  * @param neuronsPerLayer: the number of neurons per layer in the network.
  * @param nrOfOutputs: the number of outputs in the network. */
 struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs) {
+
     struct NeuralNetwork neuralNetwork;
 
     neuralNetwork.nrOfParameters = nrOfParameters;
@@ -55,9 +58,11 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
 
     neuralNetwork.parameterLayer = createParameterLayer(nrOfParameters);
 
-    neuralNetwork.intermediateLayers = (struct NeuronLayer *) malloc((nrOfLayers * neuronsPerLayer * neuronsPerLayer)*sizeof(double));
+    neuralNetwork.intermediateLayers = (struct NeuronLayer *) malloc(nrOfLayers *  sizeof(struct NeuronLayer));
 
-    for (int i = 0; i < nrOfLayers; i++) {
+    neuralNetwork.intermediateLayers[0] = createNeuronLayer(nrOfParameters, neuronsPerLayer);
+
+    for (int i = 1; i < nrOfLayers; i++) {
         neuralNetwork.intermediateLayers[i] = createNeuronLayer(neuronsPerLayer, neuronsPerLayer);
     }
 

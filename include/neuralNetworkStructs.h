@@ -18,6 +18,7 @@
     struct NeuronLayer {
         int size;
         double * edges;
+        double * biases;
         double * output;
     };
 
