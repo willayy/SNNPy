@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "neuralNetworkInit.h"
 #include "neuralNetworkStructs.h"
+#include <time.h>
 
 /**      
  * Creates a parameter layer.
@@ -30,11 +31,13 @@ struct NeuronLayer createNeuronLayer(int edgesPerNeuron, int nrOfNeurons) {
     neuronLayer.biases = (double *) malloc(nrOfNeurons * sizeof(double));
     neuronLayer.output = (double *) malloc(nrOfNeurons * sizeof(double));
 
+    srand(time(NULL));
+
     for (int i = 0; i < edgesPerNeuron * nrOfNeurons; i++) {
-        neuronLayer.edges[i] = 0.00;
+        neuronLayer.edges[i] = (double) rand() / (double) rand();
     }
     for (int i = 0; i < nrOfNeurons; i++) {
-        neuronLayer.biases[i] = 0.00;
+        neuronLayer.biases[i] = (double) rand() / (double) rand();
         neuronLayer.output[i] = 0.00;
     }
 
