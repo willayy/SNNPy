@@ -14,6 +14,6 @@ int main() {
 
     printf("Output: %f\n", output[0]);
     printf("Output: %f\n", output[1]);
-
+    
     return 0;
 }
