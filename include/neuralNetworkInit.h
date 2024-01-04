@@ -3,6 +3,8 @@
 
     struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs);
 
-    void freeNeuralNetwork(struct NeuralNetwork neuralNetwork);
+    void resetNeuralNetwork(struct NeuralNetwork nn);
+
+    void freeNeuralNetwork(struct NeuralNetwork nn);
 
 #endif

@@ -17,17 +17,15 @@ double dotProduct(double *a, double *b, int vectorSize) {
 }
 
 /**
- * calculates the product of a vector multiplied by a matrix.
- * Size of vector must be equal to the number of columns in the matrix.
- * @param vector The vector.
- * @param matrix The matrix.
- * @param vectorSize The size of the vector.
- * @param matrixCols The number of columns in the matrix. */
-double * vectorMatrixMul(double * vector, double * matrix, int vectorSize, int matrixCols) {
+ * Multiplies a vector with a scalar.
+ * @param a The vector.
+ * @param b The scalar.
+ * @param vectorSize The size of the vector. */
+double * vectorMul(double * a, double b, int vectorSize) {
     double * resultVector = (double*)malloc(vectorSize * sizeof(double));
-     
+
     for (int i = 0; i < vectorSize; i++) {
-        resultVector[i] = dotProduct(vector, matrix + i*matrixCols, vectorSize);
+        resultVector[i] = a[i] * b;
     }
 
     return resultVector;
