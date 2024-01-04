@@ -6,14 +6,14 @@
 #include "vectorOperations.h"
 
 int main() {
-    struct NeuralNetwork nn = createNeuralNetwork(2, 20, 10, 2);
-
-    double inputData[2] = {-23, 54};
-
-    double * output = inputDataToNeuralNetwork(nn, inputData);
-
-    printf("Output: %f\n", output[0]);
-    printf("Output: %f\n", output[1]);
     
+    struct NeuralNetwork nn = createNeuralNetwork(2, 4, 2, 2);
+    double * input = (double*) malloc(sizeof(double) * 2);
+    input[0] = 0;
+    input[1] = 0;
+    inputDataToNeuralNetwork(nn, input);
+    
+    printf("%f\n", nn.outputVector[0]);
+    printf("%f\n", nn.outputVector[1]);
     return 0;
 }
