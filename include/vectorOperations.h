@@ -1,7 +1,9 @@
 #ifndef vectorOperations_h
 #define vectorOperations_h
 
-double * vectorMatrixMul(double * vector, double * matrix, int vectorSize, int matrixCols);
+double dotProduct(double *a, double *b, int vectorSize);
+
+double * vectorMul(double * a, double b, int vectorSize);
 
 double * vectorAdd(double * a, double * b, int vectorSize);
 
