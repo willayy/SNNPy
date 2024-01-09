@@ -7,27 +7,32 @@
 void propogateForwardParams(struct NeuralNetwork nn, double * inputData) {
 
     nn.parameterVector = inputData;
+    double * tempWeights = nn.weightMatrix;
 
     for (int i = 0; i < nn.nrOfParameters; i++) {
 
-        double * temp = vectorMul(nn.weightMatrix, nn.parameterVector[i], nn.nrOfParameters);
+        double * temp = vectorMul(tempWeights, nn.parameterVector[i], nn.nrOfParameters);
 
-        for (int j = 0; j < nn.neuronsPerLayer; j++) {
-            nn.neuronVector[j] += temp[j];
-        }
-
+        vectorAdd(nn.neuronVector, temp, nn.neuronsPerLayer);
+        
         free(temp);
+
+        tempWeights += nn.neuronsPerLayer;
     }
+
+    vectorAdd(nn.neuronVector, nn.biasVector, nn.neuronsPerLayer);
 
     for (int i = 0; i < nn.neuronsPerLayer; i++) {
         nn.neuronVector[i] = sigmoid(nn.neuronVector[i]);
     }
+ 
 }
 
 void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
 
     double * tempWeights = nn.weightMatrix + nn.nrOfParameters * nn.neuronsPerLayer; // Skip the first layer as it has already been calculated.
-    double * tempNeurons = nn.neuronVector; // Skip the first layer as it has already been calculated.
+    double * tempNeurons = nn.neuronVector;
+    double * tempBias = nn.biasVector + nn.neuronsPerLayer;
 
     for (int i = 0; i < nn.nrOfLayers - 1; i++) {
 
@@ -35,9 +40,7 @@ void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
 
             double * temp = vectorMul(tempWeights, tempNeurons[j], nn.neuronsPerLayer);
 
-            for (int k = 0; k < nn.neuronsPerLayer; k++) {
-                tempNeurons[k + nn.neuronsPerLayer] += temp[k];
-            }
+            vectorAdd(tempNeurons + nn.neuronsPerLayer, temp, nn.neuronsPerLayer);
 
             tempWeights += nn.neuronsPerLayer;
 
@@ -45,9 +48,11 @@ void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
         }
 
         for (int j = 0; j < nn.neuronsPerLayer; j++) {
+            tempNeurons[j + nn.neuronsPerLayer] += tempBias[j];
             tempNeurons[j + nn.neuronsPerLayer] = sigmoid(tempNeurons[j]);
         }
 
+        tempBias += nn.neuronsPerLayer;
         tempNeurons += nn.neuronsPerLayer;
     }
 }
@@ -63,9 +68,7 @@ void propogateForwardOutput(struct NeuralNetwork nn) {
 
             double * temp = vectorMul(tempWeights, tempNeurons[j], nn.neuronsPerLayer);
 
-            for (int k = 0; k < nn.nrOfOutputs; k++) {
-                nn.outputVector[k] += temp[k];
-            }
+            vectorAdd(nn.outputVector, temp, nn.nrOfOutputs);
 
             tempWeights += nn.neuronsPerLayer;
 
