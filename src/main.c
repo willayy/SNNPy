@@ -15,5 +15,6 @@ int main() {
     
     printf("%f\n", nn.outputVector[0]);
     printf("%f\n", nn.outputVector[1]);
+    
     return 0;
 }
