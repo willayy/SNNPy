@@ -19,13 +19,13 @@ static double * nullVector;
  * @return The cost of the neural network on the given input and desired output. */
 double * costFunction(double * output, double * desiredOutput, int outputSize) {
 
-    double cost[outputSize];
+    double *  cost = (double*) malloc(sizeof(double) * outputSize);
 
     for (int i = 0; i < outputSize; i++) {
         cost[i] = (desiredOutput[i] - output[i]);
     }
 
-    return (double *) cost;
+    return cost;
 }
 
 /**
