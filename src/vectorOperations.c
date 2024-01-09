@@ -32,16 +32,25 @@ double * vectorMul(double * a, double b, int vectorSize) {
 }
 
 /**
- * Adds two vectors of the same size.
+ * Adds vector b to vector a.
  * @param a The first vector.
  * @param b The second vector.
  * @param vectorSize The size of the vectors. */
-double * vectorAdd(double * a, double * b, int vectorSize) {
+void vectorAdd(double * a, double * b, int vectorSize) {
     double * resultVector = (double*)malloc(vectorSize * sizeof(double));
 
     for (int i = 0; i < vectorSize; i++) {
-        resultVector[i] = a[i] + b[i];
+        a[i] = a[i] + b[i];
     }
+}
 
-    return resultVector;
+/**
+ * Replaces vector elements in a with vector b elements.
+ * @param a The first vector.
+ * @param b The second vector.
+ * @param vectorSize The size of the vectors. */
+void vectorReplace(double * a, double * b, int vectorSize) {
+    for (int i = 0; i < vectorSize; i++) {
+        a[i] = b[i];
+    }
 }
