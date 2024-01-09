@@ -53,3 +53,14 @@ void vectorReplace(double * a, double * b, int vectorSize) {
         a[i] = b[i];
     }
 }
+
+/**
+ * Applies a function to each element of a vector. Function must take a double as a parameter and return an double.
+ * @param a The vector.
+ * @param vectorSize The size of the vector.
+ * @param operation The function to be applied to each element of the vector. */
+void vectorOperation(double * a, singeleDoubleParamOperation operation, int vectorSize) {
+    for (int i = 0; i < vectorSize; i++) {
+        a[i] = operation(a[i]);
+    }
+}

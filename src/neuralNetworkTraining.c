@@ -59,10 +59,9 @@ void backPropagateOutput(struct NeuralNetwork nn, double * cost) {
         free(temp);
     }
 
-    for (int i = 0; i < nn.neuronsPerLayer; i++) {
-        tempNeurons[i] += tempBiases[i];
-        tempNeurons[i] = sigmoid(tempNeurons[i]);
-    }
+    vectorAdd(tempNeurons, tempBiases, nn.neuronsPerLayer);
+
+    vectorOperation(tempNeurons, sigmoid, nn.neuronsPerLayer);
 
 }
 
@@ -95,11 +94,10 @@ void backPropogateHiddenlayers(struct NeuralNetwork nn) {
             free(temp);
         }
 
-        for (int j = 0; j < nn.neuronsPerLayer; j++) {
-            tempNeurons[j] += tempBiases[j];
-            tempNeurons[j] = sigmoid(tempNeurons[j]);
-        }
+        vectorAdd(tempNeurons, tempBiases, nn.neuronsPerLayer);
 
+        vectorOperation(tempNeurons, sigmoid, nn.neuronsPerLayer);
+        
         startNeurons -= nn.neuronsPerLayer;
         tempWeights -= nn.neuronsPerLayer * nn.neuronsPerLayer;
         tempBiases -= nn.neuronsPerLayer;

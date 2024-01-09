@@ -22,9 +22,7 @@ void propogateForwardParams(struct NeuralNetwork nn, double * inputData) {
 
     vectorAdd(nn.neuronVector, nn.biasVector, nn.neuronsPerLayer);
 
-    for (int i = 0; i < nn.neuronsPerLayer; i++) {
-        nn.neuronVector[i] = sigmoid(nn.neuronVector[i]);
-    }
+    vectorOperation(nn.neuronVector, sigmoid, nn.neuronsPerLayer);
  
 }
 
@@ -47,10 +45,9 @@ void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
             free(temp);
         }
 
-        for (int j = 0; j < nn.neuronsPerLayer; j++) {
-            tempNeurons[j + nn.neuronsPerLayer] += tempBias[j];
-            tempNeurons[j + nn.neuronsPerLayer] = sigmoid(tempNeurons[j]);
-        }
+        vectorAdd(tempNeurons + nn.neuronsPerLayer, tempBias, nn.neuronsPerLayer);
+
+        vectorOperation(tempNeurons + nn.neuronsPerLayer, sigmoid, nn.neuronsPerLayer);
 
         tempBias += nn.neuronsPerLayer;
         tempNeurons += nn.neuronsPerLayer;
