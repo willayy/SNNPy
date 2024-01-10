@@ -8,6 +8,8 @@
 static double * paramNullvector;
 static double * outputNullVector;
 static double * nullVector;
+static double lrw = 0.50; // Learning rate weight
+static double lrb = 0.10; // Learning rate bias
 
 
 /**
@@ -22,7 +24,7 @@ double * costFunction(double * output, double * desiredOutput, int outputSize) {
     double *  cost = (double*) malloc(sizeof(double) * outputSize);
 
     for (int i = 0; i < outputSize; i++) {
-        cost[i] = (desiredOutput[i] - output[i]);
+        cost[i] = (desiredOutput[i]-output[i]);
     }
 
     return cost;
@@ -40,8 +42,8 @@ void backPropagateOutput(struct NeuralNetwork nn, double * cost) {
     double * tempBiases = nn.biasVector + nn.neuronsPerLayer * nn.nrOfLayers;
     
     for (int i = 0; i < nn.nrOfOutputs; i++) {
-        double * deltaWeights = vectorMul(tempWeights, nn.outputVector[i], nn.neuronsPerLayer);
-        double * deltaBias = vectorMul(tempBiases, 0.01 * nn.outputVector[i], nn.neuronsPerLayer);
+        double * deltaWeights = vectorMul(tempWeights, lrw * nn.outputVector[i], nn.neuronsPerLayer);
+        double * deltaBias = vectorMul(tempBiases, lrb * nn.outputVector[i], nn.neuronsPerLayer);
         vectorAdd(tempWeights, deltaWeights, nn.neuronsPerLayer);
         vectorAdd(tempBiases, deltaBias, nn.neuronsPerLayer);
         tempWeights += nn.neuronsPerLayer;
@@ -78,8 +80,8 @@ void backPropogateHiddenlayers(struct NeuralNetwork nn) {
     for (int i = nn.nrOfLayers - 1; i > 0; i--) {
 
         for (int j = 0; j < nn.neuronsPerLayer; j++) {
-            double * deltaWeights = vectorMul(tempWeights, startNeurons[j], nn.neuronsPerLayer);
-            double * deltaBias = vectorMul(tempBiases, 0.01 * startNeurons[j], nn.neuronsPerLayer);
+            double * deltaWeights = vectorMul(tempWeights, lrw * startNeurons[j], nn.neuronsPerLayer);
+            double * deltaBias = vectorMul(tempBiases, lrb * startNeurons[j], nn.neuronsPerLayer);
             vectorAdd(tempWeights + j * nn.neuronsPerLayer, deltaWeights, nn.neuronsPerLayer);
             vectorAdd(tempBiases, deltaBias, nn.neuronsPerLayer);
             free(deltaWeights);
@@ -107,12 +109,41 @@ void backPropogateHiddenlayers(struct NeuralNetwork nn) {
 
 }
 
+void backPropogateInput(struct NeuralNetwork nn) {
+    
+    double * tempWeights = nn.weightMatrix;
+    double * tempBiases = nn.biasVector;
+    double * tempNeurons = nn.neuronVector;
+
+    for (int i = 0; i < nn.neuronsPerLayer; i++) {
+        double * deltaWeights = vectorMul(tempWeights, lrw * nn.neuronVector[i], nn.nrOfParameters);
+        double * deltaBias = vectorMul(tempBiases, lrb * nn.neuronVector[i], nn.nrOfParameters);
+        vectorAdd(tempWeights, deltaWeights, nn.nrOfParameters);
+        vectorAdd(tempBiases, deltaBias, nn.nrOfParameters);
+        free(deltaWeights);
+        free(deltaBias);
+    }
+
+    vectorReplace(tempNeurons, paramNullvector, nn.nrOfParameters);
+
+    for (int i = 0; i < nn.neuronsPerLayer; i++) {
+        double * temp = vectorMul(tempWeights, nn.neuronVector[i], nn.nrOfParameters);
+        vectorAdd(tempNeurons, temp, nn.nrOfParameters);
+        free(temp);
+    }
+
+    vectorAdd(tempNeurons, tempBiases, nn.nrOfParameters);
+
+    vectorOperation(tempNeurons, sigmoid, nn.nrOfParameters);
+
+}
+
 /**
  * Trains the neural network on a given input and desired output.
  * @param nn The neural network.
  * @param input The input of the neural network.
  * @param desiredOutput The desired output of the neural network. */
-void trainOnData(struct NeuralNetwork nn, double * input, double * desiredOutput) {
+double * trainOnData(struct NeuralNetwork nn, double * input, double * desiredOutput) {
 
     paramNullvector = (double*) malloc(sizeof(double) * nn.nrOfParameters);
     outputNullVector = (double*) malloc(sizeof(double) * nn.nrOfOutputs);
@@ -127,6 +158,10 @@ void trainOnData(struct NeuralNetwork nn, double * input, double * desiredOutput
     double * cost = costFunction(nn.outputVector, desiredOutput, nn.nrOfOutputs);
     
     backPropagateOutput(nn, cost);
+
+    backPropogateHiddenlayers(nn);
+
+    backPropogateInput(nn);
     
-    free(cost);
+    return cost;
 }

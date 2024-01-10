@@ -19,11 +19,12 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.nrOfOutputs = nrOfOutputs;
 
     int sizeOfDouble = sizeof(double);
-    neuralNetwork.parameterVector = (double*) malloc(sizeOfDouble * nrOfParameters);
-    neuralNetwork.neuronVector = (double*) malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
-    neuralNetwork.outputVector = (double*) malloc(sizeOfDouble * nrOfOutputs);
-    neuralNetwork.biasVector = (double*) malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
-    neuralNetwork.weightMatrix = (double*) malloc(sizeOfDouble * (nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer));
+
+    neuralNetwork.parameterVector = malloc(sizeOfDouble * nrOfParameters);
+    neuralNetwork.neuronVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
+    neuralNetwork.outputVector = malloc(sizeOfDouble * nrOfOutputs);
+    neuralNetwork.biasVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
+    neuralNetwork.weightMatrix = malloc(sizeOfDouble * (nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer));
 
     int totalNrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;
     
