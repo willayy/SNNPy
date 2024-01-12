@@ -21,14 +21,12 @@ double dotProduct(double *a, double *b, int vectorSize) {
  * @param a The vector.
  * @param b The scalar.
  * @param vectorSize The size of the vector. */
-double * vectorMul(double * a, double b, int vectorSize) {
-    double * resultVector = (double*)malloc(vectorSize * sizeof(double));
+void vectorMul(double * a, double b, int vectorSize) {
 
     for (int i = 0; i < vectorSize; i++) {
-        resultVector[i] = a[i] * b;
+        a[i] = a[i] * b;
     }
 
-    return resultVector;
 }
 
 /**

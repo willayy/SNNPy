@@ -5,7 +5,7 @@ typedef double (*singeleDoubleParamOperation)(double);
 
 double dotProduct(double *a, double *b, int vectorSize);
 
-double * vectorMul(double * a, double b, int vectorSize);
+void vectorMul(double * a, double b, int vectorSize);
 
 void vectorAdd(double * a, double * b, int vectorSize);
 
