@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "neuralNetworkInit.h"
 #include "neuralNetworkStructs.h"
 #include <time.h>
@@ -17,6 +18,7 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.nrOfLayers = nrOfLayers;
     neuralNetwork.neuronsPerLayer = neuronsPerLayer;
     neuralNetwork.nrOfOutputs = nrOfOutputs;
+    neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;  
 
     int sizeOfDouble = sizeof(double);
 
@@ -25,8 +27,6 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.outputVector = malloc(sizeOfDouble * nrOfOutputs);
     neuralNetwork.biasVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
     neuralNetwork.weightMatrix = malloc(sizeOfDouble * (nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer));
-
-    int totalNrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;
     
     srand(time(NULL));
 
@@ -42,12 +42,14 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
         neuralNetwork.outputVector[i] = 0;
     }
 
-    for (int i = 0; i < totalNrOfWeights; i++) {
-        neuralNetwork.weightMatrix[i] = (double) rand() / rand();
+    for (int i = 0; i < neuralNetwork.nrOfWeights; i++) {
+        // neuralNetwork.weightMatrix[i] = (double) rand() / rand();
+        neuralNetwork.weightMatrix[i] = (double) (rand() / 10000.0 + 1.0);
     }
 
     for (int i = 0; i < nrOfLayers*neuronsPerLayer; i++) {
-        neuralNetwork.biasVector[i] = (double) rand() / rand();
+        // neuralNetwork.biasVector[i] = (double) rand() / rand();
+        neuralNetwork.biasVector[i] = (double) (rand() / 10000.0 + 1.0);
     }
 
     return neuralNetwork;
