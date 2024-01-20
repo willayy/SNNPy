@@ -22,3 +22,7 @@ double sigmoid(double x) {
 double sigmoidDerivative(double x) {
     return sigmoid(x) * (1 - sigmoid(x));
 }
+
+double antiSigmoid(double x) {
+    return log(x / (1 - x));
+}

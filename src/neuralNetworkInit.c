@@ -18,7 +18,9 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.nrOfLayers = nrOfLayers;
     neuralNetwork.neuronsPerLayer = neuronsPerLayer;
     neuralNetwork.nrOfOutputs = nrOfOutputs;
-    neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;  
+    neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;
+    neuralNetwork.weightsPerLayer = neuronsPerLayer * neuronsPerLayer;
+    neuralNetwork.nrOfHiddenNodes = neuronsPerLayer * nrOfLayers;
 
     int sizeOfDouble = sizeof(double);
 

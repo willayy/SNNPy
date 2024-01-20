@@ -9,6 +9,8 @@ void propogateForwardParams(struct NeuralNetwork nn, double * inputData) {
 
     nn.parameterVector = inputData;
     
+    vectorOperation(nn.parameterVector, sigmoid, nn.nrOfParameters);
+
     for (int i = 0; i < nn.neuronsPerLayer; i++) {
         nn.neuronVector[i] = dotProduct(nn.parameterVector, nn.weightMatrix + i * nn.nrOfParameters, nn.nrOfParameters);
     }
