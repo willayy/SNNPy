@@ -1,4 +1,6 @@
 #include "neuralNetworkStructs.h"
+#include "nodeUtility.h"
+#include <stdlib.h>
 
 /**
  * returns a vector of the nodes connected to a given node in the forward direction.
