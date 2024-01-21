@@ -5,11 +5,12 @@
 /**
  * returns a vector of the nodes connected to a given node in the forward direction.
  * @param nn The neural network.
- * @param node The node to find the connected nodes of.
+ * @param node The node to find the connected nodes of (node 0 is the top parameter node).
  * @return A vector of the connected nodes. */
 int * findConnectedNodes(struct NeuralNetwork nn, int node) {
 
     int * connectedNodes = malloc(sizeof(int)*nn.neuronsPerLayer);
+
     int isParamNode = node <= nn.nrOfParameters;
     int isHiddenNode = node > nn.nrOfParameters && node <= (nn.nrOfHiddenNodes - nn.neuronsPerLayer);
     int isHiddenToOutputNode = node > nn.nrOfHiddenNodes - nn.neuronsPerLayer && node <= nn.nrOfHiddenNodes;
@@ -32,8 +33,47 @@ int * findConnectedNodes(struct NeuralNetwork nn, int node) {
             connectedNodes[i] = nn.outputVector[i];
         }
     }
+
+    return connectedNodes;
 }
 
+/**
+ * returns a vector of the weights connected to a given node in the forward direction.
+ * @param nn The neural network.
+ * @param node The node to find the connected weights of (node 0 is the top parameter node).
+ * @return A vector of the connected weights. */
 int * findConnectedWeights(struct NeuralNetwork nn, int node) {
     
+    int * connectedWeights = malloc(sizeof(int)*(nn.neuronsPerLayer*nn.neuronsPerLayer));
+
+    int isParamNode = node <= nn.nrOfParameters;
+    int isHiddenNode = node > nn.nrOfParameters && node <= (nn.nrOfHiddenNodes - nn.neuronsPerLayer);
+    int isHiddenToOutputNode = node > nn.nrOfHiddenNodes - nn.neuronsPerLayer && node <= nn.nrOfHiddenNodes;
+
+    if (isParamNode) {
+        for (int i = 0; i < nn.neuronsPerLayer; ++i) {
+            int offset = node * nn.neuronsPerLayer;
+            connectedWeights[i] = nn.weightMatrix[i + offset];
+        }
+    }
+
+    else if (isHiddenNode) {
+        for (int i = 0; i < nn.neuronsPerLayer; ++i) {
+            int nodeLayer = (node-nn.nrOfParameters) / nn.neuronsPerLayer;
+            int parameterLayerWeights = nn.nrOfParameters * nn.neuronsPerLayer;
+            int offset = nodeLayer * nn.weightsPerLayer + parameterLayerWeights + node * nn.neuronsPerLayer;
+            connectedWeights[i] = nn.weightMatrix[offset + i];
+        }
+    }
+
+    else if (isHiddenToOutputNode) {
+        for (int i = 0; i < nn.nrOfOutputs; ++i) {
+            int parameterLayerWeights = nn.nrOfParameters * nn.neuronsPerLayer;
+            int hiddenLayerWeights = nn.weightsPerLayer * nn.nrOfLayers;
+            int offset = parameterLayerWeights + hiddenLayerWeights + node * nn.nrOfOutputs;
+            connectedWeights[i] = nn.weightMatrix[offset + i];
+        }
+    }
+
+    return connectedWeights;
 }
