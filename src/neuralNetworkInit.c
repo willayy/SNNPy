@@ -15,12 +15,12 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     struct NeuralNetwork neuralNetwork;
 
     neuralNetwork.nrOfParameters = nrOfParameters;
-    neuralNetwork.nrOfLayers = nrOfLayers;
+    neuralNetwork.nrOfHiddenLayers = nrOfLayers;
     neuralNetwork.neuronsPerLayer = neuronsPerLayer;
     neuralNetwork.nrOfOutputs = nrOfOutputs;
     neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;
     neuralNetwork.weightsPerLayer = neuronsPerLayer * neuronsPerLayer;
-    neuralNetwork.nrOfHiddenNodes = neuronsPerLayer * nrOfLayers;
+    neuralNetwork.nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
 
     int sizeOfDouble = sizeof(double);
 
@@ -66,7 +66,7 @@ void resetNeuralNetwork(struct NeuralNetwork nn) {
         nn.parameterVector[i] = 0;
     }
 
-    for (int i = 0; i < nn.nrOfLayers*nn.neuronsPerLayer; i++) {
+    for (int i = 0; i < nn.nrOfHiddenLayers*nn.neuronsPerLayer; i++) {
         nn.neuronVector[i] = 0;
     }
 

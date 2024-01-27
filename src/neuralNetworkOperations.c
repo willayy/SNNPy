@@ -23,7 +23,7 @@ void propogateForwardParams(struct NeuralNetwork nn, double * inputData) {
 
 void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
 
-    for (int i = 0; i < nn.nrOfLayers; i++) {
+    for (int i = 0; i < nn.nrOfHiddenLayers; i++) {
 
         for (int j = 0; j < nn.neuronsPerLayer; j++) {
             double * neuronVector = nn.neuronVector + i * nn.neuronsPerLayer;
@@ -40,8 +40,8 @@ void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
 void propogateForwardOutput(struct NeuralNetwork nn) {
 
     for (int i = 0; i < nn.nrOfOutputs; i++) {
-        double * neuronVector = nn.neuronVector + nn.nrOfLayers * nn.neuronsPerLayer;
-        double * weightVector = nn.weightMatrix + nn.nrOfParameters * nn.neuronsPerLayer + nn.nrOfLayers * nn.neuronsPerLayer * nn.neuronsPerLayer + i * nn.neuronsPerLayer;
+        double * neuronVector = nn.neuronVector + nn.nrOfHiddenLayers * nn.neuronsPerLayer;
+        double * weightVector = nn.weightMatrix + nn.nrOfParameters * nn.neuronsPerLayer + nn.nrOfHiddenLayers * nn.neuronsPerLayer * nn.neuronsPerLayer + i * nn.neuronsPerLayer;
         nn.outputVector[i] = dotProduct(neuronVector, weightVector, nn.neuronsPerLayer);
     }
     

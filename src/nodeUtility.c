@@ -4,8 +4,8 @@
 
 int getNeuronLayer(struct NeuralNetwork nn, int node) {
     int isParamNode = node <= nn.nrOfParameters;
-    int isHiddenNode = node > nn.nrOfParameters && node <= (nn.nrOfHiddenNodes - nn.neuronsPerLayer);
-    int isHiddenToOutputNode = node > nn.nrOfHiddenNodes - nn.neuronsPerLayer && node <= nn.nrOfHiddenNodes;
+    int isHiddenNode = node > nn.nrOfParameters && node <= (nn.nrOfHiddenNeurons - nn.neuronsPerLayer);
+    int isHiddenToOutputNode = node > nn.nrOfHiddenNeurons - nn.neuronsPerLayer && node <= nn.nrOfHiddenNeurons;
 
     if (isParamNode) {
         return 1;
@@ -44,7 +44,7 @@ int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron) {
  * @return A vector of the activation values of the neurons in the neural network. */
 double * getNeuronActivationValues(struct NeuralNetwork nn) {
 
-    int nrOfNeurons = nn.nrOfParameters + nn.nrOfHiddenNodes + nn.nrOfOutputs;
+    int nrOfNeurons = nn.nrOfParameters + nn.nrOfHiddenNeurons + nn.nrOfOutputs;
 
     double * neuronActivationValues = malloc(sizeof(double)*nrOfNeurons);
 
@@ -59,7 +59,7 @@ double * getNeuronActivationValues(struct NeuralNetwork nn) {
             neuronActivationValues[i] = nn.neuronVector[i - nn.nrOfParameters];
         }
         else if (nodeLayer == 3) {
-            neuronActivationValues[i] = nn.outputVector[i - nn.nrOfHiddenNodes];
+            neuronActivationValues[i] = nn.outputVector[i - nn.nrOfHiddenNeurons];
         }
     }
     
@@ -128,7 +128,7 @@ double ** findConnectedWeights(struct NeuralNetwork nn, int neuron) {
 
     else if (nodeLayer == 3) {
         int parameterLayerWeights = nn.nrOfParameters * nn.neuronsPerLayer;
-        int hiddenLayerWeights = nn.weightsPerLayer * nn.nrOfLayers;
+        int hiddenLayerWeights = nn.weightsPerLayer * nn.nrOfHiddenLayers;
         int offset = parameterLayerWeights + hiddenLayerWeights + neuron * nn.nrOfOutputs;
         for (int i = 0; i < nn.nrOfOutputs; ++i) {
             connectedWeights[i] = & nn.weightMatrix[offset + i];
