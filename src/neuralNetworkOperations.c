@@ -42,9 +42,10 @@ void propogateForwardOutput(struct NeuralNetwork nn) {
     for (int i = 0; i < nn.nrOfOutputs; i++) {
         double * neuronVector = nn.neuronVector + nn.nrOfLayers * nn.neuronsPerLayer;
         double * weightVector = nn.weightMatrix + nn.nrOfParameters * nn.neuronsPerLayer + nn.nrOfLayers * nn.neuronsPerLayer * nn.neuronsPerLayer + i * nn.neuronsPerLayer;
-        nn.outputVector[i] = sigmoid(dotProduct(neuronVector, weightVector, nn.neuronsPerLayer));
+        nn.outputVector[i] = dotProduct(neuronVector, weightVector, nn.neuronsPerLayer);
     }
-
+    
+    vectorOperation(nn.outputVector, sigmoid, nn.nrOfOutputs);
 }
 
 /**

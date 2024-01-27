@@ -1,8 +1,14 @@
+#include "neuralNetworkStructs.h"
+
 #ifndef neuralNetworkInit_h
     #define neuralNetworkInit_h
 
-    int * findConnectedNodes(struct NeuralNetwork nn, int node);
+    double ** findConnectedNeurons(struct NeuralNetwork nn, int neuron);
 
-    int * findConnectedWeights(struct NeuralNetwork nn, int node);
+    double ** findConnectedWeights(struct NeuralNetwork nn, int neuron);
+
+    double * getNeuronActivationValues(struct NeuralNetwork nn);
+
+    int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron);
 
 #endif

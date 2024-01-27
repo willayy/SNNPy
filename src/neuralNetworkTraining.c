@@ -1,3 +1,4 @@
+#include "nodeUtility.h"
 #include "neuralNetworkTraining.h"
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"
@@ -5,6 +6,30 @@
 #include "costFunction.h"
 #include "sigmoid.h"
 #include <stdlib.h>
+
+
+void outputLayerDerivatives(struct NeuralNetwork nn, double * desiredOutput) {
+    for (int i = 0; i < nn.nrOfOutputs; i++) {
+        double dCdA = costFunctionDerivative(nn.outputVector[i], desiredOutput[i]);
+        double dAdZ = sigmoidDerivative(nn.outputVector[i]);
+        nn.outputVector[i] = dCdA * dAdZ;
+    }
+}
+
+void hiddenLayerDerivatives(struct NeuralNetwork nn) {
+
+}
+
+void optimizeWeight(double * weight, double * frontNeuron, double backNeuronValue, double lrw) {
+    double dZdW = backNeuronValue;
+    weight[0] -= lrw * dZdW * frontNeuron[0]; 
+}
+
+void backPropogateNeuron(struct NeuralNetwork nn, int neuronIndex, double neuronActivationValues, double lrw, double lrb) {
+    double ** connectedNodes = findConnectedNeurons(nn, neuronIndex);
+    double ** connectedWeights = findConnectedWeights(nn, neuronIndex);
+    int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, neuronIndex);
+}
 
 /**
  * Backpropogates the error through the neural network and optimizes the weights and biases.
@@ -14,8 +39,17 @@
  * @param lrb The learning rate for the biases. */
 void backPropogate(struct NeuralNetwork nn, double * desiredOutput, double lrw, double lrb) {
 
-    double * derivatives = malloc(sizeof(double)*nn.neuronsPerLayer);
-    
+    double * neuronActivationValues = getNeuronActivationValues(nn);
+
+    outputLayerDerivatives(nn, desiredOutput);
+
+    hiddenLayerDerivatives(nn);
+
+    int nodesToBackPropagate = nn.nrOfHiddenNodes + nn.nrOfParameters;
+
+    for (int i = nodesToBackPropagate; i >= 0; i--) {
+        backPropogateNeuron(nn, i, neuronActivationValues[i], lrw, lrb);
+    }
     
 }
 

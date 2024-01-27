@@ -30,6 +30,6 @@ src/costFunction.c
 src/nodeUtility.c
 )
 
-target_compile_features(Main PRIVATE c_std_11)
+target_compile_features(Main PRIVATE c_std_17)
 
 target_include_directories(Main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
