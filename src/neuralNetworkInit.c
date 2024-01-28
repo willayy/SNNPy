@@ -18,7 +18,7 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.nrOfHiddenLayers = nrOfLayers;
     neuralNetwork.neuronsPerLayer = neuronsPerLayer;
     neuralNetwork.nrOfOutputs = nrOfOutputs;
-    neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer;
+    neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*(nrOfLayers-1) + nrOfOutputs*neuronsPerLayer;
     neuralNetwork.weightsPerLayer = neuronsPerLayer * neuronsPerLayer;
     neuralNetwork.nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
 
@@ -28,7 +28,7 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     neuralNetwork.neuronVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
     neuralNetwork.outputVector = malloc(sizeOfDouble * nrOfOutputs);
     neuralNetwork.biasVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
-    neuralNetwork.weightMatrix = malloc(sizeOfDouble * (nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*nrOfLayers + nrOfOutputs*neuronsPerLayer));
+    neuralNetwork.weightMatrix = malloc(sizeOfDouble * (neuralNetwork.nrOfWeights));
     
     srand(time(NULL));
 
@@ -45,13 +45,11 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     }
 
     for (int i = 0; i < neuralNetwork.nrOfWeights; i++) {
-        // neuralNetwork.weightMatrix[i] = (double) rand() / rand();
-        neuralNetwork.weightMatrix[i] = (double) (rand() / 10000.0 + 1.0);
+        neuralNetwork.weightMatrix[i] = (double) (rand() / 100000.0);
     }
 
     for (int i = 0; i < nrOfLayers*neuronsPerLayer; i++) {
-        // neuralNetwork.biasVector[i] = (double) rand() / rand();
-        neuralNetwork.biasVector[i] = (double) (rand() / 10000.0 + 1.0);
+        neuralNetwork.biasVector[i] = (double) (rand() / 100000.0) + 1;
     }
 
     return neuralNetwork;

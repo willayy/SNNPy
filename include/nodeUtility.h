@@ -7,7 +7,11 @@
 
     double ** findConnectedWeights(struct NeuralNetwork nn, int neuron);
 
-    double * getNeuronActivationValues(struct NeuralNetwork nn);
+    double * getOutputNeuronActivationValues(struct NeuralNetwork nn);
+
+    double * getNeuronActiviationValues(struct NeuralNetwork nn);
+
+    double * findNeuron(struct NeuralNetwork nn, int neuron);
 
     int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron);
 

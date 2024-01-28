@@ -12,7 +12,7 @@ double costFunction(double * output, double * desiredOutput, int outputSize) {
     double cost = 0;
 
     for (int i = 0; i < outputSize; i++) {
-        cost += (output[i]-desiredOutput[i])*(output[i]-desiredOutput[i]);
+        cost += (desiredOutput[i]-output[i])*(desiredOutput[i]-output[i]);
     }
 
     return cost;
@@ -24,5 +24,5 @@ double costFunction(double * output, double * desiredOutput, int outputSize) {
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */
 double costFunctionDerivative(double output, double desiredOutput) {
-    return 2 * (output - desiredOutput);
+    return 2 * (desiredOutput - output);
 }
