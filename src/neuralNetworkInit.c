@@ -12,47 +12,63 @@
  * @param nrOfOutputs: the number of outputs in the network. */
 struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs) {
 
-    struct NeuralNetwork neuralNetwork;
+    struct NeuralNetwork nn;
 
-    neuralNetwork.nrOfParameters = nrOfParameters;
-    neuralNetwork.nrOfHiddenLayers = nrOfLayers;
-    neuralNetwork.neuronsPerLayer = neuronsPerLayer;
-    neuralNetwork.nrOfOutputs = nrOfOutputs;
-    neuralNetwork.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*(nrOfLayers-1) + nrOfOutputs*neuronsPerLayer;
-    neuralNetwork.weightsPerLayer = neuronsPerLayer * neuronsPerLayer;
-    neuralNetwork.nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
+    nn.nrOfParameterNeurons = nrOfParameters;
+    nn.nrOfHiddenLayers = nrOfLayers;
+    nn.neuronsPerLayer = neuronsPerLayer;
+    nn.nrOfOutputNeurons = nrOfOutputs;
+    nn.nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*(nrOfLayers-1) + nrOfOutputs*neuronsPerLayer;
+    nn.nrOfNeurons = nrOfParameters + neuronsPerLayer*nrOfLayers + nrOfOutputs;
+    nn.nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
 
     int sizeOfDouble = sizeof(double);
+ 
+    nn.neuronVector = malloc(sizeOfDouble * (nn.nrOfNeurons));
+    nn.parameterVector = nn.neuronVector;
+    nn.hiddenVector = nn.neuronVector + nn.nrOfParameterNeurons;
+    nn.outputVector = nn.neuronVector + nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons;
+    nn.biasVector = malloc(sizeOfDouble * (nn.nrOfNeurons));
+    nn.weightMatrix = malloc(sizeof(double *) * (nn.nrOfNeurons));
 
-    neuralNetwork.parameterVector = malloc(sizeOfDouble * nrOfParameters);
-    neuralNetwork.neuronVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
-    neuralNetwork.outputVector = malloc(sizeOfDouble * nrOfOutputs);
-    neuralNetwork.biasVector = malloc(sizeOfDouble * (nrOfLayers*neuronsPerLayer));
-    neuralNetwork.weightMatrix = malloc(sizeOfDouble * (neuralNetwork.nrOfWeights));
+    int temp = nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons - nn.neuronsPerLayer;
+
+    // allocate memory for the weight matrix
+
+    for (int i = 0; i < temp; i++) {
+        nn.weightMatrix[i] = (double *) malloc(sizeof(double) * (nn.nrOfNeurons));
+    }
+
+    for (int i = temp; i < temp + nn.neuronsPerLayer; i++) {
+        nn.weightMatrix[i] = (double *) malloc(sizeof(double) * (nn.nrOfOutputNeurons));
+    }
+    
     
     srand(time(NULL));
 
-    for (int i = 0; i < nrOfParameters; i++) {
-        neuralNetwork.parameterVector[i] = 0;
+    for (int i = 0; i < nn.nrOfParameterNeurons; i++) {
+        nn.parameterVector[i] = 0;
     }
 
-    for (int i = 0; i < nrOfLayers*neuronsPerLayer; i++) {
-        neuralNetwork.neuronVector[i] = 0;
+    for (int i = 0; i < nn.nrOfHiddenNeurons; i++) {
+        nn.neuronVector[i] = 0;
     }
 
-    for (int i = 0; i < nrOfOutputs; i++) {
-        neuralNetwork.outputVector[i] = 0;
+    for (int i = 0; i < nn.nrOfOutputNeurons; i++) {
+        nn.outputVector[i] = 0;
     }
 
-    for (int i = 0; i < neuralNetwork.nrOfWeights; i++) {
-        neuralNetwork.weightMatrix[i] = (double) (rand() / 100000.0);
+    for (int i = 0; i < nn.nrOfNeurons - nn.nrOfOutputNeurons; i++) {
+        for (int j = 0; j < nn.neuronsPerLayer; j++) {
+            nn.weightMatrix[i][j] = (double) (rand() / 100000.0) + 1;
+        }
     }
 
-    for (int i = 0; i < nrOfLayers*neuronsPerLayer; i++) {
-        neuralNetwork.biasVector[i] = (double) (rand() / 100000.0) + 1;
+    for (int i = 0; i < nn.nrOfNeurons; i++) {
+        nn.biasVector[i] = (double) (rand() / 100000.0) + 1;
     }
 
-    return neuralNetwork;
+    return nn;
 
 }
 
@@ -60,15 +76,16 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
  * Resets the neural network parameters, neurons and output.
  * @param nn: the neural network to reset. */
 void resetNeuralNetwork(struct NeuralNetwork nn) {
-    for (int i = 0; i < nn.nrOfParameters; i++) {
+
+    for (int i = 0; i < nn.nrOfParameterNeurons; i++) {
         nn.parameterVector[i] = 0;
     }
 
-    for (int i = 0; i < nn.nrOfHiddenLayers*nn.neuronsPerLayer; i++) {
+    for (int i = 0; i < nn.nrOfHiddenNeurons; i++) {
         nn.neuronVector[i] = 0;
     }
 
-    for (int i = 0; i < nn.nrOfOutputs; i++) {
+    for (int i = 0; i < nn.nrOfOutputNeurons; i++) {
         nn.outputVector[i] = 0;
     }
 }
@@ -77,9 +94,21 @@ void resetNeuralNetwork(struct NeuralNetwork nn) {
  * Frees the memory allocated for a neural network.
  * @param nn: the neural network to free. */
 void freeNeuralNetwork(struct NeuralNetwork nn) {
-    free(nn.parameterVector);
+
     free(nn.neuronVector);
-    free(nn.outputVector);
+
     free(nn.biasVector);
+
+    for (int i = 0; i < nn.nrOfNeurons - nn.nrOfOutputNeurons; i++) {
+        if (i > nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons - nn.nrOfOutputNeurons) {
+            for (int j = 0; j < nn.nrOfOutputNeurons; j++) {
+                free(nn.weightMatrix[i]);
+            }
+        } else {
+            for (int j = 0; j < nn.neuronsPerLayer; j++) {
+                free(nn.weightMatrix[i]);
+            }
+        }
+    }
     free(nn.weightMatrix);
 }

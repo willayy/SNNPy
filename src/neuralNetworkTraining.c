@@ -7,6 +7,15 @@
 #include "sigmoid.h"
 #include <stdlib.h>
 
+void optimizeWeight(double * weight, double frontNeuronValue, double backNeuronValue, double lrw) {
+    double dZdW = backNeuronValue;
+    weight[0] -= lrw * dZdW * frontNeuronValue; 
+}
+
+void optimizeBias(double * bias, double frontNeuronValue, double lrb) {
+    double dZdB = 1;
+    bias[0] -= lrb * dZdB * frontNeuronValue;
+}
 
 void outputLayerDerivatives(struct NeuralNetwork nn, double * desiredOutput) {
     for (int i = 0; i < nn.nrOfOutputs; i++) {
@@ -34,24 +43,11 @@ void hiddenLayerDerivatives(struct NeuralNetwork nn) {
             derivativeSum += dZdA * dAdZ * frontNeuron;
         }
 
-        free(connectedNeurons);
-        free(connectedWeights);
-
         double avgDerivative = derivativeSum / nrOfConnectedNeurons;
 
         neuron[0] = derivativeSum;
 
     }
-}
-
-void optimizeWeight(double * weight, double frontNeuronValue, double backNeuronValue, double lrw) {
-    double dZdW = backNeuronValue;
-    weight[0] -= lrw * dZdW * frontNeuronValue; 
-}
-
-void optimizeBias(double * bias, double frontNeuronValue, double lrb) {
-    double dZdB = 1;
-    bias[0] -= lrb * dZdB * frontNeuronValue;
 }
 
 void backPropogateNeuron(struct NeuralNetwork nn, int neuronIndex, double neuronActivationValue, double lrw, double lrb) {
@@ -71,8 +67,6 @@ void backPropogateNeuron(struct NeuralNetwork nn, int neuronIndex, double neuron
         optimizeBias(bias, neuronActivationValue, lrb);
     }
 
-    free(connectedWeights);
-    free(connectedNeurons);
 }
 
 /**
@@ -95,10 +89,10 @@ void backPropogate(struct NeuralNetwork nn, double * desiredOutput, double lrw, 
         backPropogateNeuron(nn, i, neuronActivationValues[i], lrw, lrb);
     }
     
-    /*
-        free(outputNeuronActivationValues);
-        free(neuronActivationValues);
-    */
+    
+        
+    free(neuronActivationValues);
+    
 }
 
 /**

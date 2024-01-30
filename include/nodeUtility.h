@@ -3,11 +3,9 @@
 #ifndef neuralNetworkInit_h
     #define neuralNetworkInit_h
 
-    double ** findConnectedNeurons(struct NeuralNetwork nn, int neuron);
+    double * findConnectedNeurons(struct NeuralNetwork nn, int neuron);
 
-    double ** findConnectedWeights(struct NeuralNetwork nn, int neuron);
-
-    double * getOutputNeuronActivationValues(struct NeuralNetwork nn);
+    double * findConnectedWeights(struct NeuralNetwork nn, int neuron);
 
     double * getNeuronActiviationValues(struct NeuralNetwork nn);
 
