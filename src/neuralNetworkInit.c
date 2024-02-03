@@ -64,7 +64,11 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
         }
     }
 
-    for (int i = 0; i < nn.nrOfNeurons; i++) {
+    for (int i = 0; i < nn.nrOfParameterNeurons; i++) {
+        nn.biasVector[i] = 0;
+    }
+
+    for (int i = nn.nrOfParameterNeurons; i < nn.nrOfNeurons; i++) {
         nn.biasVector[i] = (double) (rand() / 100000.0) + 1;
     }
 

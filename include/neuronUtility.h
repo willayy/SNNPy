@@ -11,6 +11,8 @@
 
     double * findNeuron(struct NeuralNetwork nn, int neuron);
 
+    int isNeuronLastInLayer(struct NeuralNetwork nn, int neuron);
+
     int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron);
 
 #endif

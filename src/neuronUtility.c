@@ -1,5 +1,5 @@
 #include "neuralNetworkStructs.h"
-#include "nodeUtility.h"
+#include "neuronUtility.h"
 #include <stdlib.h>
 
 /**
@@ -65,4 +65,24 @@ double * getActivationValues(struct NeuralNetwork nn) {
         activationValues[i] = nn.neuronVector[i];
     }
     return activationValues;
+}
+
+/**
+ * Is the given neuron the last in its layer.
+ * @param nn The neural network.
+ * @param neuron The neuron to check.
+ * @return 1 if the neuron is the last in its layer, 0 otherwise. */
+int isNeuronLastInLayer(struct NeuralNetwork nn, int neuron) {
+
+    if (neuron < nn.nrOfParameterNeurons && neuron == nn.nrOfParameterNeurons - 1) {
+        return 1;
+    }
+
+    else if (neuron >= nn.nrOfParameterNeurons && neuron < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons) {
+        if ((neuron - nn.nrOfParameterNeurons + 1) % nn.neuronsPerLayer == 0) {
+            return 1;
+        }
+    }
+
+    return 0;
 }

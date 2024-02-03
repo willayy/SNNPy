@@ -1,4 +1,4 @@
-#include "nodeUtility.h"
+#include "neuronUtility.h"
 #include "neuralNetworkTraining.h"
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"

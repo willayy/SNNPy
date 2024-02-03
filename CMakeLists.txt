@@ -27,7 +27,7 @@ src/vectorOperations.c
 src/sigmoid.c
 src/neuralNetworkOperations.c
 src/costFunction.c
-src/nodeUtility.c
+src/neuronUtility.c
 )
 
 target_compile_features(Main PRIVATE c_std_17)
