@@ -13,6 +13,6 @@ void vectorReplace(double * a, double * b, int vectorSize);
 
 void vectorOperation(double * a, singeleDoubleParamOperation operation, int vectorSize);
 
-double * elemWiseVectorMul(double * a, double * b, int vectorSize);
+double * vectorMulCopy(double * a, double b, int vectorSize);
 
 #endif

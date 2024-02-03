@@ -30,15 +30,18 @@ void vectorMul(double * a, double b, int vectorSize) {
 }
 
 /**
- * Multiplies two vectors element wise. Also known as the Hadamard product.
- * @param a The first vector.
- * @param b The second vector.
- * @param vectorSize The size of the vectors. */
-double * elemWiseVectorMul(double * a, double * b, int vectorSize) {
+ * Multiplies a vector with a scalar and returns a copy of the result.
+ * @param a The vector.
+ * @param b The scalar.
+ * @param vectorSize The size of the vector.
+ * @return A copy of the result. */
+double * vectorMulCopy(double * a, double b, int vectorSize) {
     double * result = malloc(vectorSize * sizeof(double));
+
     for (int i = 0; i < vectorSize; i++) {
-        result[i] = a[i] * b[i];
+        result[i] = a[i] * b;
     }
+
     return result;
 }
 
