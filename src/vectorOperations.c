@@ -51,7 +51,6 @@ double * vectorMulCopy(double * a, double b, int vectorSize) {
  * @param b The second vector.
  * @param vectorSize The size of the vectors. */
 void vectorAdd(double * a, double * b, int vectorSize) {
-
     for (int i = 0; i < vectorSize; i++) {
         a[i] = a[i] + b[i];
     }

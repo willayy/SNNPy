@@ -1,13 +1,14 @@
-#include "neuronUtility.h"
-#include "vectorOperations.h"
-#include "neuralNetworkStructs.h"
-#include "neuralNetworkOperations.h"
-#include "neuralNetworkInit.h"
-#include "sigmoid.h"
 #include <stdlib.h>
 
-void propogateForward(struct NeuralNetwork nn, double * inputData) {
+#include "neuralNetworkOperations.h"
 
+#include "neuronUtility.h"
+#include "neuralNetworkInit.h"
+#include "vectorOperations.h"
+#include "neuralNetworkStructs.h"
+#include "sigmoid.h"
+
+void propogateForward(struct NeuralNetwork nn, double * inputData) {
     // Set the input data to the parameter neurons.
     for (int i = 0; i < nn.nrOfParameterNeurons; i++) {
         nn.parameterVector[i] = inputData[i];
@@ -24,7 +25,7 @@ void propogateForward(struct NeuralNetwork nn, double * inputData) {
 
         // If the neuron is the last in the 
         if (isNeuronLastInLayer(nn, i)) {
-            vectorAdd(nn.neuronVector + i + 1, nn.biasVector + i, nrOfConnectedNeurons);
+            vectorAdd(nn.neuronVector + i + 1, nn.biasVector + i + 1, nrOfConnectedNeurons);
             vectorOperation(nn.neuronVector + i + 1, sigmoid, nrOfConnectedNeurons);
         }
     }

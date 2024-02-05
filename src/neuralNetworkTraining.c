@@ -1,11 +1,11 @@
-#include "neuronUtility.h"
 #include "neuralNetworkTraining.h"
+
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"
 #include "vectorOperations.h"
 #include "costFunction.h"
 #include "sigmoid.h"
-#include <stdlib.h>
+#include "neuronUtility.h"
 
 void optimizeWeight(double * weight, double frontNeuronValue, double backNeuronValue, double lrw) {
     double dZdW = backNeuronValue;
@@ -21,7 +21,7 @@ void optimizeBias(double * bias, double frontNeuronValue, double lrb) {
  * Calculates the derivatives for the output layer of the neural network.
  * @param nn The neural network.
  * @param desiredOutput The desired output of the neural network. */
-void outputLayerDerivatives(struct NeuralNetwork nn, double * desiredOutput) { 
+void outputLayerDerivatives(struct NeuralNetwork nn, double * desiredOutput) {
     for (int i = nn.nrOfNeurons - 1; i < (nn.nrOfNeurons - nn.nrOfOutputNeurons); i--) {
         double * neuron = findNeuron(nn, i);
         double dCdA = costFunctionDerivative(nn.outputVector[i], desiredOutput[i]);
@@ -39,9 +39,12 @@ void hiddenLayerDerivatives(struct NeuralNetwork nn) {
         double * connectedNeurons = findConnectedNeurons(nn, i);
         double * connectedWeights = findConnectedWeights(nn, i);
         double derivativeSum = 0;
+
         for (int j = 0; j < numberOfConnectedNeurons(nn, i); j++) {
-            derivativeSum += connectedNeurons[j] * connectedWeights[j];
+            double dZdA = connectedWeights[j];
+            derivativeSum += connectedNeurons[j] * dZdA;
         }
+
         double dAdZ = sigmoidDerivative(antiSigmoid(neuron[0]));
         nn.neuronVector[i] = derivativeSum * dAdZ; 
     }
@@ -53,8 +56,20 @@ void hiddenLayerDerivatives(struct NeuralNetwork nn) {
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
 void optimize(struct NeuralNetwork nn, double lrw, double lrb) {
+    for (int i = 0; i < nn.nrOfNeurons - nn.nrOfOutputNeurons; i++) {
+        double * neuron = findNeuron(nn, i);
+        double * bias = findBias(nn, i);
+        double * connectedNeurons = findConnectedNeurons(nn, i);
+        double * connectedWeights = findConnectedWeights(nn, i);
+        double sumConnectedNeurons = 0;
 
+        for (int j = 0; j < numberOfConnectedNeurons(nn, i); j++) {
+            optimizeWeight(&connectedWeights[j], connectedNeurons[j], neuron[0], lrw);
+            sumConnectedNeurons += connectedNeurons[j];
+        }
 
+        optimizeBias(bias, sumConnectedNeurons, lrb);
+    }
 }
 
 /**
@@ -75,9 +90,12 @@ void backPropogate(struct NeuralNetwork nn, double * desiredOutput, double lrw, 
 
 /**
  * Trains the neural network on a given input and desired output.
+ * This is done by first propogating the data forward through the neural network, then backpropogating the error and optimizing the weights and biases.
  * @param nn The neural network.
  * @param input The input vector of the neural network.
- * @param desiredOutput The desired output vector of the neural network. */
+ * @param desiredOutput The desired output vector of the neural network.
+ * @param lrw The learning rate for the weights.
+ * @param lrb The learning rate for the biases. */
 double trainOnData(struct NeuralNetwork nn, double * input, double * desiredOutput, double lrw, double lrb) {
     
     inputDataToNeuralNetwork(nn, input);

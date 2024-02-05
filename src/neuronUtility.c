@@ -21,11 +21,19 @@ int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron) {
 }
 
 /**
- * Returns pointer to a neuron in the neural network, cant be a output neuron.
+ * Returns pointer to a neuron in the neural network.
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuron(struct NeuralNetwork nn, int neuron) {
     return & nn.neuronVector[neuron];
+}
+
+/**
+ * Returns pointer to a bias in the neural network.
+ * @param nn The neural network.
+ * @param node The neuron. */
+double * findBias(struct NeuralNetwork nn, int neuron) {
+    return & nn.biasVector[neuron];
 }
 
 /**
