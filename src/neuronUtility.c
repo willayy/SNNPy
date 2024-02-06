@@ -43,13 +43,15 @@ double * findBias(struct NeuralNetwork nn, int neuron) {
  * @return A vector of the connected nodes. */
 double * findConnectedNeurons(struct NeuralNetwork nn, int neuron) {
 
-    if (neuron < nn.nrOfParameterNeurons) {
+    // TODO: There seems to be a bug here.
+
+     if (neuron < nn.nrOfParameterNeurons) {
         return nn.neuronVector + nn.nrOfParameterNeurons;
     }
     else if (neuron < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons - nn.neuronsPerLayer) {
-        return nn.hiddenVector + (1 + neuron / nn.neuronsPerLayer) * nn.neuronsPerLayer;
+        return nn.hiddenVector + (1 + (neuron / nn.neuronsPerLayer)) * nn.neuronsPerLayer;
     }
-    else if (neuron < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons) {
+    else if (neuron < nn.nrOfNeurons) {
         return nn.outputVector;
     }
 }

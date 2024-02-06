@@ -92,16 +92,9 @@ void freeNeuralNetwork(struct NeuralNetwork nn) {
 
     free(nn.biasVector);
 
-    for (int i = 0; i < nn.nrOfNeurons - nn.nrOfOutputNeurons; i++) {
-        if (i > nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons - nn.nrOfOutputNeurons) {
-            for (int j = 0; j < nn.nrOfOutputNeurons; j++) {
-                free(nn.weightMatrix[i]);
-            }
-        } else {
-            for (int j = 0; j < nn.neuronsPerLayer; j++) {
-                free(nn.weightMatrix[i]);
-            }
-        }
+    for (int i = 0; i < nn.nrOfNeurons; i++) {
+        free(nn.weightMatrix[i]);
     }
+    
     free(nn.weightMatrix);
 }

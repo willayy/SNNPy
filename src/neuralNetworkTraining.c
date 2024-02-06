@@ -8,7 +8,8 @@
 #include "neuronUtility.h"
 
 void optimizeWeight(double * weight, double frontNeuronValue, double backNeuronValue, double lrw) {
-    double dZdW = backNeuronValue;
+    double dZdW = backNeuronValue; // BUG ALERT BUG ALERT : BACK NEURON VALUE IS THE DERIVATIVE NOT THE VALUE OF THE NEURON
+                                   // NEED TO SAVE THE VALUE OF THE NEURON IN THE PROPAGATE FORWARD FUNCTION
     weight[0] -= lrw * dZdW * frontNeuronValue; 
 }
 
