@@ -1,5 +1,6 @@
 #include "neuralNetworkStructs.h"
 #include "neuronUtility.h"
+#include "e4c.h"
 #include <stdlib.h>
 
 /**
@@ -18,6 +19,8 @@ int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron) {
     else if (neuron < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons) {
         return nn.nrOfOutputNeurons;
     }
+
+    throw(IllegalArgumentException, "Neuron not found");
 }
 
 /**
@@ -25,6 +28,9 @@ int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuron(struct NeuralNetwork nn, int neuron) {
+    if (neuron < 0 || neuron >= nn.nrOfNeurons) {
+        throw(IllegalArgumentException, "Neuron not found");
+    }
     return & nn.neuronVector[neuron];
 }
 
@@ -33,7 +39,11 @@ double * findNeuron(struct NeuralNetwork nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findBias(struct NeuralNetwork nn, int neuron) {
+    if (neuron < 0 || neuron >= nn.nrOfNeurons) {
+        throw(IllegalArgumentException, "Neuron not found");
+    }
     return & nn.biasVector[neuron];
+
 }
 
 /**
@@ -43,9 +53,7 @@ double * findBias(struct NeuralNetwork nn, int neuron) {
  * @return A vector of the connected nodes. */
 double * findConnectedNeurons(struct NeuralNetwork nn, int neuron) {
 
-    // TODO: There seems to be a bug here.
-
-     if (neuron < nn.nrOfParameterNeurons) {
+    if (neuron < nn.nrOfParameterNeurons) {
         return nn.neuronVector + nn.nrOfParameterNeurons;
     }
     else if (neuron < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons - nn.neuronsPerLayer) {
@@ -54,6 +62,8 @@ double * findConnectedNeurons(struct NeuralNetwork nn, int neuron) {
     else if (neuron < nn.nrOfNeurons) {
         return nn.outputVector;
     }
+
+    throw(IllegalArgumentException, "Neuron not found");
 }
 
 /**
@@ -62,6 +72,9 @@ double * findConnectedNeurons(struct NeuralNetwork nn, int neuron) {
  * @param node The node to find the connected weights of (node 0 is the top parameter node).
  * @return A vector of the connected weights. */
 double * findConnectedWeights(struct NeuralNetwork nn, int neuron) {
+    if (neuron < 0 || neuron >= nn.nrOfNeurons) {
+        throw(IllegalArgumentException, "Neuron not found");
+    }
     return nn.weightMatrix[neuron];
 }
 
@@ -70,7 +83,9 @@ double * findConnectedWeights(struct NeuralNetwork nn, int neuron) {
  * @param nn The neural network.
  * @return A vector of the activation values of the neurons in the neural network. */
 double * getActivationValues(struct NeuralNetwork nn) {
+
     double * activationValues = malloc(sizeof(double) * nn.nrOfNeurons);
+
     for (int i = 0; i < nn.nrOfNeurons; i++) {
         activationValues[i] = nn.neuronVector[i];
     }
@@ -83,6 +98,10 @@ double * getActivationValues(struct NeuralNetwork nn) {
  * @param neuron The neuron to check.
  * @return 1 if the neuron is the last in its layer, 0 otherwise. */
 int isNeuronLastInLayer(struct NeuralNetwork nn, int neuron) {
+
+    if (neuron < 0 || neuron >= nn.nrOfNeurons) {
+        throw(IllegalArgumentException, "Neuron not found");
+    }
 
     if (neuron < nn.nrOfParameterNeurons && neuron == nn.nrOfParameterNeurons - 1) {
         return 1;

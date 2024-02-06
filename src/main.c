@@ -9,7 +9,7 @@
 #include "sigmoid.h"
 
 int main() {
-    
+
     struct NeuralNetwork nn = createNeuralNetwork(2, 3, 4, 2);
 
     double * input = (double *) malloc(sizeof(double)*2);
