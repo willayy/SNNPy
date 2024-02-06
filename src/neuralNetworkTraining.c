@@ -9,7 +9,7 @@
 
 void optimizeWeight(double * weight, double frontNeuronValue, double backNeuronValue, double lrw) {
     double dZdW = backNeuronValue; // BUG ALERT BUG ALERT : BACK NEURON VALUE IS THE DERIVATIVE NOT THE VALUE OF THE NEURON
-                                   // NEED TO SAVE THE VALUE OF THE NEURON IN THE PROPAGATE FORWARD FUNCTION
+                                   // NEED TO SAVE THE VALUE OF THE NEURON IN THE PROPAGATE FORWARD FUNCTION OR IN THE DERIVATIVE FINDING FUNCTIONS
     weight[0] -= lrw * dZdW * frontNeuronValue; 
 }
 
