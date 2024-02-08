@@ -13,7 +13,8 @@
          * @param nrOfHiddenLayers: the number of hidden layers in the network.
          * @param neuronsPerLayer: the number of neurons per hidden layer in the network.
          * 
-         * @param neuronVector: a vector of all the neurons in the network.
+         * @param neuronActivationVector: a vector of all the neuron activation values in the network.
+         * @param neuronValueVector: a vector of all the neuron values in the network.
          * @param parameterVector: a pointer to all the parameter neurons in the network (neuronVector + 0).
          * @param hiddenVector: a pointer to all the hidden neurons in the network (neuronVector + nrOfParameterNeurons).
          * @param outputVector: a pointer to all the output neurons in the network (neuronVector + nrOfParameterNeurons + nrOfHiddenNeurons).
@@ -29,7 +30,9 @@
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            double * neuronVector;
+
+            double * neuronActivationVector;
+            double * neuronValueVector;
             double * parameterVector;
             double * hiddenVector;
             double * outputVector;

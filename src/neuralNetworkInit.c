@@ -24,10 +24,11 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     nn.nrOfNeurons = nrOfParameters + neuronsPerLayer*nrOfLayers + nrOfOutputs;
     nn.nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
  
-    nn.neuronVector = malloc(sizeof(double) * (nn.nrOfNeurons));
-    nn.parameterVector = nn.neuronVector;
-    nn.hiddenVector = nn.neuronVector + nn.nrOfParameterNeurons;
-    nn.outputVector = nn.neuronVector + nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons;
+    nn.neuronActivationVector = malloc(sizeof(double) * (nn.nrOfNeurons));
+    nn.neuronValueVector = malloc(sizeof(double) * (nn.nrOfNeurons));
+    nn.parameterVector = nn.neuronActivationVector;
+    nn.hiddenVector = nn.neuronActivationVector + nn.nrOfParameterNeurons;
+    nn.outputVector = nn.neuronActivationVector + nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons;
     nn.biasVector = malloc(sizeof(double) * (nn.nrOfNeurons));
     nn.weightMatrix = malloc(sizeof(double *) * (nn.nrOfNeurons));
 
@@ -45,7 +46,11 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
     srand(time(NULL));
 
     for (int i = 0; i < nn.nrOfNeurons; i++) {
-        nn.neuronVector[i] = 0;
+        nn.neuronActivationVector[i] = 0;
+    }
+
+    for (int i = 0; i < nn.nrOfNeurons; i++) {
+        nn.neuronValueVector[i] = 0;
     }
 
     for (int i = 0; i < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons; i++) {
@@ -78,7 +83,11 @@ struct NeuralNetwork createNeuralNetwork(int nrOfParameters, int nrOfLayers, int
 void resetNeuralNetwork(struct NeuralNetwork nn) {
 
     for (int i = 0; i < nn.nrOfNeurons; i++) {
-        nn.neuronVector[i] = 0;
+        nn.neuronActivationVector[i] = 0;
+    }
+
+    for (int i = 0; i < nn.nrOfNeurons; i++) {
+        nn.neuronValueVector[i] = 0;
     }
 
 }
@@ -88,9 +97,11 @@ void resetNeuralNetwork(struct NeuralNetwork nn) {
  * @param nn: the neural network to free. */
 void freeNeuralNetwork(struct NeuralNetwork nn) {
 
-    free(nn.neuronVector);
+    free(nn.neuronActivationVector);
 
     free(nn.biasVector);
+
+    free(nn.neuronValueVector);
 
     for (int i = 0; i < nn.nrOfNeurons; i++) {
         free(nn.weightMatrix[i]);

@@ -23,7 +23,7 @@ int main() {
     inputDataToNeuralNetwork(nn, input);
 
     for (int i = 0; i < 100; i++) {
-        double cost = trainOnData(nn, input, desiredOutput, 0.4, 0.1);
+        double cost = trainOnData(nn, input, desiredOutput, 0.1, 0.1);
         printf("Iteration: %d Cost: %f Output: %f, %f First layer gradients: %f, %f, %f, %f \n", i, cost, nn.outputVector[0], nn.outputVector[1], nn.hiddenVector[0], nn.hiddenVector[1], nn.hiddenVector[2], nn.hiddenVector[3]);
     }
     

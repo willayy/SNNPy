@@ -14,4 +14,8 @@
         void vectorOperation(double * a, singeleDoubleParamOperation operation, int vectorSize);
 
         double * vectorMulCopy(double * a, double b, int vectorSize);
+
+        double * vectorCopy(double * a, int vectorSize);
+
+        void vectorExtend(double * a, double * b, int from, int vectorSize);
 #endif

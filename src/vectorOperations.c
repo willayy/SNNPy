@@ -2,6 +2,33 @@
 #include <stdlib.h>
 
 /**
+ * Copies a vector.
+ * @param a The vector.
+ * @param vectorSize The size of the vector.
+ * @return A copy of the vector. */
+double * vectorCopy(double * a, int vectorSize) {
+    double * result = malloc(vectorSize * sizeof(double));
+
+    for (int i = 0; i < vectorSize; i++) {
+        result[i] = a[i];
+    }
+
+    return result;
+}
+
+/**
+ * Extend a vector A with the elements of vector B from (inclusive) a given index.
+ * @param a The first vector.
+ * @param b The second vector.
+ * @param from The index to start extending from.
+ * @param vectorSize The size of the vectors.*/
+void vectorExtend(double * a, double * b, int from, int vectorSize) {
+    for (int i = 0; i < vectorSize; i++) {
+        a[from + i] = b[i];
+    }
+}
+
+/**
  * Calculates the dot product of two vectors of the same size.
  * @param a The first vector.
  * @param b The second vector.

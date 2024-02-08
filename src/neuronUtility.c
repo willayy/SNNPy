@@ -24,14 +24,25 @@ int numberOfConnectedNeurons(struct NeuralNetwork nn, int neuron) {
 }
 
 /**
- * Returns pointer to a neuron in the neural network.
+ * Returns pointer to a neurons activartion value in the neural network.
  * @param nn The neural network.
  * @param node The neuron. */
-double * findNeuron(struct NeuralNetwork nn, int neuron) {
+double * findNeuronActivation(struct NeuralNetwork nn, int neuron) {
     if (neuron < 0 || neuron >= nn.nrOfNeurons) {
         throw(IllegalArgumentException, "Neuron not found");
     }
-    return & nn.neuronVector[neuron];
+    return & nn.neuronActivationVector[neuron];
+}
+
+/**
+ * Returns pointer to a neurons value in the neural network.
+ * @param nn The neural network.
+ * @param node The neuron. */
+double * findNeuronValue(struct NeuralNetwork nn, int neuron) {
+    if (neuron < 0 || neuron >= nn.nrOfNeurons) {
+        throw(IllegalArgumentException, "Neuron not found");
+    }
+    return & nn.neuronValueVector[neuron];
 }
 
 /**
@@ -47,14 +58,14 @@ double * findBias(struct NeuralNetwork nn, int neuron) {
 }
 
 /**
- * returns a vector of the nodes connected to a given node in the forward direction.
+ * returns a vector of the nodes activation values connected to a given node in the forward direction.
  * @param nn The neural network.
  * @param node The node to find the connected nodes of (node 0 is the top parameter node).
  * @return A vector of the connected nodes. */
-double * findConnectedNeurons(struct NeuralNetwork nn, int neuron) {
+double * findConnectedNeuronActivations(struct NeuralNetwork nn, int neuron) {
 
     if (neuron < nn.nrOfParameterNeurons) {
-        return nn.neuronVector + nn.nrOfParameterNeurons;
+        return nn.neuronActivationVector + nn.nrOfParameterNeurons;
     }
     else if (neuron < nn.nrOfParameterNeurons + nn.nrOfHiddenNeurons - nn.neuronsPerLayer) {
         return nn.hiddenVector + (1 + (neuron / nn.neuronsPerLayer)) * nn.neuronsPerLayer;
@@ -76,20 +87,6 @@ double * findConnectedWeights(struct NeuralNetwork nn, int neuron) {
         throw(IllegalArgumentException, "Neuron not found");
     }
     return nn.weightMatrix[neuron];
-}
-
-/** 
- * Returns a copy vector of the activation values of the neurons in the neural network.
- * @param nn The neural network.
- * @return A vector of the activation values of the neurons in the neural network. */
-double * getActivationValues(struct NeuralNetwork nn) {
-
-    double * activationValues = malloc(sizeof(double) * nn.nrOfNeurons);
-
-    for (int i = 0; i < nn.nrOfNeurons; i++) {
-        activationValues[i] = nn.neuronVector[i];
-    }
-    return activationValues;
 }
 
 /**
