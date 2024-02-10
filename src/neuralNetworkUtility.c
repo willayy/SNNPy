@@ -1,7 +1,9 @@
 #include "neuralNetworkStructs.h"
-#include "neuronUtility.h"
+#include "neuralNetworkUtility.h"
 #include "e4c.h"
 #include <stdlib.h>
+
+
 
 /**
  * Returns the number of nodes connected to a given node in the forward direction.

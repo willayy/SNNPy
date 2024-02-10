@@ -4,9 +4,11 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Project name
-project(SNNpy
-VERSION 1.0
-LANGUAGES C)
+project(
+  SNNpy
+  VERSION 2.0.0
+  LANGUAGES C
+)  
 
 # Doxygen docs
 find_package(Doxygen)
@@ -28,8 +30,14 @@ add_executable(
   src/sigmoid.c
   src/neuralNetworkOperations.c
   src/costFunction.c
-  src/neuronUtility.c
+  src/neuralNetworkUtility.c
 )
+
+# Set the C standard to C17
+target_compile_features(SNNpy PRIVATE c_std_17)
+
+# Include the header files
+target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # compiler definitions for exceptions4c compliance
 add_definitions(-D E4C_THREADSAFE)
@@ -53,8 +61,4 @@ target_include_directories(SNNpy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalCLib
 # Link the executable to the library
 target_link_libraries(SNNpy e4c simpleCtests)
 
-# Set the C standard to C17
-target_compile_features(SNNpy PRIVATE c_std_17)
 
-# Include the header files
-target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -10,23 +10,27 @@
 
 int main() {
 
-    struct NeuralNetwork nn = createNeuralNetwork(2, 3, 4, 2);
+    struct NeuralNetwork nn = createNeuralNetwork(2, 1, 2, 2);
 
     double * input = (double *) malloc(sizeof(double)*2);
     input[0] = 1;
-    input[1] = 0;
+    input[1] = 0.1;
+    
 
     double * desiredOutput = (double *) malloc(sizeof(double)*2);
-    desiredOutput[0] = 0;
+    desiredOutput[0] = 0.1;
     desiredOutput[1] = 1;
+    
 
-    inputDataToNeuralNetwork(nn, input);
-
-    for (int i = 0; i < 100; i++) {
-        double cost = trainOnData(nn, input, desiredOutput, 0.1, 0.1);
-        printf("Iteration: %d Cost: %f Output: %f, %f First layer gradients: %f, %f, %f, %f \n", i, cost, nn.outputVector[0], nn.outputVector[1], nn.hiddenVector[0], nn.hiddenVector[1], nn.hiddenVector[2], nn.hiddenVector[3]);
+    for (int i = 0; i < 10000; i++) {
+        resetNeuralNetwork(nn);
+        inputDataToNeuralNetwork(nn, input);
+        double cost = fit(nn, desiredOutput, 0.01, 0.2);
+        printf("Iteration: %d Cost: %f \n", i, cost);
     }
     
+    free(input);
+    free(desiredOutput);
     freeNeuralNetwork(nn);
 
     return 0;

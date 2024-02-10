@@ -2,13 +2,11 @@
 
 #include "neuralNetworkOperations.h"
 
-#include "neuronUtility.h"
+#include "neuralNetworkUtility.h"
 #include "neuralNetworkInit.h"
 #include "vectorOperations.h"
 #include "neuralNetworkStructs.h"
 #include "sigmoid.h"
-
-// TODO: CONTROL THAT THIS WORKS
 
 void propogateForward(struct NeuralNetwork nn, double * inputData) {
 
@@ -43,8 +41,6 @@ void propogateForward(struct NeuralNetwork nn, double * inputData) {
  * @param nn The neural network to calculate the output of.
  * @param inputData The input data to the neural network. Must be of the same size as the input layer of the neural network. */
 void inputDataToNeuralNetwork(struct NeuralNetwork nn, double * inputData) {
-
-    resetNeuralNetwork(nn);
 
     propogateForward(nn, inputData);
 
