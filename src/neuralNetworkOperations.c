@@ -1,48 +1,39 @@
-#include "neuralNetworkStructs.h"
-#include "vectorOperations.h"
-#include "neuralNetworkOperations.h"
-#include "neuralNetworkInit.h"
-#include "sigmoid.h"
 #include <stdlib.h>
 
-void propogateForwardParams(struct NeuralNetwork nn, double * inputData) {
+#include "neuralNetworkOperations.h"
 
-    nn.parameterVector = inputData;
-    
-    for (int i = 0; i < nn.neuronsPerLayer; i++) {
-        nn.neuronVector[i] = dotProduct(nn.parameterVector, nn.weightMatrix + i * nn.nrOfParameters, nn.nrOfParameters);
+#include "neuralNetworkUtility.h"
+#include "neuralNetworkInit.h"
+#include "vectorOperations.h"
+#include "neuralNetworkStructs.h"
+#include "sigmoid.h"
+
+void propogateForward(struct NeuralNetwork nn, double * inputData) {
+
+    // Set the input data to the parameter neurons.
+    for (int i = 0; i < nn.nrOfParameterNeurons; i++) {
+
+        nn.neuronValueVector[i] = inputData[i];
+        nn.parameterVector[i] = sigmoid(inputData[i]);
     }
 
-    vectorAdd(nn.neuronVector, nn.biasVector, nn.neuronsPerLayer);
+    for (int i = 0; i < nn.nrOfNeurons - nn.nrOfOutputNeurons; i++) {
 
-    vectorOperation(nn.neuronVector, sigmoid, nn.neuronsPerLayer);
- 
-}
+        double * neuron = findNeuronActivation(nn, i);
+        double * weigths =  findConnectedWeights(nn, i);
+        double * connectedNeurons =  findConnectedNeuronActivations(nn, i);
+        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        double * result = vectorMulCopy(weigths, neuron[0], nrOfConnectedNeurons);
+        vectorAdd(connectedNeurons, result, nrOfConnectedNeurons);
+        free(result);
 
-void propogateForwardHiddenLayers(struct NeuralNetwork nn) {
-
-    for (int i = 0; i < nn.nrOfLayers; i++) {
-
-        for (int j = 0; j < nn.neuronsPerLayer; j++) {
-            double * neuronVector = nn.neuronVector + i * nn.neuronsPerLayer;
-            double * weightVector = nn.weightMatrix + nn.nrOfParameters * nn.neuronsPerLayer + i * nn.neuronsPerLayer*nn.neuronsPerLayer + j * nn.neuronsPerLayer;
-            nn.neuronVector[(i+1)*nn.neuronsPerLayer + j] = dotProduct(neuronVector, weightVector, nn.neuronsPerLayer);
+        // If the neuron is the last in the 
+        if (isNeuronLastInLayer(nn, i)) {
+            vectorExtend(nn.neuronValueVector, connectedNeurons, (i+1), nrOfConnectedNeurons);
+            vectorAdd(nn.neuronActivationVector + i + 1, nn.biasVector + i + 1, nrOfConnectedNeurons);
+            vectorOperation(nn.neuronActivationVector + i + 1, sigmoid, nrOfConnectedNeurons);
         }
-
-        vectorAdd(nn.neuronVector + (i+1)*nn.neuronsPerLayer, nn.biasVector + (i+1)*nn.neuronsPerLayer, nn.neuronsPerLayer);
-
-        vectorOperation(nn.neuronVector + (i+1)*nn.neuronsPerLayer, sigmoid, nn.neuronsPerLayer);
     }
-}
-
-void propogateForwardOutput(struct NeuralNetwork nn) {
-
-    for (int i = 0; i < nn.nrOfOutputs; i++) {
-        double * neuronVector = nn.neuronVector + nn.nrOfLayers * nn.neuronsPerLayer;
-        double * weightVector = nn.weightMatrix + nn.nrOfParameters * nn.neuronsPerLayer + nn.nrOfLayers * nn.neuronsPerLayer * nn.neuronsPerLayer + i * nn.neuronsPerLayer;
-        nn.outputVector[i] = sigmoid(dotProduct(neuronVector, weightVector, nn.neuronsPerLayer));
-    }
-
 }
 
 /**
@@ -51,10 +42,6 @@ void propogateForwardOutput(struct NeuralNetwork nn) {
  * @param inputData The input data to the neural network. Must be of the same size as the input layer of the neural network. */
 void inputDataToNeuralNetwork(struct NeuralNetwork nn, double * inputData) {
 
-    propogateForwardParams(nn, inputData);
-
-    propogateForwardHiddenLayers(nn);
-
-    propogateForwardOutput(nn);
+    propogateForward(nn, inputData);
 
 }

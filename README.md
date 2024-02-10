@@ -3,6 +3,10 @@ This is a Python module with api's to a simple C implemented configurable layer 
 
 This NeuralNetwork model is not made for performance in the first hand and features no parallism or vectorization operations. Code readability also takes heavy precedence over algorithm optimization.
 
+#### Dependencies
+
+- exceptions4c docs and more at https://github.com/guillermocalvo/exceptions4c (this project contains a stripped down verison)
+
 #### This project was developed and tested using:
 
 - OS: Microsoft Windows 11 Home

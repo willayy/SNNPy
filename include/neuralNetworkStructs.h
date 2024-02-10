@@ -1,29 +1,42 @@
 #ifndef neuronStructs_h
     #define neuronStructs_h
 
-    /**
-     * A neural network
-     * @param nrOfParameters: the number of parameters in the network.
-     * @param nrOfLayers: the number of layers in the network.
-     * @param neuronsPerLayer: the number of neurons per layer in the network.
-     * @param nrOfOutputs: the number of outputs in the network.
-     * @param nrOfWeights: the number of weights in the network.
-     * @param parameterVector: the vector of parameters in the network.
-     * @param weightMatrix: the matrix of weights in the network.
-     * @param biasVector: the vector of biases in the network.
-     * @param outputVector: the vector of outputs in the network.
-     * @param neuronVector: the vector of neurons in the network. */
-    struct NeuralNetwork {
-        int nrOfParameters;
-        int nrOfLayers;
-        int neuronsPerLayer;
-        int nrOfOutputs;
-        int nrOfWeights;
-        double * parameterVector;
-        double * weightMatrix;
-        double * biasVector;
-        double * outputVector;
-        double * neuronVector;
-    };
+        /**
+         * A Neural network implemented as a struct.
+         * These are the following members and their purpose:
+         * 
+         * @param nrOfParameterNeurons: the number of parameter neurons in the network.
+         * @param nrOfHiddenNeurons: the number of hidden neurons in the network.
+         * @param nrOfOutputNeurons: the number of output neurons in the network.
+         * @param nrOfNeurons: the total number of neurons in the network.
+         * @param nrOfWeights: the total number of weights in the network.
+         * @param nrOfHiddenLayers: the number of hidden layers in the network.
+         * @param neuronsPerLayer: the number of neurons per hidden layer in the network.
+         * 
+         * @param neuronActivationVector: a vector of all the neuron activation values in the network.
+         * @param neuronValueVector: a vector of all the neuron values in the network.
+         * @param parameterVector: a pointer to all the parameter neurons in the network (neuronVector + 0).
+         * @param hiddenVector: a pointer to all the hidden neurons in the network (neuronVector + nrOfParameterNeurons).
+         * @param outputVector: a pointer to all the output neurons in the network (neuronVector + nrOfParameterNeurons + nrOfHiddenNeurons).
+         * @param weightMatrix: a matrix of all the weights in the network [i] is the neuron and [j] are the forward connecting weights.
+         * @param biasVector: a vector of all the biases in the network.    */  
+        struct NeuralNetwork {
 
+            int nrOfParameterNeurons;
+            int nrOfHiddenNeurons;
+            int nrOfOutputNeurons;
+            int nrOfNeurons;
+            int nrOfWeights;
+            int nrOfHiddenLayers;
+            int neuronsPerLayer;
+
+
+            double * neuronActivationVector;
+            double * neuronValueVector;
+            double * parameterVector;
+            double * hiddenVector;
+            double * outputVector;
+            double ** weightMatrix;
+            double * biasVector;
+        };
 #endif

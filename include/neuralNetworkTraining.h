@@ -3,6 +3,5 @@
 #ifndef neuralNetworkTraining_h
     #define neuralNetworkTraining_h
 
-    double trainOnData(struct NeuralNetwork nn, double * input, double * desiredOutput, double lrw, double lrb, double delta);
-
+        double fit(struct NeuralNetwork nn, double * desiredOutput, double lrw, double lrb);
 #endif
