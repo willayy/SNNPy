@@ -9,7 +9,7 @@ This NeuralNetwork model is not made for performance in the first hand and featu
 
 #### This project was developed and tested using:
 
-- OS: Microsoft Windows 11 Home
+- OS: Microsoft Windows 11
 - OS Version: 10.0.22621
 - Compiler: GCC 
 - Compiler Version: 13.10.0
