@@ -1,7 +1,7 @@
 # CMakeLists.txt
 
 # Minimum required CMake version
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.20)
 
 # Project name
 project(
@@ -48,17 +48,11 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/e4c.c
     ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/e4c.h
 )
-add_library(
-  simpleCtests
-    ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/simpleCtests-0.0.1/src/simpleCtests.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/simpleCtests-0.0.1/src/simpleCtests.h
-)
 
 # Include the exceptions4c library
 target_include_directories(SNNpy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/)
-target_include_directories(SNNpy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/simpleCtests-0.0.1/src/)
 
 # Link the executable to the library
-target_link_libraries(SNNpy e4c simpleCtests)
+target_link_libraries(SNNpy e4c)
 
 
