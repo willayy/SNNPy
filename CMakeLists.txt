@@ -20,6 +20,13 @@ endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
+# Adding libraries
+add_library(
+  e4c 
+    ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/e4c.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/e4c.h
+)
+
 # Add files that the exe will be built from
 add_executable(
   SNNpy
@@ -42,15 +49,8 @@ target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 # compiler definitions for exceptions4c compliance
 add_definitions(-D E4C_THREADSAFE)
 
-# Adding libraries
-add_library(
-  e4c 
-    ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/e4c.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/e4c.h
-)
-
 # Include the exceptions4c library
-target_include_directories(SNNpy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/)
+target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/externalCLibs/exceptions4c-3.0.5/src/)
 
 # Link the executable to the library
 target_link_libraries(SNNpy e4c)
