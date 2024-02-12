@@ -1,1 +1,0 @@
-Files have been removed from this library to make it smaller //SNNPy 
