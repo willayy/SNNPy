@@ -13,13 +13,13 @@
  * Calculates the derivatives for the output layer of the neural network.
  * @param nn The neural network.
  * @param desiredOutput The desired output of the neural network. */
-void outputLayerDerivatives(struct NeuralNetwork nn, double * desiredOutput) {
+void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput) {
 
-    for (int i = nn.nrOfNeurons - 1; i >= (nn.nrOfNeurons - nn.nrOfOutputNeurons); i--) {
+    for (int i = nn->nrOfNeurons - 1; i >= (nn->nrOfNeurons - nn->nrOfOutputNeurons); i--) {
         
         double * neuronValue = findNeuronValue(nn, i);
         double * neuronActivation = findNeuronActivation(nn, i);
-        double dCdA = costFunctionDerivative(nn.neuronActivationVector[i], desiredOutput[nn.nrOfNeurons - i - 1]);
+        double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
         double dAdZ = sigmoidDerivative(neuronValue[0]);
         neuronActivation[0] = dCdA * dAdZ;
     }
@@ -28,9 +28,9 @@ void outputLayerDerivatives(struct NeuralNetwork nn, double * desiredOutput) {
 /**
  * Calculates the derivatives for the hidden layers of the neural network. 
  * @param nn The neural network. */
-void hiddenLayerDerivatives(struct NeuralNetwork nn) {
+void hiddenLayerDerivatives(struct NeuralNetwork * nn) {
 
-    for (int i = nn.nrOfNeurons - nn.nrOfOutputNeurons - 1; i >= nn.nrOfParameterNeurons; i--) {
+    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= nn->nrOfParameterNeurons; i--) {
         
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         double * neuronValue = findNeuronValue(nn, i);
@@ -45,7 +45,7 @@ void hiddenLayerDerivatives(struct NeuralNetwork nn) {
         }
 
         double dAdZ = sigmoidDerivative(neuronValue[0]);
-        nn.neuronActivationVector[i] = derivativeSum * dAdZ; 
+        nn->neuronActivationVector[i] = derivativeSum * dAdZ; 
     }
 }
 
@@ -66,9 +66,9 @@ void optimizeBias(double * bias, double frontNeuronValue, double lrb) {
  * @param nn The neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-void optimize(struct NeuralNetwork nn, double lrw, double lrb) {
+void optimize(struct NeuralNetwork * nn, double lrw, double lrb) {
 
-    for (int i = 0; i < nn.nrOfNeurons - nn.nrOfOutputNeurons; i++) {
+    for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
 
         double * backNeuronValue = findNeuronValue(nn, i);
         double * bias = findBias(nn, i);
@@ -94,7 +94,7 @@ void optimize(struct NeuralNetwork nn, double lrw, double lrb) {
  * @param desiredOutput The desired output of the neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-void backPropogate(struct NeuralNetwork nn, double * desiredOutput, double lrw, double lrb) {
+void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb) {
 
     outputLayerDerivatives(nn, desiredOutput);
     
@@ -111,9 +111,9 @@ void backPropogate(struct NeuralNetwork nn, double * desiredOutput, double lrw, 
  * @param desiredOutput The desired output vector of the neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-double fit(struct NeuralNetwork nn, double * desiredOutput, double lrw, double lrb) {
+double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb) {
     
-    double cost = costFunction(nn.outputVector, desiredOutput, nn.nrOfOutputNeurons);
+    double cost = costFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
     
     backPropogate(nn, desiredOutput, lrw, lrb);
 
