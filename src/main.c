@@ -10,7 +10,9 @@
 
 int main() {
 
-    struct NeuralNetwork nn = createNeuralNetwork(2, 1, 2, 2);
+    struct NeuralNetwork nn;
+
+    initNeuralNetwork(&nn, 2, 1, 2, 2);
 
     double * input = (double *) malloc(sizeof(double)*2);
     input[0] = 1;
@@ -23,15 +25,15 @@ int main() {
     
 
     for (int i = 0; i < 10000; i++) {
-        resetNeuralNetwork(nn);
-        inputDataToNeuralNetwork(nn, input);
-        double cost = fit(nn, desiredOutput, 0.01, 0.2);
+        resetNeuralNetwork(&nn);
+        inputDataToNeuralNetwork(&nn, input);
+        double cost = fit(&nn, desiredOutput, 0.01, 0.2);
         printf("Iteration: %d Cost: %f \n", i, cost);
     }
     
     free(input);
     free(desiredOutput);
-    freeNeuralNetwork(nn);
+    freeNeuralNetwork(&nn);
 
     return 0;
 }
