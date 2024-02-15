@@ -48,7 +48,6 @@ add_executable(
 add_executable(
   SNNpy-tests
   tests/main.c
-  tests/neuralNetworkTests.c
 )
 
 # Set the C standard to C17
@@ -56,6 +55,7 @@ target_compile_features(SNNpy PRIVATE c_std_17)
 
 # Include the header files
 target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include)
+target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
 # compiler definitions for exceptions4c compliance
 add_definitions(-D E4C_THREADSAFE)
