@@ -11,9 +11,10 @@ No external dependencies
 
 #### Installation
 
-- Its recommended to build the SNNpy-test executable to test the software on your device before building the
-shared library files for the python module.
-- Build the shared libraries for the python module using CMake (recommended).
+- Install source code.
+- (Recommended) build SNNpy-test executable to test if software works correctly in your enviorment.
+- Build the shared libraries for the python module using CMake (recommended build tool).
+- Start using python module!
 
 #### This project was developed and tested using:
 

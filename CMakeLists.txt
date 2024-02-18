@@ -59,7 +59,7 @@ set_target_properties(SNNpy-tests PROPERTIES
 )
 
 set_target_properties(SNNpy PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/lib
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/libs
 )
 
 # Set the C standard to C17
