@@ -11,7 +11,9 @@ No external dependencies
 
 #### Installation
 
-- Its recommended to build the shared libraries for the python module from scrath using the CMake MakeFile
+- Its recommended to build the SNNpy-test executable to test the software on your device before building the
+shared library files for the python module.
+- Build the shared libraries for the python module using CMake (recommended).
 
 #### This project was developed and tested using:
 
