@@ -9,10 +9,14 @@ This NeuralNetwork model is not made for performance in the first hand and featu
 
 No external dependencies
 
+#### Installation
+
+- Its recommended to build the shared libraries for the python module from scrath using the CMake MakeFile
+
 #### This project was developed and tested using:
 
 - OS: Microsoft Windows 11 version 10.0.22621 and later
 - Compiler: GCC 13.10.0
 - Build System: CMake 3.28.1
 
-#### Features
+#### Usage
