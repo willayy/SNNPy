@@ -7,7 +7,7 @@ This NeuralNetwork model is not made for performance in the first hand and featu
 
 #### Dependencies
 
-- exceptions4c docs and more at https://github.com/guillermocalvo/exceptions4c (this project contains a stripped down verison to save space)
+No external dependencies
 
 #### This project was developed and tested using:
 
