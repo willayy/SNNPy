@@ -1,6 +1,5 @@
 #include "neuralNetworkStructs.h"
 #include "neuralNetworkUtility.h"
-#include "e4c.h"
 #include <stdlib.h>
 
 
@@ -22,7 +21,6 @@ int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
         return nn->nrOfOutputNeurons;
     }
 
-    throw(IllegalArgumentException, "Neuron not found");
 }
 
 /**
@@ -30,9 +28,7 @@ int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuronActivation(struct NeuralNetwork * nn, int neuron) {
-    if (neuron < 0 || neuron >= nn->nrOfNeurons) {
-        throw(IllegalArgumentException, "Neuron not found");
-    }
+    
     return & (nn->neuronActivationVector[neuron]);
 }
 
@@ -41,9 +37,7 @@ double * findNeuronActivation(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuronValue(struct NeuralNetwork * nn, int neuron) {
-    if (neuron < 0 || neuron >= nn->nrOfNeurons) {
-        throw(IllegalArgumentException, "Neuron not found");
-    }
+    
     return & (nn->neuronValueVector[neuron]);
 }
 
@@ -52,9 +46,7 @@ double * findNeuronValue(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findBias(struct NeuralNetwork * nn, int neuron) {
-    if (neuron < 0 || neuron >= nn->nrOfNeurons) {
-        throw(IllegalArgumentException, "Neuron not found");
-    }
+    
     return & (nn->biasVector[neuron]);
 
 }
@@ -76,7 +68,6 @@ double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
         return nn->outputVector;
     }
 
-    throw(IllegalArgumentException, "Neuron not found");
 }
 
 /**
@@ -85,9 +76,7 @@ double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
  * @param node The node to find the connected weights of (node 0 is the top parameter node).
  * @return A vector of the connected weights. */
 double * findConnectedWeights(struct NeuralNetwork * nn, int neuron) {
-    if (neuron < 0 || neuron >= nn->nrOfNeurons) {
-        throw(IllegalArgumentException, "Neuron not found");
-    }
+    
     return nn->weightMatrix[neuron];
 }
 
@@ -97,10 +86,6 @@ double * findConnectedWeights(struct NeuralNetwork * nn, int neuron) {
  * @param neuron The neuron to check.
  * @return 1 if the neuron is the last in its layer, 0 otherwise. */
 int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
-
-    if (neuron < 0 || neuron >= nn->nrOfNeurons) {
-        throw(IllegalArgumentException, "Neuron not found");
-    }
 
     if (neuron < nn->nrOfParameterNeurons && neuron == nn->nrOfParameterNeurons - 1) {
         return 1;
