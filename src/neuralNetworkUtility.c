@@ -20,6 +20,8 @@ int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
     else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons) {
         return nn->nrOfOutputNeurons;
     }
+    
+    return 0;
 
 }
 
@@ -28,8 +30,12 @@ int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuronActivation(struct NeuralNetwork * nn, int neuron) {
-    
-    return & (nn->neuronActivationVector[neuron]);
+    if (neuron >= 0 && neuron < nn->nrOfNeurons) {
+        return & (nn->neuronActivationVector[neuron]);
+    }
+
+    return 0;
+
 }
 
 /**
@@ -37,8 +43,13 @@ double * findNeuronActivation(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuronValue(struct NeuralNetwork * nn, int neuron) {
-    
-    return & (nn->neuronValueVector[neuron]);
+    if (neuron >= 0 && neuron < nn->nrOfNeurons) {
+
+        return & (nn->neuronValueVector[neuron]);
+    }
+
+    return 0;
+
 }
 
 /**
@@ -46,8 +57,11 @@ double * findNeuronValue(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findBias(struct NeuralNetwork * nn, int neuron) {
-    
-    return & (nn->biasVector[neuron]);
+    if (neuron >= 0 && neuron < nn->nrOfNeurons) {
+        return & (nn->biasVector[neuron]);
+    }
+
+    return 0;
 
 }
 
@@ -68,6 +82,8 @@ double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
         return nn->outputVector;
     }
 
+    return 0;
+
 }
 
 /**
@@ -76,8 +92,12 @@ double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
  * @param node The node to find the connected weights of (node 0 is the top parameter node).
  * @return A vector of the connected weights. */
 double * findConnectedWeights(struct NeuralNetwork * nn, int neuron) {
-    
-    return nn->weightMatrix[neuron];
+    if (neuron >= 0 && neuron < nn->nrOfNeurons) {
+        return (nn->weightMatrix[neuron]);
+    }
+
+    return 0;
+
 }
 
 /**
@@ -95,6 +115,10 @@ int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
         if ((neuron - nn->nrOfParameterNeurons + 1) % nn->neuronsPerLayer == 0) {
             return 1;
         }
+    }
+
+    if (neuron == nn->nrOfNeurons - 1) {
+        return 1;
     }
 
     return 0;

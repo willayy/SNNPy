@@ -9,6 +9,8 @@
 
         int dbl_assertNotEqual(double expected, double actual, char* message);
 
+        int dbl_assertBetween(double min, double max, double actual, char* message);
+
         int assertTrue(int booleanExpression, char* message);
 
         int assertFalse(int booleanExpression, char* message);

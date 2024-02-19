@@ -35,6 +35,7 @@ add_library(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunction.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )
 target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
@@ -49,6 +50,7 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunction.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )
 target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src)
