@@ -64,9 +64,14 @@ set_target_properties(testing PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
 
-set_target_properties(SNNpy PROPERTIES
-  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib
-)
+if (WIN32) # Windows output directory
+  set_target_properties(SNNpy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+  set_target_properties(SNNpy PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+endif()
+
+if (UNIX) # Linux or MacOS output directory
+  set_target_properties(SNNpy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+endif()
 
 # Set the C standard to C17
 target_compile_features(SNNpy PRIVATE c_std_17)

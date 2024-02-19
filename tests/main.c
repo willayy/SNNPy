@@ -3,6 +3,8 @@
 #include "neuralNetworkInit.h"
 #include "vectorOperations.h"
 #include "randomValueGenerator.h"
+#include "neuralNetworkOperations.h"
+#include "neuralNetworkTraining.h"
 #include "testing.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,6 +13,8 @@
 int main() {
 
     int testSumUtility = 0;
+
+    printf("\nRunning tests for neuralNetworkUtility.c functions\n\n");
 
     struct NeuralNetwork * nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
     initNeuralNetwork(nn, 1, 1, 1, 1, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
@@ -115,6 +119,40 @@ int main() {
     free(vector2);
     free(vector3);
 
+    printf("\nRunning more tests for neuralNetworkUtility.c functions\n\n");
+
+    int testSumUtility2 = 0;
+
+    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    initNeuralNetwork(nn, 5, 1, 3, 2, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    for (int i = 0; i < nn->nrOfHiddenNeurons; i++) { nn->hiddenVector[i] = 1; }
+    for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->outputVector[i] = 2; }
+    double * activationValues = findConnectedNeuronActivations(nn, 4);
+    testSumUtility2 += dbl_assertEqual(activationValues[0], 1, "testNr 59, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertEqual(activationValues[1], 1, "testNr 60, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertEqual(activationValues[2], 1, "testNr 61, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertNotEqual(activationValues[3], 1, "testNr 62, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    activationValues = findConnectedNeuronActivations(nn, 5);
+    testSumUtility2 += dbl_assertEqual(activationValues[0], 2, "testNr 63, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertEqual(activationValues[1], 2, "testNr 64, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertNotEqual(activationValues[2], 2, "testNr 65, findConnectedNeuronActivations 5, 1, 3, 2 network");
+    freeNeuralNetwork(nn);
+
+    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    initNeuralNetwork(nn, 5, 1, 3, 2, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    for (int i = 0; i < nn->neuronsPerLayer; i++) { nn->weightMatrix[0][i] = 1; }
+    for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->weightMatrix[7][i] = 2; }
+    double * weightValues = findConnectedWeights(nn, 0);
+    testSumUtility2 += dbl_assertEqual(weightValues[0], 1, "testNr 66, findConnectedWeights 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertEqual(weightValues[1], 1, "testNr 67, findConnectedWeights 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertEqual(weightValues[2], 1, "testNr 68, findConnectedWeights 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertNotEqual(weightValues[3], 1, "testNr 69, findConnectedWeights 5, 1, 3, 2 network");
+    weightValues = findConnectedWeights(nn, 7);
+    testSumUtility2 += dbl_assertEqual(weightValues[0], 2, "testNr 70, findConnectedWeights 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertEqual(weightValues[1], 2, "testNr 71, findConnectedWeights 5, 1, 3, 2 network");
+    testSumUtility2 += dbl_assertNotEqual(weightValues[2], 2, "testNr 72, findConnectedWeights 5, 1, 3, 2 network");
+    freeNeuralNetwork(nn);
+
     printf("\nRunning tests for randomValueGenerator.c to check for good distribution\n\n");
 
     int testSumRandomValueGenerator = 0;
@@ -125,9 +163,56 @@ int main() {
         sum += randomValue(-10, 10);
     }
     double average = sum / 10000;
-    testSumRandomValueGenerator += dbl_assertBetween(-0.1, 0.1, average, "testNr 59, randomValue -10, 10 average 0");
+    testSumRandomValueGenerator += dbl_assertBetween(-0.1, 0.1, average, "testNr 73, randomValue -10, 10");
 
     printf("\nRunning tests for neuralNetworkUtility.c functions\n\n");
 
-    return testSumUtility + testSumVectorOperations + testSumRandomValueGenerator;
+    printf("\nRunning a simple neural network convergence test\n\n");
+
+    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    initNeuralNetwork(nn, 15, 3, 5, 1, (double[]){-2, 2}, (double[]){-2, 2}, 00001);
+    
+    // Training data input
+    double * input1 = (double *) malloc(sizeof(double) * 15);
+    input1[0] = 0.1; input1[1] = 1; input1[2] = 0.1; // Number 1
+    input1[3] = 1; input1[4] = 1; input1[5] = 0.1;
+    input1[6] = 0.1; input1[7] = 1; input1[8] = 0.1;
+    input1[9] = 0.1; input1[10] = 1; input1[11] = 0.1;
+    input1[12] = 1; input1[13] = 1; input1[14] = 1;
+
+    double * input2 = (double *) malloc(sizeof(double) * 15);
+    input2[0] = 1; input2[1] = 1; input2[2] = 1; // Number 2
+    input2[3] = 0.1; input2[4] = 0.1; input2[5] = 1;
+    input2[6] = 1; input2[7] = 1; input2[8] = 1;
+    input2[9] = 1; input2[10] = 0.1; input2[11] = 0.1;
+    input2[12] = 1; input2[13] = 1; input2[14] = 1;
+
+    double * input3 = (double *) malloc(sizeof(double) * 15);
+    input2[0] = 1; input2[1] = 1; input2[2] = 1; // Number 2
+    input2[3] = 0.1; input2[4] = 0.1; input2[5] = 1;
+    input2[6] = 1; input2[7] = 1; input2[8] = 1;
+    input2[9] = 0.1; input2[10] = 0.1; input2[11] = 1;
+    input2[12] = 1; input2[13] = 1; input2[14] = 1;
+    
+    // Training data expected output
+    double * expOutput1 = (double *) malloc(sizeof(double) * 3);
+    expOutput1[0] = 0.1;
+    double * expOutput2 = (double *) malloc(sizeof(double) * 3);
+    expOutput2[0] = 0.2;
+    double * expOutput3 = (double *) malloc(sizeof(double) * 3);
+    expOutput3[0] = 0.3;
+    
+    // Training
+    for (int i = 0; i < 10000; i++) {
+        inputDataToNeuralNetwork(nn, input1);
+        double cost1 = fit(nn, expOutput1, 0.01, 0.005);
+        inputDataToNeuralNetwork(nn, input2);
+        double cost2 = fit(nn, expOutput2, 0.01, 0.005);
+        inputDataToNeuralNetwork(nn, input3);
+        double cost3 = fit(nn, expOutput3, 0.01, 0.005);
+        printf("Cost: %f, %f, %f\n", cost1, cost2, cost3);
+    }
+
+
+    return testSumUtility + testSumVectorOperations + testSumRandomValueGenerator + testSumUtility2;
 }
