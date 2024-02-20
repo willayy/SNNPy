@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "neuralNetworkInit.h"
 
@@ -13,7 +14,10 @@
  * @param nrOfLayers: the number of layers in the network.
  * @param neuronsPerLayer: the number of neurons per layer in the network.
  * @param nrOfOutputs: the number of outputs in the network. */
-void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, double * wRange, double * bRange, unsigned int seed) {
+void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, dblA activationFunction, dblA activationFunctionDerivative) {
+
+    nn->activationFunction = activationFunction;
+    nn->activationFunctionDerivative = activationFunctionDerivative;
 
     nn->nrOfParameterNeurons = nrOfParameters;
     nn->nrOfHiddenLayers = nrOfLayers;
@@ -49,35 +53,108 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
         nn->neuronValueVector[i] = 0;
     }
 
-    // Set the seed for the random number generator
-    setSeed(seed);
-    double minw = wRange[0];
-    double maxw = wRange[1];
-    double minb = bRange[0];
-    double maxb = bRange[1];
+    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
+        nn->biasVector[i] = 0;
+    }
 
-    // Randomize the weights and biases
+}
+/**
+ * Initializes the weights of the neural network to a random number within "Xavier" range uniformly.
+ * @param nn: the neural network to initialize the weights for.
+ * @param seed: the seed for the random function */
+void initWeightsXavierUniform(struct NeuralNetwork * nn, unsigned int seed) {
+
+    setSeed(seed);
+
+    double range = sqrt(6.0 / (nn->nrOfParameterNeurons + nn->neuronsPerLayer));
 
     for (int i = 0; i < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i++) {
         for (int j = 0; j < nn->neuronsPerLayer; j++) {
-            nn->weightMatrix[i][j] = randomValue(minw, maxw);
+            nn->weightMatrix[i][j] = randomValue(-range, range);
         }
     }
 
     for (int i = nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i < nn->nrOfNeurons; i++) {
         for (int j = 0; j < nn->nrOfOutputNeurons; j++) {
-            nn->weightMatrix[i][j] = randomValue(minw, maxw);
+            nn->weightMatrix[i][j] = randomValue(-range, range);
+        }
+    }
+}
+
+/**
+*  Initializes the weights of the neural network to a random number within "Xavier" range normally.
+*  @param nn: the neural network to initialize the weights for.
+*  @param seed: the seed for the random function */
+void initWeightsXavierNormal(struct NeuralNetwork * nn, unsigned int seed) {
+
+    setSeed(seed);
+
+    double range = sqrt(2.0 / (nn->nrOfParameterNeurons + nn->neuronsPerLayer));
+
+    for (int i = 0; i < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i++) {
+        for (int j = 0; j < nn->neuronsPerLayer; j++) {
+            nn->weightMatrix[i][j] = boxMuellerTransform(0, range);
         }
     }
 
-    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
-        nn->biasVector[i] = 0;
+    for (int i = nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i < nn->nrOfNeurons; i++) {
+        for (int j = 0; j < nn->nrOfOutputNeurons; j++) {
+            nn->weightMatrix[i][j] = boxMuellerTransform(0, range);
+        }
     }
+}
+
+/**
+ * Initializes the biases of the neural network to a constant value.
+ * @param nn: the neural network to initialize the biases for.
+ * @param b: the constant value to initialize the biases to. */
+void initBiasesConstant(struct NeuralNetwork * nn, double b) {
+    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons; i++) {
+        nn->biasVector[i] = b;
+    }
+}
+
+/**
+ * Initializes the biases of the neural network to a random number within a range uniformly.
+ * @param nn: the neural network to initialize the biases for.
+ * @param bRange: the value range
+ * @param seed: the seed for the random function */
+void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange, unsigned int seed) {
+
+    setSeed(seed);
+
+    double minb = bRange[0];
+    double maxb = bRange[1];
 
     for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons; i++) {
         nn->biasVector[i] = randomValue(minb, maxb);
     }
+}
 
+/**
+ * Initializes the weights of the neural network to a random number within a range uniformly.
+ * Scaled down by a factor of 1/sqrt(nrOfParameterNeurons).
+ * @param nn: the neural network to initialize the weights for.
+ * @param wRange: the value range 
+ * @param seed: the seed for the random function */
+void initWeightsRandomUniform(struct NeuralNetwork * nn, double * wRange, unsigned int seed) {
+
+    setSeed(seed);
+
+    double minw = wRange[0];
+    double maxw = wRange[1];
+
+    for (int i = 0; i < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i++) {
+        for (int j = 0; j < nn->neuronsPerLayer; j++) {
+            nn->weightMatrix[i][j] = randomValue(minw, maxw) / (1/sqrt(nn->nrOfParameterNeurons));
+        }
+    }
+
+    for (int i = nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i < nn->nrOfNeurons; i++) {
+        for (int j = 0; j < nn->nrOfOutputNeurons; j++) {
+            nn->weightMatrix[i][j] = randomValue(minw, maxw) / (1/sqrt(nn->nrOfParameterNeurons));
+        }
+    }
 }
 
 /**

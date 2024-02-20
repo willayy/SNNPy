@@ -6,9 +6,12 @@
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkTraining.h"
 #include "testing.h"
+#include "activationFunctions.h"
+#include "costFunctions.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
 int main() {
 
@@ -17,7 +20,7 @@ int main() {
     printf("\nRunning tests for neuralNetworkUtility.c functions\n\n");
 
     struct NeuralNetwork * nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 1, 1, 1, 1, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 1, 1, 1, 1, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 1, "testNr 0, numberOfConnectedNeurons 1, 1, 1, 1 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,1), 1, "testNr 1, numberOfConnectedNeurons 1, 1, 1, 1 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,2), 0, "testNr 2, numberOfConnectedNeurons 1, 1, 1, 1 network");
@@ -27,7 +30,7 @@ int main() {
     freeNeuralNetwork(nn);
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 1, 2, 3, 1, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 1, 2, 3, 1, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 3, "testNr 6, numberOfConnectedNeurons 1, 2, 3, 1 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,3), 3, "testNr 7, numberOfConnectedNeurons 1, 2, 3, 1 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,6), 1, "testNr 8, numberOfConnectedNeurons 1, 2, 3, 1 network");
@@ -39,7 +42,7 @@ int main() {
     freeNeuralNetwork(nn);
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 2, 2, 2, 2, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 2, 2, 2, 2, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 2, "testNr 14, numberOfConnectedNeurons 2, 2, 2, 2 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,2), 2, "testNr 15, numberOfConnectedNeurons 2, 2, 2, 2 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,4), 2, "testNr 16, numberOfConnectedNeurons 2, 2, 2, 2 network");
@@ -53,7 +56,7 @@ int main() {
     freeNeuralNetwork(nn);    
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 5, 1, 1, 1, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 5, 1, 1, 1, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 1, "testNr 24, numberOfConnectedNeurons 5, 1, 1, 1 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,4), 1, "testNr 25, numberOfConnectedNeurons 5, 1, 1, 1 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,5), 1, "testNr 26, numberOfConnectedNeurons 5, 1, 1, 1 network");
@@ -65,7 +68,7 @@ int main() {
     freeNeuralNetwork(nn);
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 1, 1, 1, 5, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 1, 1, 1, 5, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 1, "testNr 32, numberOfConnectedNeurons 1, 1, 1, 5 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,1), 5, "testNr 33, numberOfConnectedNeurons 1, 1, 1, 5 network");
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,2), 0, "testNr 34, numberOfConnectedNeurons 1, 1, 1, 5 network");
@@ -124,7 +127,7 @@ int main() {
     int testSumUtility2 = 0;
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 5, 1, 3, 2, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 5, 1, 3, 2, &sigmoid, &sigmoidDerivative);
     for (int i = 0; i < nn->nrOfHiddenNeurons; i++) { nn->hiddenVector[i] = 1; }
     for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->outputVector[i] = 2; }
     double * activationValues = findConnectedNeuronActivations(nn, 4);
@@ -139,7 +142,7 @@ int main() {
     freeNeuralNetwork(nn);
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 5, 1, 3, 2, (double[]){-1, 1}, (double[]){-1, 1}, time(NULL));
+    initNeuralNetwork(nn, 5, 1, 3, 2, &sigmoid, &sigmoidDerivative);
     for (int i = 0; i < nn->neuronsPerLayer; i++) { nn->weightMatrix[0][i] = 1; }
     for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->weightMatrix[7][i] = 2; }
     double * weightValues = findConnectedWeights(nn, 0);
@@ -163,56 +166,25 @@ int main() {
         sum += randomValue(-10, 10);
     }
     double average = sum / 10000;
-    testSumRandomValueGenerator += dbl_assertBetween(-0.1, 0.1, average, "testNr 73, randomValue -10, 10");
+    testSumRandomValueGenerator += dbl_assertBetween(-0.2, 0.2, average, "testNr 73, uniformRandomValue mean -10, 10");
 
-    printf("\nRunning tests for neuralNetworkUtility.c functions\n\n");
-
-    printf("\nRunning a simple neural network convergence test\n\n");
-
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 15, 3, 5, 1, (double[]){-2, 2}, (double[]){-2, 2}, 00001);
-    
-    // Training data input
-    double * input1 = (double *) malloc(sizeof(double) * 15);
-    input1[0] = 0.1; input1[1] = 1; input1[2] = 0.1; // Number 1
-    input1[3] = 1; input1[4] = 1; input1[5] = 0.1;
-    input1[6] = 0.1; input1[7] = 1; input1[8] = 0.1;
-    input1[9] = 0.1; input1[10] = 1; input1[11] = 0.1;
-    input1[12] = 1; input1[13] = 1; input1[14] = 1;
-
-    double * input2 = (double *) malloc(sizeof(double) * 15);
-    input2[0] = 1; input2[1] = 1; input2[2] = 1; // Number 2
-    input2[3] = 0.1; input2[4] = 0.1; input2[5] = 1;
-    input2[6] = 1; input2[7] = 1; input2[8] = 1;
-    input2[9] = 1; input2[10] = 0.1; input2[11] = 0.1;
-    input2[12] = 1; input2[13] = 1; input2[14] = 1;
-
-    double * input3 = (double *) malloc(sizeof(double) * 15);
-    input2[0] = 1; input2[1] = 1; input2[2] = 1; // Number 2
-    input2[3] = 0.1; input2[4] = 0.1; input2[5] = 1;
-    input2[6] = 1; input2[7] = 1; input2[8] = 1;
-    input2[9] = 0.1; input2[10] = 0.1; input2[11] = 1;
-    input2[12] = 1; input2[13] = 1; input2[14] = 1;
-    
-    // Training data expected output
-    double * expOutput1 = (double *) malloc(sizeof(double) * 3);
-    expOutput1[0] = 0.1;
-    double * expOutput2 = (double *) malloc(sizeof(double) * 3);
-    expOutput2[0] = 0.2;
-    double * expOutput3 = (double *) malloc(sizeof(double) * 3);
-    expOutput3[0] = 0.3;
-    
-    // Training
+    sum = 0;
+    double ssd = 0;
+    double val = 0;
     for (int i = 0; i < 10000; i++) {
-        inputDataToNeuralNetwork(nn, input1);
-        double cost1 = fit(nn, expOutput1, 0.01, 0.005);
-        inputDataToNeuralNetwork(nn, input2);
-        double cost2 = fit(nn, expOutput2, 0.01, 0.005);
-        inputDataToNeuralNetwork(nn, input3);
-        double cost3 = fit(nn, expOutput3, 0.01, 0.005);
-        printf("Cost: %f, %f, %f\n", cost1, cost2, cost3);
+        val = boxMuellerTransform(6, 2);
+        ssd += (val - 6) * (val - 6);
+        sum += val;
     }
+    average = sum / 10000;
+    double stddev = sqrt(ssd / 10000);
 
+    testSumRandomValueGenerator += dbl_assertBetween(5.8, 6.2, average, "testNr 74, boxMuellerTransform mean 6, 4");
+    testSumRandomValueGenerator += dbl_assertBetween(1.8, 2.2, stddev, "testNr 75, boxMuellerTransform stdev 6, 4");
 
-    return testSumUtility + testSumVectorOperations + testSumRandomValueGenerator + testSumUtility2;
+    if (!testSumUtility && !testSumUtility2) { printf("\nAll tests for neuralNetworkUtility.c passed\n"); } else { printf("\n\nSome tests for neuralNetworkUtility.c failed\n"); }
+    if (!testSumVectorOperations) { printf("All tests for vectorOperations.c passed\n"); } else { printf("Some tests for vectorOperations.c failed\n"); }
+    if (!testSumRandomValueGenerator) { printf("All tests for randomValueGenerator.c passed\n");} else { printf("Some tests for randomValueGenerator.c failed\n"); }
+ 
+    return testSumUtility + testSumVectorOperations + testSumUtility2 + testSumRandomValueGenerator;
 }

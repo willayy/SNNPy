@@ -1,3 +1,5 @@
+#include "funcPtrs.h"
+
 #ifndef neuronStructs_h
     #define neuronStructs_h
 
@@ -30,6 +32,8 @@
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
+            dblA activationFunction;
+            dblA activationFunctionDerivative;
 
             double * neuronActivationVector;
             double * neuronValueVector;

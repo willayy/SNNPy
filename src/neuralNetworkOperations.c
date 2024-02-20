@@ -6,7 +6,7 @@
 #include "neuralNetworkInit.h"
 #include "vectorOperations.h"
 #include "neuralNetworkStructs.h"
-#include "sigmoid.h"
+#include "activationFunctions.h"
 
 void propogateForward(struct NeuralNetwork * nn, double * inputData) {
 
@@ -14,7 +14,7 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
     for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
 
         nn->neuronValueVector[i] = inputData[i];
-        nn->parameterVector[i] = sigmoid(inputData[i]);
+        nn->parameterVector[i] = nn->activationFunction(inputData[i]);
     }
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
@@ -31,7 +31,7 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
         if (isNeuronLastInLayer(nn, i)) {
             vectorExtend(nn->neuronValueVector, connectedNeurons, (i+1), nrOfConnectedNeurons);
             vectorAdd(nn->neuronActivationVector + i + 1, nn->biasVector + i + 1, nrOfConnectedNeurons);
-            vectorOperation(nn->neuronActivationVector + i + 1, sigmoid, nrOfConnectedNeurons);
+            vectorOperation(nn->neuronActivationVector + i + 1, nn->activationFunction, nrOfConnectedNeurons);
         }
     }
 }
