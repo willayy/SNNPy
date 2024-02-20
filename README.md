@@ -7,11 +7,12 @@ This NeuralNetwork modeling software was made for learnings-sake and is not made
 
 #### Dependencies
 
-No external dependencies
+CMake is heavily recommended as the build tool for this source code.
+No other external dependencies.
 
 #### Installation
 
-- Install source code.
+- Download source code.
 - (Recommended) build SNNpy-test executable to test if software works correctly in your enviorment.
 - (Recommended) build SNNpy-benchmark executable to further test integrity and to benchmark software
 - Build the shared libraries for the python module using CMake (recommended build tool).
