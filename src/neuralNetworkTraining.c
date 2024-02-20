@@ -8,19 +8,20 @@
 #include "costFunctions.h"
 #include "activationFunctions.h"
 #include "neuralNetworkUtility.h"
+#include "funcPtrs.h"
 
 /**
  * Calculates the derivatives for the output layer of the neural network.
  * @param nn The neural network.
  * @param desiredOutput The desired output of the neural network. */
-void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput) {
+void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative) {
 
     for (int i = nn->nrOfNeurons - 1; i >= (nn->nrOfNeurons - nn->nrOfOutputNeurons); i--) {
         
         double * neuronValue = findNeuronValue(nn, i);
         double * neuronActivation = findNeuronActivation(nn, i);
-        double dCdA = sqrCostFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
-        double dAdZ = sigmoidDerivative(neuronValue[0]);
+        double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
+        double dAdZ = nn->activationFunctionDerivative(neuronValue[0]);
         neuronActivation[0] = dCdA * dAdZ;
     }
 }
@@ -94,9 +95,9 @@ void optimize(struct NeuralNetwork * nn, double lrw, double lrb) {
  * @param desiredOutput The desired output of the neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb) {
+void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblA_dblA costFunctionDerivative) {
 
-    outputLayerDerivatives(nn, desiredOutput);
+    outputLayerDerivatives(nn, desiredOutput, costFunctionDerivative);
     
     hiddenLayerDerivatives(nn);
 
@@ -111,11 +112,11 @@ void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw
  * @param desiredOutput The desired output vector of the neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb) {
+double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblP_dblP_intA costFunction, dblA_dblA costFunctionDerivative) {
     
-    double cost = sqrCostFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
+    double cost = costFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
     
-    backPropogate(nn, desiredOutput, lrw, lrb);
+    backPropogate(nn, desiredOutput, lrw, lrb, costFunctionDerivative);
 
     return cost;
 }

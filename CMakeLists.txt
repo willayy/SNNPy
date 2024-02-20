@@ -39,7 +39,7 @@ add_library(
 )
 target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
-# Add the executable
+# Add the executable for testsuite
 add_executable(
   SNNpy-tests
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.c
@@ -55,21 +55,41 @@ add_executable(
 target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src/)
 
-# Set the output directory
+add_executable(
+  SNNpy-benchmark
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmarkTest.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
+)
+target_include_directories(SNNpy-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+
+# Set the output directory for the testsuite
 set_target_properties(SNNpy-tests PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
 )
 
+# Set the output directory for the benchmark
+set_target_properties(SNNpy-benchmark PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
+)
+
+# Set the output directory for the archive testing library
 set_target_properties(testing PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
 
-if (WIN32) # Windows output directory
+if (WIN32) # Windows output directory for shared library
   set_target_properties(SNNpy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
   set_target_properties(SNNpy PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
 endif()
 
-if (UNIX) # Linux or MacOS output directory
+if (UNIX) # Linux or MacOS output directory for shared library
   set_target_properties(SNNpy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
 endif()
 

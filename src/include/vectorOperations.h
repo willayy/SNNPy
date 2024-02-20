@@ -11,7 +11,7 @@
 
         void vectorReplace(double * a, double * b, int vectorSize);
 
-        void vectorOperation(double * a, singeleDoubleParamOperation operation, int vectorSize);
+        void vectorOperation(double * a,  dblA operation, int vectorSize);
 
         double * vectorMulCopy(double * a, double b, int vectorSize);
 

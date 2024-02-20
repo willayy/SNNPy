@@ -13,12 +13,13 @@ No external dependencies
 
 - Install source code.
 - (Recommended) build SNNpy-test executable to test if software works correctly in your enviorment.
+- (Recommended) build SNNpy-benchmark executable to further test integrity and to benchmark software
 - Build the shared libraries for the python module using CMake (recommended build tool).
 - Start using python module!
 
 #### This project was developed and tested using:
 
-- OS: Microsoft Windows 11 version 10.0.22621 and later
+- OS: Microsoft Windows 11 version 23H2, MacOs Sonoma version 14
 - Compiler: GCC 13.10.0
 - Build System: CMake 3.28.1
 

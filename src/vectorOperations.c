@@ -99,7 +99,7 @@ void vectorReplace(double * a, double * b, int vectorSize) {
  * @param a The vector.
  * @param vectorSize The size of the vector.
  * @param operation The function to be applied to each element of the vector. */
-void vectorOperation(double * a, singeleDoubleParamOperation operation, int vectorSize) {
+void vectorOperation(double * a, dblA operation, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
         a[i] = operation(a[i]);
     }

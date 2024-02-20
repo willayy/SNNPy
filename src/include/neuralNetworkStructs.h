@@ -32,7 +32,8 @@
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            singeleDoubleParamOperation activationFunction;
+            dblA activationFunction;
+            dblA activationFunctionDerivative;
 
             double * neuronActivationVector;
             double * neuronValueVector;
