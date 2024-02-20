@@ -153,6 +153,26 @@ int main() {
     testSumUtility2 += dbl_assertNotEqual(weightValues[2], 2, "testNr 72, findConnectedWeights 5, 1, 3, 2 network");
     freeNeuralNetwork(nn);
 
+    printf("\nTesting backpropogation algorithm\n\n");
+
+    int testSumBackpropogation = 0;
+
+        // TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     printf("\nRunning tests for randomValueGenerator.c to check for good distribution\n\n");
 
     int testSumRandomValueGenerator = 0;
@@ -164,9 +184,7 @@ int main() {
     }
     double average = sum / 10000;
     testSumRandomValueGenerator += dbl_assertBetween(-0.1, 0.1, average, "testNr 73, randomValue -10, 10");
-
-    printf("\nRunning tests for neuralNetworkUtility.c functions\n\n");
-
+    
     printf("\nRunning a simple neural network convergence test\n\n");
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
