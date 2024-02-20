@@ -4,6 +4,7 @@
 #include "neuralNetworkInit.h"
 
 #include "neuralNetworkStructs.h"
+#include "randomValueGenerator.h"
 
 
 /**
@@ -12,7 +13,7 @@
  * @param nrOfLayers: the number of layers in the network.
  * @param neuronsPerLayer: the number of neurons per layer in the network.
  * @param nrOfOutputs: the number of outputs in the network. */
-void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs) {
+void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, double * wRange, double * bRange, unsigned int seed) {
 
     nn->nrOfParameterNeurons = nrOfParameters;
     nn->nrOfHiddenLayers = nrOfLayers;
@@ -39,9 +40,6 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
     for (int i = nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i < nn->nrOfNeurons; i++) {
         nn->weightMatrix[i] = (double *) malloc(sizeof(double) * (nn->nrOfOutputNeurons));
     }
-    
-    
-    srand(time(NULL));
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
         nn->neuronActivationVector[i] = 0;
@@ -51,15 +49,24 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
         nn->neuronValueVector[i] = 0;
     }
 
+    // Set the seed for the random number generator
+    setSeed(seed);
+    double minw = wRange[0];
+    double maxw = wRange[1];
+    double minb = bRange[0];
+    double maxb = bRange[1];
+
+    // Randomize the weights and biases
+
     for (int i = 0; i < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i++) {
         for (int j = 0; j < nn->neuronsPerLayer; j++) {
-            nn->weightMatrix[i][j] = (double) (rand() / 100000.0) + 1;
+            nn->weightMatrix[i][j] = randomValue(minw, maxw);
         }
     }
 
     for (int i = nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i < nn->nrOfNeurons; i++) {
         for (int j = 0; j < nn->nrOfOutputNeurons; j++) {
-            nn->weightMatrix[i][j] = (double) (rand() / 100000.0) + 1;
+            nn->weightMatrix[i][j] = randomValue(minw, maxw);
         }
     }
 
@@ -68,7 +75,7 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
     }
 
     for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons; i++) {
-        nn->biasVector[i] = (double) (rand() / 100000.0) + 1;
+        nn->biasVector[i] = randomValue(minb, maxb);
     }
 
 }
