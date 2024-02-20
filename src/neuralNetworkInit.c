@@ -80,6 +80,22 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
 
 }
 
+initWeightsXavier(struct NeuralNetwork * nn) {
+ //TODO
+}
+
+initBiasesConstant(struct NeuralNetwork * nn, double b) {
+ //TODO
+}
+
+initBiasesRandom(struct NeuralNetwork * nn, double * bRange, unsigned int seed) {
+ //TODO
+}
+
+initWeightsRandom(struct NeuralNetwork * nn, double * wRange, unsigned int seed) {
+ //TODO
+}
+
 /**
  * Resets the neural network parameters, neurons and output.
  * @param nn: the neural network to reset. */
