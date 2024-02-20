@@ -1,6 +1,5 @@
-#ifndef sigmoid_h
-    #define sigmoid_h
+#ifndef activationFunctions_h
+    #define activationFunctions_h
         double sigmoid(double x);
         double sigmoidDerivative(double x);
-        double antiSigmoid(double x);
 #endif

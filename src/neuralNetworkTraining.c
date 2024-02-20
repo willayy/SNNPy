@@ -5,8 +5,8 @@
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"
 #include "vectorOperations.h"
-#include "costFunction.h"
-#include "sigmoid.h"
+#include "costFunctions.h"
+#include "activationFunctions.h"
 #include "neuralNetworkUtility.h"
 
 /**
@@ -19,7 +19,7 @@ void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput) {
         
         double * neuronValue = findNeuronValue(nn, i);
         double * neuronActivation = findNeuronActivation(nn, i);
-        double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
+        double dCdA = sqrCostFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
         double dAdZ = sigmoidDerivative(neuronValue[0]);
         neuronActivation[0] = dCdA * dAdZ;
     }
@@ -113,7 +113,7 @@ void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw
  * @param lrb The learning rate for the biases. */
 double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb) {
     
-    double cost = costFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
+    double cost = sqrCostFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
     
     backPropogate(nn, desiredOutput, lrw, lrb);
 

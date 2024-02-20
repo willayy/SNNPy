@@ -1,4 +1,4 @@
-#include "sigmoid.h"
+#include "activationFunctions.h"
 #include <math.h>
 
 
@@ -22,9 +22,17 @@ double sigmoidDerivative(double x) {
 }
 
 /**
- * The inverse of the sigmoid function (log(x / (1 - x))
+ * The hyperbolic tangent function tanh(x)
  * @param x The input value
- * @return The inverse of the sigmoid function */
-double antiSigmoid(double x) {
-    return log(x / (1 - x));
+ * @return The hyperbolic tangent of the input value (lower bound -1, upper bound 1) */
+double hyperbolicTangent(double x) {
+    return (pow(e,x) - pow(e,-x)) / (pow(e,x) + pow(e,-x));
+}
+
+/**
+ * The derivative of the hyperbolic tangent function d/dx tanh(x)
+ * @param x The input value
+ * @return The derivative of the hyperbolic tangent function */
+double hyperbolicTangentDerivative(double x) {
+    return (4*pow(e, 2*x) / pow(pow(e, x*2) + 1, 2));
 }

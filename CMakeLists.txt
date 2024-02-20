@@ -31,9 +31,9 @@ add_library(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/sigmoid.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunction.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )
@@ -46,9 +46,9 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/sigmoid.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunction.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )

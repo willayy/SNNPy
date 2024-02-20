@@ -6,7 +6,7 @@
 #include "neuralNetworkInit.h"
 #include "vectorOperations.h"
 #include "neuralNetworkStructs.h"
-#include "sigmoid.h"
+#include "activationFunctions.h"
 
 void propogateForward(struct NeuralNetwork * nn, double * inputData) {
 

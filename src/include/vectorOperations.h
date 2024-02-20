@@ -1,7 +1,7 @@
+#include "funcPtrs.h"
+
 #ifndef vectorOperations_h
     #define vectorOperations_h
-
-        typedef double (*singeleDoubleParamOperation)(double);
 
         double dotProduct(double *a, double *b, int vectorSize);
 
