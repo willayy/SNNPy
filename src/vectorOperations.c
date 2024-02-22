@@ -57,6 +57,19 @@ void vectorMul(double * a, double b, int vectorSize) {
 }
 
 /**
+ * Divides a vector with a scalar.
+ * @param a The vector.
+ * @param b The scalar.
+ * @param vectorSize The size of the vector. */
+void vectorDiv(double * a, double b, int vectorSize) {
+
+    for (int i = 0; i < vectorSize; i++) {
+        a[i] = a[i] / b;
+    }
+
+}
+
+/**
  * Multiplies a vector with a scalar and returns a copy of the result.
  * @param a The vector.
  * @param b The scalar.
@@ -79,7 +92,7 @@ double * vectorMulCopy(double * a, double b, int vectorSize) {
  * @param vectorSize The size of the vectors. */
 void vectorAdd(double * a, double * b, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
-        a[i] = a[i] + b[i];
+        a[i] += b[i];
     }
 }
 

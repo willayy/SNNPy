@@ -21,7 +21,7 @@ void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput, d
         double * neuronValue = findNeuronValue(nn, i);
         double * neuronActivation = findNeuronActivation(nn, i);
         double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
-        double dAdZ = nn->activationFunctionDerivative(neuronValue[0]);
+        double dAdZ = nn->lastLayerActivationFunctionDerivative(neuronValue[0]);
         neuronActivation[0] = dCdA * dAdZ;
     }
 }
@@ -112,11 +112,11 @@ void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw
  * @param desiredOutput The desired output vector of the neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblP_dblP_intA costFunction, dblA_dblA costFunctionDerivative) {
+void fit(struct NeuralNetwork * nn, double * avgOutput, double * desiredOutput, double lrw, double lrb, dblA_dblA costFunctionDerivative) {
     
-    double cost = costFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
+    for (int i = 0; i < nn->nrOfOutputNeurons; i++) {
+        nn->outputVector[i] = avgOutput[i];
+    }
     
     backPropogate(nn, desiredOutput, lrw, lrb, costFunctionDerivative);
-
-    return cost;
 }

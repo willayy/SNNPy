@@ -4,6 +4,21 @@
 
 static double e = 2.7182818284590452353602874;
 
+/**
+ * The linear function (x)
+ * @param x The input value
+ * @return The input value  */
+double linear(double x) {
+    return x;
+}
+
+/**
+ * The derivative of the linear function (1)
+ * @param x The input value
+ * @return The derivative of the linear function */
+double linearDerivative(double x) {
+    return 1;
+}
 
 /**
  * The sigmoid function (1 / (1 + e^-x)
@@ -26,7 +41,11 @@ double sigmoidDerivative(double x) {
  * @param x The input value
  * @return The ReLU of the input value (lower bound 0, upper bound x) */
 double rectifiedLinearUnit(double x) {
-    return x > 0 ? x : 0;
+    if (x > 0) {
+        return x;
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -34,7 +53,11 @@ double rectifiedLinearUnit(double x) {
  * @param x The input value
  * @return The derivative of the ReLU function */
 double rectifiedLinearUnitDerivative(double x) {
-    return x > 0 ? 1 : 0;
+    if (x > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 /**

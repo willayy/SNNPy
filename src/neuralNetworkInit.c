@@ -14,10 +14,12 @@
  * @param nrOfLayers: the number of layers in the network.
  * @param neuronsPerLayer: the number of neurons per layer in the network.
  * @param nrOfOutputs: the number of outputs in the network. */
-void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, dblA activationFunction, dblA activationFunctionDerivative) {
+void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, dblA activationFunction, dblA activationFunctionDerivative, dblA lastLayerActivationFunction, dblA lastLayerActivationFunctionDerivative) {
 
     nn->activationFunction = activationFunction;
     nn->activationFunctionDerivative = activationFunctionDerivative;
+    nn->lastLayerActivationFunction = lastLayerActivationFunction;
+    nn->lastLayerActivationFunctionDerivative = lastLayerActivationFunction;
 
     nn->nrOfParameterNeurons = nrOfParameters;
     nn->nrOfHiddenLayers = nrOfLayers;

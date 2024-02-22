@@ -13,6 +13,8 @@
 
         void vectorOperation(double * a,  dblA operation, int vectorSize);
 
+        void vectorDiv(double * a, double b, int vectorSize);
+
         double * vectorMulCopy(double * a, double b, int vectorSize);
 
         double * vectorCopy(double * a, int vectorSize);

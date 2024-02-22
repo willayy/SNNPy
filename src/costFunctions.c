@@ -1,5 +1,6 @@
 #include "costFunctions.h"
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * Calculates the cost of the neural network on a given input and desired output. 

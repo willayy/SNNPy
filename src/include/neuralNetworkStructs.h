@@ -33,7 +33,9 @@
             int neuronsPerLayer;
 
             dblA activationFunction;
+            dblA lastLayerActivationFunction;
             dblA activationFunctionDerivative;
+            dblA lastLayerActivationFunctionDerivative;
 
             double * neuronActivationVector;
             double * neuronValueVector;
