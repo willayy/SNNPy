@@ -145,12 +145,12 @@ int main() {
     initNeuralNetwork(nn, 5, 1, 3, 2, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     for (int i = 0; i < nn->neuronsPerLayer; i++) { nn->weightMatrix[0][i] = 1; }
     for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->weightMatrix[7][i] = 2; }
-    double * weightValues = findConnectedWeights(nn, 0);
+    double const * weightValues = findOutputWeights(nn, 0);
     testSumUtility2 += dbl_assertEqual(weightValues[0], 1, "testNr 66, findConnectedWeights 5, 1, 3, 2 network");
     testSumUtility2 += dbl_assertEqual(weightValues[1], 1, "testNr 67, findConnectedWeights 5, 1, 3, 2 network");
     testSumUtility2 += dbl_assertEqual(weightValues[2], 1, "testNr 68, findConnectedWeights 5, 1, 3, 2 network");
     testSumUtility2 += dbl_assertNotEqual(weightValues[3], 1, "testNr 69, findConnectedWeights 5, 1, 3, 2 network");
-    weightValues = findConnectedWeights(nn, 7);
+    weightValues = findOutputWeights(nn, 7);
     testSumUtility2 += dbl_assertEqual(weightValues[0], 2, "testNr 70, findConnectedWeights 5, 1, 3, 2 network");
     testSumUtility2 += dbl_assertEqual(weightValues[1], 2, "testNr 71, findConnectedWeights 5, 1, 3, 2 network");
     testSumUtility2 += dbl_assertNotEqual(weightValues[2], 2, "testNr 72, findConnectedWeights 5, 1, 3, 2 network");

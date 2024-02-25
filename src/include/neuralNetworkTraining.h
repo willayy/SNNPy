@@ -3,8 +3,12 @@
 
 #ifndef neuralNetworkTraining_h
     #define neuralNetworkTraining_h
-    
-        double * computeGradient(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative);
 
-        void fit(struct NeuralNetwork * nn, double * gradients, double lrw, double lrb);
+        double ** computeGradientsWeights(struct NeuralNetwork * nn, const double * partialGradients, double batchSize);
+
+        double * computeGradientsBiases(struct NeuralNetwork * nn, const double * partialGradients, double batchSize);
+
+        double * computePartialGradient(struct NeuralNetwork * nn, const double * result, const double * desiredOutput, dblA_dblA costFunctionDerivative);
+
+        void optimize(struct NeuralNetwork * nn, const double ** Wgrad, const double * Bgrad, double lrw, double lrb);
 #endif

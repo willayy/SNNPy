@@ -44,7 +44,12 @@ int main() {
 
     double epochCostSum;
     double * result;
-    double * gradients = (double *) malloc(sizeof(double) * 24);
+    double ** weightGradients;
+    double const * biasGradients;
+    double * partialGradient;
+    double * sumBiasGradients;
+    double ** sumWeightGradients;
+
     
     for (int i = 0; i < 100; i++) {
 
@@ -53,13 +58,21 @@ int main() {
         for (int j = 0; j < 16; j++) {
             result = inputDataToNeuralNetwork(nn, inputs[j]);
             epochCostSum += sqrCostFunction(result, outputs[j], 16);
-            vectorAdd(gradients, computeGradient(nn, outputs[j], &sqrCostFunctionDerivative, 16), 24);
+            partialGradient = computePartialGradient(nn, result, outputs[j], &sqrCostFunctionDerivative);
+            weightGradients = computeGradientsWeights(nn, partialGradient, 16);
+            biasGradients = computeGradientsBiases(nn, partialGradient, 16);
+            vectorAdd(sumBiasGradients, biasGradients, nn->nrOfNeurons);
+            for (int k = 0; k < nn->nrOfNeurons; k++) {
+                vectorAdd(sumWeightGradients[k], weightGradients[k], nn->nrOfNeurons);
+            }
+            free(result);
+            free(partialGradient);
+            for (int k = 0; k < nn->nrOfNeurons; k++) { free(weightGradients[k]); }
         }
 
-        printf("Epoch %d, cost: %f\n", i, epochCostSum/16);
+        optimize(nn, sumWeightGradients, sumBiasGradients, 0.01, 0.01);
 
-        vectorDiv(gradients, 16, 24);
-        fit(nn, gradients, 0.01, 0.01);
+        printf("Epoch %d, cost: %f\n", i, epochCostSum/16);
 
     }
 
@@ -71,7 +84,6 @@ int main() {
     }
     free(inputs);
     free(outputs);
-    free(gradients);
 
     return testSumConvergence;
 }
