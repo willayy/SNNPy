@@ -6,7 +6,7 @@
  * @param a The vector.
  * @param vectorSize The size of the vector.
  * @return A copy of the vector. */
-double * vectorCopy(const double * a, int vectorSize) {
+double * vectorCopy(double * a, int vectorSize) {
     double * result = malloc(vectorSize * sizeof(double));
 
     for (int i = 0; i < vectorSize; i++) {
@@ -22,7 +22,7 @@ double * vectorCopy(const double * a, int vectorSize) {
  * @param b The second vector.
  * @param from The index to start extending from.
  * @param vectorSize The size of the vectors.*/
-void vectorExtend(double * a, const double * b, int from, int vectorSize) {
+void vectorExtend(double * a, double * b, int from, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
         a[from + i] = b[i];
     }
@@ -33,7 +33,7 @@ void vectorExtend(double * a, const double * b, int from, int vectorSize) {
  * @param a The first vector.
  * @param b The second vector.
  * @param vectorSize The size of the vectors. */
-double dotProduct(const double *a, const double *b, int vectorSize) {
+double dotProduct(double * a, double * b, int vectorSize) {
     double sum = 0;
 
     for (int i = 0; i < vectorSize; i++) {
@@ -75,7 +75,7 @@ void vectorDiv(double * a, double b, int vectorSize) {
  * @param b The scalar.
  * @param vectorSize The size of the vector.
  * @return A copy of the result. */
-double * vectorMulCopy(const double * a, double b, int vectorSize) {
+double * vectorMulCopy(double * a, double b, int vectorSize) {
     double * result = malloc(vectorSize * sizeof(double));
 
     for (int i = 0; i < vectorSize; i++) {
@@ -90,7 +90,7 @@ double * vectorMulCopy(const double * a, double b, int vectorSize) {
  * @param a The first vector.
  * @param b The second vector.
  * @param vectorSize The size of the vectors. */
-void vectorAdd(double * a, const double * b, int vectorSize) {
+void vectorAdd(double * a, double * b, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
         a[i] += b[i];
     }
@@ -101,7 +101,7 @@ void vectorAdd(double * a, const double * b, int vectorSize) {
  * @param a The first vector.
  * @param b The second vector.
  * @param vectorSize The size of the vectors. */
-void vectorReplace(double * a, const double * b, int vectorSize) {
+void vectorReplace(double * a, double * b, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
         a[i] = b[i];
     }

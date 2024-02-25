@@ -18,12 +18,7 @@ int main() {
 
     int testSumConvergence = 1;
 
-    setSeed(time(NULL));
-
-    struct NeuralNetwork * nn  = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 4, 1, 4, 16, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
-    initWeightsXavierNormal(nn);
-    initBiasesConstant(nn, 0.1);
+    // Create data set
 
     double ** inputs = (double **) malloc(sizeof(double *) * 16);
     double ** outputs = (double **) malloc(sizeof(double *) * 16);
@@ -42,14 +37,23 @@ int main() {
         }
     }
 
+    // Create neural network
+
+    setSeed(time(NULL));
+    struct NeuralNetwork * nn  = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    initNeuralNetwork(nn, 4, 1, 4, 16, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
+    initWeightsXavierNormal(nn);
+    initBiasesConstant(nn, 0.1);
+
     double epochCostSum;
     double * result;
-    double ** weightGradients;
-    double const * biasGradients;
     double * partialGradient;
-    double * sumBiasGradients;
-    double ** sumWeightGradients;
+    double ** sumBiasGradients = (double **) malloc(sizeof(double *) * 16);
+    double *** sumWeightGradients = (double ***) malloc(sizeof(double **) * 16);
+    double ** avgWeightGradients;
+    double * avgBiasGradients;
 
+    // train neural network
     
     for (int i = 0; i < 100; i++) {
 
@@ -58,22 +62,34 @@ int main() {
         for (int j = 0; j < 16; j++) {
             result = inputDataToNeuralNetwork(nn, inputs[j]);
             epochCostSum += sqrCostFunction(result, outputs[j], 16);
-            partialGradient = computePartialGradient(nn, result, outputs[j], &sqrCostFunctionDerivative);
-            weightGradients = computeGradientsWeights(nn, partialGradient, 16);
-            biasGradients = computeGradientsBiases(nn, partialGradient, 16);
-            vectorAdd(sumBiasGradients, biasGradients, nn->nrOfNeurons);
-            for (int k = 0; k < nn->nrOfNeurons; k++) {
-                vectorAdd(sumWeightGradients[k], weightGradients[k], nn->nrOfNeurons);
-            }
+            partialGradient = computePartialGradient(nn, outputs[j], &sqrCostFunctionDerivative);
+            sumBiasGradients[j] = computeBiasGradients(nn, partialGradient);
+            sumWeightGradients[j] = computeWeightGradients(nn, partialGradient);
             free(result);
             free(partialGradient);
-            for (int k = 0; k < nn->nrOfNeurons; k++) { free(weightGradients[k]); }
         }
 
-        optimize(nn, sumWeightGradients, sumBiasGradients, 0.01, 0.01);
+        avgWeightGradients = averageWeightGradients(nn, sumWeightGradients, 16);
+        avgBiasGradients = averageBiasGradients(nn, sumBiasGradients, 16);
+
+        optimize(nn, avgWeightGradients, avgBiasGradients, 0.01, 0.01);
 
         printf("Epoch %d, cost: %f\n", i, epochCostSum/16);
 
+        // free all gradients in list of gradients
+        for (int j = 0; j < 16; j++) {
+            freeWeightGradients(sumWeightGradients[j], nn->nrOfNeurons);
+            free(sumBiasGradients[j]);
+        }
+
+        // free top level pointer        
+        free(sumBiasGradients);
+        free(sumWeightGradients);
+
+        // free averages
+        freeWeightGradients(avgWeightGradients, nn->nrOfNeurons);
+        free(avgBiasGradients);
+        
     }
 
     freeNeuralNetwork(nn);
