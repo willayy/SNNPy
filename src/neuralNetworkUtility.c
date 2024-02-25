@@ -92,7 +92,7 @@ double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The node to find the connected weights of (node 0 is the top parameter node).
  * @return A vector of the connected weights. */
-double * findConnectedWeights(struct NeuralNetwork * nn, int neuron) {
+double * findOutputWeights(struct NeuralNetwork * nn, int neuron) {
     if (neuron >= 0 && neuron < nn->nrOfNeurons) {
         return (nn->weightMatrix[neuron]);
     }
@@ -124,3 +124,4 @@ int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
 
     return 0;
 }
+

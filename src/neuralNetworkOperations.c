@@ -20,7 +20,7 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
 
         double * neuron = findNeuronActivation(nn, i);
-        double * weigths =  findConnectedWeights(nn, i);
+        double * weigths =  findOutputWeights(nn, i);
         double * connectedNeurons =  findConnectedNeuronActivations(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         double * result = vectorMulCopy(weigths, neuron[0], nrOfConnectedNeurons);
