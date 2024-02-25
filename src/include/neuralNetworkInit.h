@@ -9,13 +9,13 @@
 
         void freeNeuralNetwork(struct NeuralNetwork * nn);
 
-        void initWeightsXavierUniform(struct NeuralNetwork * nn, unsigned int seed);
+        void initWeightsXavierUniform(struct NeuralNetwork * nn);
 
-        void initWeightsXavierNormal(struct NeuralNetwork * nn, unsigned int seed);
+        void initWeightsXavierNormal(struct NeuralNetwork * nn);
 
         void initBiasesConstant(struct NeuralNetwork * nn, double b);
 
-        void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange, unsigned int seed);
+        void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange);
 
-        void initWeightsRandomUniform(struct NeuralNetwork * nn, double * wRange, unsigned int seed);
+        void initWeightsRandomUniform(struct NeuralNetwork * nn, double * wRange);
 #endif

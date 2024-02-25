@@ -14,13 +14,14 @@
  * Calculates the derivatives for the output layer of the neural network.
  * @param nn The neural network.
  * @param desiredOutput The desired output of the neural network. */
-void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative) {
+void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA_intA costFunctionDerivative, int batchSize) {
 
     for (int i = nn->nrOfNeurons - 1; i >= (nn->nrOfNeurons - nn->nrOfOutputNeurons); i--) {
         
         double * neuronValue = findNeuronValue(nn, i);
         double * neuronActivation = findNeuronActivation(nn, i);
-        double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
+        int outputIndex = nn->nrOfNeurons - i - 1;
+        double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[outputIndex], batchSize);
         double dAdZ = nn->lastLayerActivationFunctionDerivative(neuronValue[0]);
         neuronActivation[0] = dCdA * dAdZ;
     }
@@ -45,7 +46,7 @@ void hiddenLayerDerivatives(struct NeuralNetwork * nn) {
             derivativeSum += dZdA * connectedNeurons[j];
         }
 
-        double dAdZ = sigmoidDerivative(neuronValue[0]);
+        double dAdZ = nn->activationFunctionDerivative(neuronValue[0]);
         nn->neuronActivationVector[i] = derivativeSum * dAdZ; 
     }
 }
@@ -90,33 +91,31 @@ void optimize(struct NeuralNetwork * nn, double lrw, double lrb) {
 }
 
 /**
- * Backpropogates the error through the neural network and optimizes the weights and biases.
+ * Computes the gradient for the neural network.
  * @param nn The neural network.
  * @param desiredOutput The desired output of the neural network.
- * @param lrw The learning rate for the weights.
- * @param lrb The learning rate for the biases. */
-void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblA_dblA costFunctionDerivative) {
+ * @param costFunctionDerivative The derivative of the cost function.
+ * @param batchSize The size of the batch. */
+double * computeGradient(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA_intA costFunctionDerivative, int batchSize) {
 
-    outputLayerDerivatives(nn, desiredOutput, costFunctionDerivative);
+    outputLayerDerivatives(nn, desiredOutput, costFunctionDerivative, batchSize);
     
     hiddenLayerDerivatives(nn);
 
-    optimize(nn, lrw, lrb);
+    return nn->neuronActivationVector;
 }
 
 /**
- * Trains the neural network on a given input and desired output.
- * This is done by first propogating the data forward through the neural network, then backpropogating the error and optimizing the weights and biases.
+ * Fits the neural network to the desired output.
  * @param nn The neural network.
- * @param input The input vector of the neural network.
- * @param desiredOutput The desired output vector of the neural network.
+ * @param gradients The gradients of the neural network.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-void fit(struct NeuralNetwork * nn, double * avgOutput, double * desiredOutput, double lrw, double lrb, dblA_dblA costFunctionDerivative) {
+void fit(struct NeuralNetwork * nn, double * gradients, double lrw, double lrb) {
     
-    for (int i = 0; i < nn->nrOfOutputNeurons; i++) {
-        nn->outputVector[i] = avgOutput[i];
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
+        nn->neuronActivationVector[i] = gradients[i];
     }
-    
-    backPropogate(nn, desiredOutput, lrw, lrb, costFunctionDerivative);
+
+    optimize(nn, lrw, lrb);
 }

@@ -30,6 +30,7 @@ int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param node The neuron. */
 double * findNeuronActivation(struct NeuralNetwork * nn, int neuron) {
+    
     if (neuron >= 0 && neuron < nn->nrOfNeurons) {
         return & (nn->neuronActivationVector[neuron]);
     }

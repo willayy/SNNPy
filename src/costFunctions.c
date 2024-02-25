@@ -25,8 +25,8 @@ double sqrCostFunction(double * output, double * desiredOutput, int outputSize) 
  * @param output The output of the neural network neuron.
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */
-double sqrCostFunctionDerivative(double output, double desiredOutput) {
-    return 2 * (desiredOutput - output);
+double sqrCostFunctionDerivative(double output, double desiredOutput, int batchSize) {
+    return (2 * (desiredOutput - output ))/batchSize;
 }
 
 /**
@@ -53,6 +53,6 @@ double crossEntropyCostFunction(double * output, double * desiredOutput, int out
  * @param output The output of the neural network neuron.
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */
-double crossEntropyCostFunctionDerivative(double output, double desiredOutput) {
-    return -(desiredOutput / output);
+double crossEntropyCostFunctionDerivative(double output, double desiredOutput , int batchSize) {
+    return -(desiredOutput / output)/batchSize;
 }

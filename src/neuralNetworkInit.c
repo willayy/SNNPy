@@ -64,9 +64,7 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
  * Initializes the weights of the neural network to a random number within "Xavier" range uniformly.
  * @param nn: the neural network to initialize the weights for.
  * @param seed: the seed for the random function */
-void initWeightsXavierUniform(struct NeuralNetwork * nn, unsigned int seed) {
-
-    setSeed(seed);
+void initWeightsXavierUniform(struct NeuralNetwork * nn) {
 
     double range = sqrt(6.0 / (nn->nrOfParameterNeurons + nn->neuronsPerLayer));
 
@@ -87,9 +85,7 @@ void initWeightsXavierUniform(struct NeuralNetwork * nn, unsigned int seed) {
 *  Initializes the weights of the neural network to a random number within "Xavier" range normally.
 *  @param nn: the neural network to initialize the weights for.
 *  @param seed: the seed for the random function */
-void initWeightsXavierNormal(struct NeuralNetwork * nn, unsigned int seed) {
-
-    setSeed(seed);
+void initWeightsXavierNormal(struct NeuralNetwork * nn) {
 
     double range = sqrt(2.0 / (nn->nrOfParameterNeurons + nn->neuronsPerLayer));
 
@@ -121,9 +117,7 @@ void initBiasesConstant(struct NeuralNetwork * nn, double b) {
  * @param nn: the neural network to initialize the biases for.
  * @param bRange: the value range
  * @param seed: the seed for the random function */
-void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange, unsigned int seed) {
-
-    setSeed(seed);
+void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange) {
 
     double minb = bRange[0];
     double maxb = bRange[1];
@@ -139,9 +133,7 @@ void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange, unsigne
  * @param nn: the neural network to initialize the weights for.
  * @param wRange: the value range 
  * @param seed: the seed for the random function */
-void initWeightsRandomUniform(struct NeuralNetwork * nn, double * wRange, unsigned int seed) {
-
-    setSeed(seed);
+void initWeightsRandomUniform(struct NeuralNetwork * nn, double * wRange) {
 
     double minw = wRange[0];
     double maxw = wRange[1];
