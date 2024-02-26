@@ -14,7 +14,7 @@
 
         double * computeBiasGradients(struct NeuralNetwork * nn, double * partialGradients);
 
-        double * computePartialGradient(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative);
+        double * computePartialGradients(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative);
 
         void optimize(struct NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double lrw, double lrb);
 #endif

@@ -62,7 +62,7 @@ int main() {
         for (int j = 0; j < 16; j++) {
             result = inputDataToNeuralNetwork(nn, inputs[j]); // forward propogate
             epochCostSum += sqrCostFunction(result, outputs[j], 16); // calculate cost
-            partialGradient = computePartialGradient(nn, outputs[j], &sqrCostFunctionDerivative); // calculate partial gradient
+            partialGradient = computePartialGradients(nn, outputs[j], &sqrCostFunctionDerivative); // calculate partial gradient
             sumBiasGradients[j] = computeBiasGradients(nn, partialGradient); // calculate bias gradients
             sumWeightGradients[j] = computeWeightGradients(nn, partialGradient); // calculate weight gradients
             free(result);

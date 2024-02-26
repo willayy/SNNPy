@@ -38,10 +38,15 @@
             dblA lastLayerActivationFunctionDerivative;
 
             double * neuronActivationVector;
+            double * hiddenActivationVector;
+            double * activationOutputVector;
+            double * activationParameterVector;
+
             double * neuronValueVector;
-            double * parameterVector;
-            double * hiddenVector;
-            double * outputVector;
+            double * hiddenValueVector;
+            double * outputValueVector;
+            double * parameterValueVector;
+    
             double ** weightMatrix;
             double * biasVector;
         };

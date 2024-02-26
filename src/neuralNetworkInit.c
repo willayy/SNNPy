@@ -30,10 +30,15 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
     nn->nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
  
     nn->neuronActivationVector = (double *) malloc(sizeof(double) * (nn->nrOfNeurons));
+    nn->activationParameterVector = nn->neuronActivationVector;
+    nn->hiddenActivationVector = nn->neuronActivationVector + nn->nrOfParameterNeurons;
+    nn->activationOutputVector = nn->neuronActivationVector + nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons;
+
     nn->neuronValueVector = (double *) malloc(sizeof(double) * (nn->nrOfNeurons));
-    nn->parameterVector = nn->neuronActivationVector;
-    nn->hiddenVector = nn->neuronActivationVector + nn->nrOfParameterNeurons;
-    nn->outputVector = nn->neuronActivationVector + nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons;
+    nn->parameterValueVector = nn->neuronValueVector;
+    nn->hiddenValueVector = nn->neuronValueVector + nn->nrOfParameterNeurons;
+    nn->outputValueVector = nn->neuronValueVector + nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons;
+
     nn->biasVector = (double *) malloc(sizeof(double) * (nn->nrOfNeurons));
     nn->weightMatrix = (double **) malloc(sizeof(double *) * (nn->nrOfNeurons));
 

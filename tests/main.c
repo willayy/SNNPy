@@ -128,8 +128,8 @@ int main() {
 
     nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
     initNeuralNetwork(nn, 5, 1, 3, 2, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
-    for (int i = 0; i < nn->nrOfHiddenNeurons; i++) { nn->hiddenVector[i] = 1; }
-    for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->outputVector[i] = 2; }
+    for (int i = 0; i < nn->nrOfHiddenNeurons; i++) { nn->hiddenActivationVector[i] = 1; }
+    for (int i = 0; i < nn->nrOfOutputNeurons; i++) { nn->activationOutputVector[i] = 2; }
     double * activationValues = findConnectedNeuronActivations(nn, 4);
     testSumUtility2 += dbl_assertEqual(activationValues[0], 1, "testNr 59, findConnectedNeuronActivations 5, 1, 3, 2 network");
     testSumUtility2 += dbl_assertEqual(activationValues[1], 1, "testNr 60, findConnectedNeuronActivations 5, 1, 3, 2 network");

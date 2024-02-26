@@ -13,28 +13,31 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
     // Set the input data to the parameter neurons.
     for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
 
-        nn->neuronValueVector[i] = inputData[i];
-        nn->parameterVector[i] = nn->activationFunction(inputData[i]);
+        nn->parameterValueVector[i] = inputData[i];
+        nn->parameterValueVector[i] = nn->biasVector[i];
+        nn->activationParameterVector[i] = nn->activationFunction(nn->neuronValueVector[i]);
     }
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
 
-        double * neuron = findNeuronActivation(nn, i);
-        double * weigths =  findOutputWeights(nn, i);
-        double * connectedNeurons =  findConnectedNeuronActivations(nn, i);
+        double neuronActivation = nn->neuronActivationVector[i];
+        double * connectedWeights = findOutputWeights(nn, i);
+        double * ConnectedNeuronValues = findConnectedNeuronValues(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        double * result = vectorMulCopy(weigths, neuron[0], nrOfConnectedNeurons);
-        vectorAdd(connectedNeurons, result, nrOfConnectedNeurons);
-        free(result);
+        double * forwardPropogatedValues = vectorMulCopy(connectedWeights, neuronActivation, nrOfConnectedNeurons);
+        vectorAdd(ConnectedNeuronValues, forwardPropogatedValues, nrOfConnectedNeurons);
+        free(forwardPropogatedValues);
 
-        // If the neuron is the last in the 
         if (isNeuronLastInLayer(nn, i)) {
-            vectorExtend(nn->neuronValueVector, connectedNeurons, (i+1), nrOfConnectedNeurons);
-            vectorAdd(nn->neuronActivationVector + i + 1, nn->biasVector + i + 1, nrOfConnectedNeurons);
-            if (i == nn->nrOfNeurons - nn->nrOfOutputNeurons - 1) {
-                vectorOperation(nn->neuronActivationVector + i + 1, nn->lastLayerActivationFunction, nrOfConnectedNeurons);
-            } else {
-                vectorOperation(nn->neuronActivationVector + i + 1, nn->activationFunction, nrOfConnectedNeurons);
+
+            double * connectedActivationValues = findConnectedNeuronActivations(nn, i);
+            vectorAdd(ConnectedNeuronValues, findConnectedNeuronBiases(nn, i), nrOfConnectedNeurons);
+            vectorReplace(connectedActivationValues, ConnectedNeuronValues, nrOfConnectedNeurons);
+
+            if (isNeuronLastInLastlayer(nn, i)) {
+                vectorOperation(connectedActivationValues, nn->lastLayerActivationFunction, nrOfConnectedNeurons); 
+            } else { 
+                vectorOperation(connectedActivationValues, nn->activationFunction, nrOfConnectedNeurons); 
             }
         }
     }
@@ -54,7 +57,7 @@ double * inputDataToNeuralNetwork(struct NeuralNetwork * nn, double * inputData)
     double * result = (double *) malloc(sizeof(double) * nn->nrOfOutputNeurons);
 
     for (int i = 0; i < nn->nrOfOutputNeurons; i++) {
-        result[i] = nn->outputVector[i];
+        result[i] = nn->activationOutputVector[i];
     }
     
     return result;
