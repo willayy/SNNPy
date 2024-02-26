@@ -60,19 +60,20 @@ int main() {
         epochCostSum = 0;
 
         for (int j = 0; j < 16; j++) {
-            result = inputDataToNeuralNetwork(nn, inputs[j]);
-            epochCostSum += sqrCostFunction(result, outputs[j], 16);
-            partialGradient = computePartialGradient(nn, outputs[j], &sqrCostFunctionDerivative);
-            sumBiasGradients[j] = computeBiasGradients(nn, partialGradient);
-            sumWeightGradients[j] = computeWeightGradients(nn, partialGradient);
+            resetNeuralNetwork(nn); // reset the neural network
+            result = inputDataToNeuralNetwork(nn, inputs[j]); // forward propogate
+            epochCostSum += sqrCostFunction(result, outputs[j], 16); // calculate cost
+            partialGradient = computePartialGradient(nn, outputs[j], &sqrCostFunctionDerivative); // calculate partial gradient
+            sumBiasGradients[j] = computeBiasGradients(nn, partialGradient); // calculate bias gradients
+            sumWeightGradients[j] = computeWeightGradients(nn, partialGradient); // calculate weight gradients
             free(result);
             free(partialGradient);
         }
 
-        avgWeightGradients = averageWeightGradients(nn, sumWeightGradients, 16);
-        avgBiasGradients = averageBiasGradients(nn, sumBiasGradients, 16);
+        avgWeightGradients = averageWeightGradients(nn, sumWeightGradients, 16); // average weight gradients
+        avgBiasGradients = averageBiasGradients(nn, sumBiasGradients, 16); // average bias gradients
 
-        optimize(nn, avgWeightGradients, avgBiasGradients, 0.01, 0.01);
+        optimize(nn, avgWeightGradients, avgBiasGradients, 0.01, 0.01); // optimize neural network weights and biases
 
         printf("Epoch %d, cost: %f\n", i, epochCostSum/16);
 
