@@ -59,11 +59,9 @@ double ** computeWeightGradients(struct NeuralNetwork * nn, double * partialGrad
 double * computePartialGradients(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative) {
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
-    
-    // Computations are made withing the neural network struct, with the values are already set from the forward propogation / input .
 
     // The derivatives of the cost function with respect to the activations of the output layer.
-    for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons; i--) {
+    for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i--) {
         double neuronA = nn->neuronActivationVector[i];
         double neuronZ = nn->neuronValueVector[i];
         double dCdA = costFunctionDerivative(neuronA, desiredOutput[i]);
@@ -72,7 +70,7 @@ double * computePartialGradients(struct NeuralNetwork * nn, double * desiredOutp
     }
 
     // the derivatives of the cost function with respect to the activations of the hidden layers.
-    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons; i >= 0; i--) {
+    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= 0; i--) {
         double neuronA = nn->neuronActivationVector[i];
         double neuronZ = nn->neuronValueVector[i];
         double * weights = findOutputWeights(nn, i);
