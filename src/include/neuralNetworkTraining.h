@@ -4,7 +4,7 @@
 #ifndef neuralNetworkTraining_h
     #define neuralNetworkTraining_h
 
-        void freeWeightGradients(double ** gradients, int nrOfNeurons);
+        void freeMatrix(double ** matrix, int rows);
 
         double ** averageWeightGradients(struct NeuralNetwork * nn, double *** sumGradients, double batchSize);
 

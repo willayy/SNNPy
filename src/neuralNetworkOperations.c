@@ -47,6 +47,8 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
  * @return The output of the network. */
 double * inputDataToNeuralNetwork(struct NeuralNetwork * nn, double * inputData) {
 
+    resetNeuralNetwork(nn); // reset the neural network.
+
     propogateForward(nn, inputData);
 
     double * result = (double *) malloc(sizeof(double) * nn->nrOfOutputNeurons);

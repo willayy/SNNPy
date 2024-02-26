@@ -60,7 +60,6 @@ int main() {
         epochCostSum = 0;
 
         for (int j = 0; j < 16; j++) {
-            resetNeuralNetwork(nn); // reset the neural network
             result = inputDataToNeuralNetwork(nn, inputs[j]); // forward propogate
             epochCostSum += sqrCostFunction(result, outputs[j], 16); // calculate cost
             partialGradient = computePartialGradient(nn, outputs[j], &sqrCostFunctionDerivative); // calculate partial gradient
@@ -77,30 +76,17 @@ int main() {
 
         printf("Epoch %d, cost: %f\n", i, epochCostSum/16);
 
-        // free all gradients in list of gradients
-        for (int j = 0; j < 16; j++) {
-            freeWeightGradients(sumWeightGradients[j], nn->nrOfNeurons);
-            free(sumBiasGradients[j]);
-        }
-
-        // free top level pointer        
-        free(sumBiasGradients);
-        free(sumWeightGradients);
-
-        // free averages
-        freeWeightGradients(avgWeightGradients, nn->nrOfNeurons);
+        // free memory
+        for (int j = 0; j < 16; j++) { freeMatrix(sumWeightGradients[j], nn->nrOfNeurons); }
+        free(sumWeightGradients); 
+        freeMatrix(sumBiasGradients, 16);     
+        freeMatrix(avgWeightGradients, nn->nrOfNeurons);
         free(avgBiasGradients);
-        
     }
 
     freeNeuralNetwork(nn);
-
-    for (int i = 0; i < 16; i++) {
-        free(inputs[i]);
-        free(outputs[i]);
-    }
-    free(inputs);
-    free(outputs);
+    freeMatrix(inputs, 16);
+    freeMatrix(outputs, 16);
 
     return testSumConvergence;
 }

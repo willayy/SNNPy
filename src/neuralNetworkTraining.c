@@ -10,13 +10,13 @@
 #include "neuralNetworkUtility.h"
 #include "funcPtrs.h"
 
-void freeWeightGradients(double ** gradients, int nrOfNeurons) {
+void freeMatrix(double ** matrix, int rows) {
 
-    for (int i = 0; i < nrOfNeurons; i++) {
-        free(gradients[i]);
+    for (int i = 0; i < rows; i++) {
+        free(matrix[i]);
     }
 
-    free(gradients);
+    free(matrix);
 }
 
 double * computeBiasGradients(struct NeuralNetwork * nn, double * partialGradients) {
