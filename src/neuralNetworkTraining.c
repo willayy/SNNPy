@@ -122,8 +122,10 @@ double * computePartialGradient(struct NeuralNetwork * nn, double * desiredOutpu
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
     
+    // Computations are made withing the neural network struct, with the values are already set from the forward propogation / input .
+
     // The derivatives of the cost function with respect to the activations of the output layer.
-    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons; i < nn->nrOfNeurons; i++) {
+    for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons; i--) {
         double * neuronA = findNeuronActivation(nn, i);
         double * neuronZ = findNeuronValue(nn, i);
         double dCdA = costFunctionDerivative(neuronA[0], desiredOutput[i]);
@@ -132,19 +134,17 @@ double * computePartialGradient(struct NeuralNetwork * nn, double * desiredOutpu
     }
 
     // the derivatives of the cost function with respect to the activations of the hidden layers.
-    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - nn->neuronsPerLayer; i > 0; i--) {
-        double dZdA;
-        double dAdZ;
+    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons; i >= 0; i--) {
         double * neuronA = findNeuronActivation(nn, i);
         double * neuronZ = findNeuronValue(nn, i);
-        double * connectedneurons = findConnectedNeuronActivations(nn, i);
         double * weights = findOutputWeights(nn, i);
+        double * connectedNeurons = findConnectedNeuronActivations(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         double gradientSum = 0;
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            dZdA = connectedneurons[j] * weights[j];
-            dAdZ = nn->activationFunctionDerivative(neuronZ[0]);
-            gradientSum += dZdA * dAdZ;
+            double dZdA = weights[0];
+            double dAdZ = nn->activationFunctionDerivative(neuronZ[0]);
+            gradientSum += connectedNeurons[j] * dZdA * dAdZ;
         }
         neuronA[0] = gradientSum;
     }
