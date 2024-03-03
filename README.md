@@ -3,7 +3,7 @@ This is a Python module with api's to a simple C implemented configurable FFN ne
 
 The training algorithm in Beta 1.0.0 uses brute force numerical derivatives to optimize weights and biases. Release Beta 2.0.0 and onwards use backpropogation as a means to opitimize weights and biases.
 
-This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand and features no parallism or vectorization operations. Code readability also takes heavy precedence over algorithm optimization.
+This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand and features no support for parallelism or hardware acceleration. Code readability also takes heavy precedence over algorithm optimization (where there is a distinct choice).
 
 #### Dependencies
 
