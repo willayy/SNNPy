@@ -3,7 +3,9 @@
 #ifndef neuralNetworkInit_h
     #define neuralNetworkInit_h
 
-        void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, dblA activationFunction, dblA activationFunctionDerivative, dblA lastLayerActivationFunction, dblA lastLayerActivationFunctionDerivative);
+        void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs);
+
+        void initNeuralNetworkFunctions(struct NeuralNetwork * nn, dblA activationFunction, dblA activationFunctionDerivative, dblA lastLayerActivationFunction, dblA lastLayerActivationFunctionDerivative);
 
         void resetNeuralNetwork(struct NeuralNetwork * nn);
 

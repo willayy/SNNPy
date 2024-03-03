@@ -37,11 +37,13 @@ int main() {
         }
     }
 
-    // Create neural network
-
+    // Initialize random number generator
     setSeed(time(NULL));
+
+    // Create neural network
     struct NeuralNetwork * nn  = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 4, 1, 4, 16, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
+    initNeuralNetwork(nn, 4, 1, 4, 16);
+    initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
 
@@ -54,7 +56,6 @@ int main() {
     double * avgBiasGradients;
 
     // train neural network
-    
     for (int i = 0; i < 100; i++) {
 
         epochCostSum = 0;

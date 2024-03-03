@@ -14,12 +14,7 @@
  * @param nrOfLayers: the number of layers in the network.
  * @param neuronsPerLayer: the number of neurons per layer in the network.
  * @param nrOfOutputs: the number of outputs in the network. */
-void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, dblA activationFunction, dblA activationFunctionDerivative, dblA lastLayerActivationFunction, dblA lastLayerActivationFunctionDerivative) {
-
-    nn->activationFunction = activationFunction;
-    nn->activationFunctionDerivative = activationFunctionDerivative;
-    nn->lastLayerActivationFunction = lastLayerActivationFunction;
-    nn->lastLayerActivationFunctionDerivative = lastLayerActivationFunction;
+void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs) {
 
     nn->nrOfParameterNeurons = nrOfParameters;
     nn->nrOfHiddenLayers = nrOfLayers;
@@ -64,6 +59,23 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
     }
 
 }
+
+/**
+ * Initializes the activation functions of the neural network.
+ * @param nn: the neural network to initialize the activation functions for.
+ * @param activationFunction: the activation function for the hidden layers.
+ * @param activationFunctionDerivative: the derivative of the activation function for the hidden layers.
+ * @param lastLayerActivationFunction: the activation function for the output layer.
+ * @param lastLayerActivationFunctionDerivative: the derivative of the activation function for the output layer. */
+void initNeuralNetworkFunctions(struct NeuralNetwork * nn, dblA activationFunction, dblA activationFunctionDerivative, dblA lastLayerActivationFunction, dblA lastLayerActivationFunctionDerivative) {
+    
+    nn->activationFunction = activationFunction;
+    nn->activationFunctionDerivative = activationFunctionDerivative;
+    nn->lastLayerActivationFunction = lastLayerActivationFunction;
+    nn->lastLayerActivationFunctionDerivative = lastLayerActivationFunction;
+    
+}
+
 /**
  * Initializes the weights of the neural network to a random number within "Xavier" range uniformly.
  * @param nn: the neural network to initialize the weights for.
