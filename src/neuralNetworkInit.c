@@ -25,7 +25,6 @@ void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLa
     nn->nrOfHiddenLayers = nrOfLayers;
     nn->neuronsPerLayer = neuronsPerLayer;
     nn->nrOfOutputNeurons = nrOfOutputs;
-    nn->nrOfWeights = nrOfParameters*neuronsPerLayer + neuronsPerLayer*neuronsPerLayer*(nrOfLayers-1) + nrOfOutputs*neuronsPerLayer;
     nn->nrOfNeurons = nrOfParameters + neuronsPerLayer*nrOfLayers + nrOfOutputs;
     nn->nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
  
