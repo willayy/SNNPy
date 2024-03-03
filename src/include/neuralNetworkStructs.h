@@ -11,7 +11,6 @@
          * @param nrOfHiddenNeurons: the number of hidden neurons in the network.
          * @param nrOfOutputNeurons: the number of output neurons in the network.
          * @param nrOfNeurons: the total number of neurons in the network.
-         * @param nrOfWeights: the total number of weights in the network.
          * @param nrOfHiddenLayers: the number of hidden layers in the network.
          * @param neuronsPerLayer: the number of neurons per hidden layer in the network.
          * 
@@ -40,7 +39,6 @@
             int nrOfHiddenNeurons;
             int nrOfOutputNeurons;
             int nrOfNeurons;
-            int nrOfWeights;
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
