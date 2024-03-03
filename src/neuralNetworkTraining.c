@@ -115,26 +115,13 @@ void optimize(struct NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double
 
 double ** averageWeightGradients(struct NeuralNetwork * nn, double *** sumGradients, double batchSize) {
 
-    double ** averageGradients = (double **) malloc(sizeof(double *) * batchSize);
+    double ** averageGradients = (double **) malloc(sizeof(double *) * nn->nrOfNeurons);
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        if (i < nn->nrOfNeurons - nn->neuronsPerLayer - nn->nrOfOutputNeurons ) {
-            averageGradients[i] = (double *) malloc(sizeof(double) * nn->neuronsPerLayer);
-            for (int j = 0; j < nrOfConnectedNeurons; j++) {
-                averageGradients[i][j] = 0;
-            }
-        } else {
-            averageGradients[i] = (double *) malloc(sizeof(double) * nn->nrOfOutputNeurons);
-            for (int j = 0; j < nrOfConnectedNeurons; j++) {
-                averageGradients[i][j] = 0;
-            }
-        }
-    }
-
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        for (int j = 0; j < batchSize; j++) {
+        averageGradients[i] = (double *) malloc(sizeof(double) * nrOfConnectedNeurons);
+        vectorReplace(averageGradients[i], sumGradients[0][i], nrOfConnectedNeurons);
+        for (int j = 1; j < batchSize; j++) {
             vectorAdd(averageGradients[i], sumGradients[j][i], nrOfConnectedNeurons);
         }
         vectorDiv(averageGradients[i], batchSize, nrOfConnectedNeurons);
@@ -147,11 +134,9 @@ double * averageBiasGradients(struct NeuralNetwork * nn, double ** sumGradients,
 
     double * averageGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
 
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        averageGradients[i] = 0;
-    }
-
-    for (int i = 0; i < batchSize; i++) {
+    vectorReplace(averageGradients, sumGradients[0], nn->nrOfNeurons);
+    
+    for (int i = 1; i < batchSize; i++) {
         vectorAdd(averageGradients, sumGradients[i], nn->nrOfNeurons);
     }
 
