@@ -101,27 +101,6 @@ double * findConnectedNeuronValues(struct NeuralNetwork * nn, int neuron) {
 }
 
 /**
- * Returns the number of neurons in the layer of the given neuron.
- * @param nn The neural network.
- * @param neuron The node to find the number of neurons in the layer of (node 0 is the top parameter node).
- * @return The number of neurons in the layer. */
-double amountOfNeuronsInLayer(struct NeuralNetwork * nn, int neuron) {
-    
-    if (neuron < nn->nrOfParameterNeurons) {
-        return nn->nrOfParameterNeurons;
-    }
-    else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons) {
-        return nn->neuronsPerLayer;
-    }
-    else if (neuron < nn->nrOfNeurons) {
-        return nn->nrOfOutputNeurons;
-    }
-    
-    return 0;
-
-}
-
-/**
  * Returns a vector of the biases of the connected neurons in the forward direction.
  * @param nn The neural network.
  * @param neuron The node to find the connected biases of (node 0 is the top parameter node).
@@ -166,11 +145,11 @@ int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
         return 1;
     }
 
-    else if (neuron >= nn->nrOfParameterNeurons && neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons) {
-        if ((neuron - nn->nrOfParameterNeurons + 1) % nn->neuronsPerLayer == 0) {
+    else if ((neuron >= nn->nrOfParameterNeurons)
+        && (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons)
+        && ((neuron - nn->nrOfParameterNeurons + 1) % nn->neuronsPerLayer == 0)) {
             return 1;
         }
-    }
 
     if (neuron == nn->nrOfNeurons - 1) {
         return 1;
