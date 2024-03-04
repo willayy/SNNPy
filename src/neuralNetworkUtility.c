@@ -163,7 +163,7 @@ int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The neuron to check.
  * @return 1 if the neuron is the last in the final hidden layer, 0 otherwise. */
-int isNeuronLastInLastlayer(struct NeuralNetwork * nn, int neuron) {
+int isNeuronLastInHiddenlayer(struct NeuralNetwork * nn, int neuron) {
 
     if (neuron == nn->nrOfNeurons - nn->nrOfOutputNeurons - 1) {
         return 1;

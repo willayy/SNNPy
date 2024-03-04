@@ -34,7 +34,7 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
             vectorAdd(ConnectedNeuronValues, findConnectedNeuronBiases(nn, i), nrOfConnectedNeurons);
             vectorReplace(connectedActivationValues, ConnectedNeuronValues, nrOfConnectedNeurons);
 
-            if (isNeuronLastInLastlayer(nn, i)) {
+            if (isNeuronLastInHiddenlayer(nn, i)) {
                 vectorOperation(connectedActivationValues, nn->lastLayerActivationFunction, nrOfConnectedNeurons); 
             } else { 
                 vectorOperation(connectedActivationValues, nn->activationFunction, nrOfConnectedNeurons); 

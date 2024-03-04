@@ -15,7 +15,7 @@
 
         int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron);
 
-        int isNeuronLastInLastlayer(struct NeuralNetwork * nn, int neuron);
+        int isNeuronLastInHiddenlayer(struct NeuralNetwork * nn, int neuron);
 
         int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron);
 #endif
