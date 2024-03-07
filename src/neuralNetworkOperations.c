@@ -8,7 +8,7 @@
 #include "neuralNetworkStructs.h"
 #include "activationFunctions.h"
 
-void propogateForward(struct NeuralNetwork * nn, double * inputData) {
+void propogateForward(NeuralNetwork * nn, double * inputData) {
 
     // Set the input data to the parameter neurons.
     for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
@@ -48,7 +48,7 @@ void propogateForward(struct NeuralNetwork * nn, double * inputData) {
  * @param nn The neural network to calculate the output of.
  * @param inputData The input data to the neural network. Must be of the same size as the input layer of the neural network.
  * @return The output of the network. */
-double * inputDataToNeuralNetwork(struct NeuralNetwork * nn, double * inputData) {
+double * inputDataToNeuralNetwork(NeuralNetwork * nn, double * inputData) {
 
     resetNeuralNetwork(nn); // reset the neural network.
 

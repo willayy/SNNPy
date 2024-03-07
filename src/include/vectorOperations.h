@@ -11,7 +11,7 @@
 
         void vectorReplace(double * a, double * b, int vectorSize);
 
-        void vectorOperation(double * a,  dblA operation, int vectorSize);
+        void vectorOperation(double * a,  dblAdblR operation, int vectorSize);
 
         void vectorDiv(double * a, double b, int vectorSize);
 

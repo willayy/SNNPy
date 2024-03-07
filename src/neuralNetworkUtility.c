@@ -9,7 +9,7 @@
  * @param nn The neural network.
  * @param neuron The node to find the number of connected nodes of (node 0 is the top parameter node).
  * @return The number of connected nodes. */
-int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
+int numberOfConnectedNeurons(NeuralNetwork * nn, int neuron) {
 
     if (neuron < nn->nrOfParameterNeurons) {
         return nn->neuronsPerLayer;
@@ -30,7 +30,7 @@ int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The node to find the connected nodes of (node 0 is the top parameter node).
  * @return A vector of the connected nodes. */
-int * findConnectedNeuronIndexes(struct NeuralNetwork * nn, int neuron) {
+int * findConnectedNeuronIndexes(NeuralNetwork * nn, int neuron) {
 
     int * connectedNeurons;
 
@@ -65,7 +65,7 @@ int * findConnectedNeuronIndexes(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The node to find the connected activations of (node 0 is the top parameter node).
  * @return A vector of the connected activations. */
-double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
+double * findConnectedNeuronActivations(NeuralNetwork * nn, int neuron) {
 
     if (neuron < nn->nrOfParameterNeurons) {
         return nn->neuronActivationVector + nn->nrOfParameterNeurons;
@@ -85,7 +85,7 @@ double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The node to find the connected values of (node 0 is the top parameter node).
  * @return A vector of the connected values. */
-double * findConnectedNeuronValues(struct NeuralNetwork * nn, int neuron) {
+double * findConnectedNeuronValues(NeuralNetwork * nn, int neuron) {
 
     if (neuron < nn->nrOfParameterNeurons) {
         return nn->neuronValueVector + nn->nrOfParameterNeurons;
@@ -105,7 +105,7 @@ double * findConnectedNeuronValues(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The node to find the connected biases of (node 0 is the top parameter node).
  * @return A vector of the connected biases. */
-double * findConnectedNeuronBiases(struct NeuralNetwork * nn, int neuron) {
+double * findConnectedNeuronBiases(NeuralNetwork * nn, int neuron) {
 
     if (neuron < nn->nrOfParameterNeurons) {
         return nn->biasVector + nn->nrOfParameterNeurons;
@@ -125,7 +125,7 @@ double * findConnectedNeuronBiases(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The node to find the connected weights of (node 0 is the top parameter node).
  * @return A vector of the connected weights. */
-double * findOutputWeights(struct NeuralNetwork * nn, int neuron) {
+double * findOutputWeights(NeuralNetwork * nn, int neuron) {
     if (neuron >= 0 && neuron < nn->nrOfNeurons) {
         return (nn->weightMatrix[neuron]);
     }
@@ -139,7 +139,7 @@ double * findOutputWeights(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The neuron to check.
  * @return 1 if the neuron is the last in its layer, 0 otherwise. */
-int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
+int isNeuronLastInLayer(NeuralNetwork * nn, int neuron) {
 
     if (neuron < nn->nrOfParameterNeurons && neuron == nn->nrOfParameterNeurons - 1) {
         return 1;
@@ -163,7 +163,7 @@ int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron) {
  * @param nn The neural network.
  * @param neuron The neuron to check.
  * @return 1 if the neuron is the last in the final hidden layer, 0 otherwise. */
-int isNeuronLastInHiddenlayer(struct NeuralNetwork * nn, int neuron) {
+int isNeuronLastInHiddenlayer(NeuralNetwork * nn, int neuron) {
 
     if (neuron == nn->nrOfNeurons - nn->nrOfOutputNeurons - 1) {
         return 1;

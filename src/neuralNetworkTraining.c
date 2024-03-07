@@ -19,7 +19,7 @@ void freeMatrix(double ** matrix, int rows) {
     free(matrix);
 }
 
-double * computeBiasGradients(struct NeuralNetwork * nn, double * partialGradients) {
+double * computeBiasGradients(NeuralNetwork * nn, double * partialGradients) {
 
     double * gradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons- nn->nrOfOutputNeurons);
 
@@ -29,7 +29,7 @@ double * computeBiasGradients(struct NeuralNetwork * nn, double * partialGradien
     return gradients;
 }
 
-double ** computeWeightGradients(struct NeuralNetwork * nn, double * partialGradients) {
+double ** computeWeightGradients(NeuralNetwork * nn, double * partialGradients) {
 
     double ** gradients = (double **) malloc(sizeof(double *) * nn->nrOfNeurons);
 
@@ -56,7 +56,7 @@ double ** computeWeightGradients(struct NeuralNetwork * nn, double * partialGrad
 
 }
 
-double * computePartialGradients(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative) {
+double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative) {
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
 
@@ -98,7 +98,7 @@ void nudgeBias(double * bias, double gradient, double lrb) {
     bias[0] -= lrb * gradient;
 }
 
-void optimize(struct NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double lrw, double lrb) {
+void optimize(NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double lrw, double lrb) {
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
         double * weights = findOutputWeights(nn, i);
@@ -113,7 +113,7 @@ void optimize(struct NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double
     }
 }
 
-double ** averageWeightGradients(struct NeuralNetwork * nn, double *** sumGradients, double batchSize) {
+double ** averageWeightGradients(NeuralNetwork * nn, double *** sumGradients, double batchSize) {
 
     double ** averageGradients = (double **) malloc(sizeof(double *) * nn->nrOfNeurons);
 
@@ -130,7 +130,7 @@ double ** averageWeightGradients(struct NeuralNetwork * nn, double *** sumGradie
     return averageGradients;
 }
 
-double * averageBiasGradients(struct NeuralNetwork * nn, double ** sumGradients, double batchSize) {
+double * averageBiasGradients(NeuralNetwork * nn, double ** sumGradients, double batchSize) {
 
     double * averageGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
 

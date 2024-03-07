@@ -19,7 +19,7 @@ int main() {
 
     printf("\nRunning tests for neuralNetworkUtility.c functions\n\n");
 
-    struct NeuralNetwork * nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    NeuralNetwork * nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 1, 1, 1, 1);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 1, "testNr 0, numberOfConnectedNeurons 1, 1, 1, 1 network");
@@ -30,7 +30,7 @@ int main() {
     testSumUtility += assertTrue(isNeuronLastInLayer(nn,2), "testNr 5, isNeuronLastInLayer 1, 1, 1, 1 network");
     freeNeuralNetwork(nn);
 
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 1, 2, 3, 1);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 3, "testNr 6, numberOfConnectedNeurons 1, 2, 3, 1 network");
@@ -43,7 +43,7 @@ int main() {
     testSumUtility += assertTrue(isNeuronLastInLayer(nn,7), "testNr 13, isNeuronLastInLayer 1, 2, 3, 1 network");
     freeNeuralNetwork(nn);
 
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 2, 2, 2, 2);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 2, "testNr 14, numberOfConnectedNeurons 2, 2, 2, 2 network");
@@ -58,7 +58,7 @@ int main() {
     testSumUtility += assertTrue(isNeuronLastInLayer(nn,7), "testNr 23, isNeuronLastInLayer 2, 2, 2, 2 network");
     freeNeuralNetwork(nn);    
 
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 5, 1, 1, 1);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 1, "testNr 24, numberOfConnectedNeurons 5, 1, 1, 1 network");
@@ -71,7 +71,7 @@ int main() {
     testSumUtility += assertTrue(isNeuronLastInLayer(nn,6), "testNr 31, isNeuronLastInLayer 5, 1, 1, 1 network");
     freeNeuralNetwork(nn);
 
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 1, 1, 1, 5);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     testSumUtility += int_assertEqual(numberOfConnectedNeurons(nn,0), 1, "testNr 32, numberOfConnectedNeurons 1, 1, 1, 5 network");
@@ -131,7 +131,7 @@ int main() {
 
     int testSumUtility2 = 0;
 
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 5, 1, 3, 2);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     for (int i = 0; i < nn->nrOfHiddenNeurons; i++) { nn->hiddenActivationVector[i] = 1; }
@@ -147,7 +147,7 @@ int main() {
     testSumUtility2 += dbl_assertNotEqual(activationValues[2], 2, "testNr 65, findConnectedNeuronActivations 5, 1, 3, 2 network");
     freeNeuralNetwork(nn);
 
-    nn = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 5, 1, 3, 2);
     initNeuralNetworkFunctions(nn, &sigmoid, &sigmoidDerivative, &sigmoid, &sigmoidDerivative);
     for (int i = 0; i < nn->neuronsPerLayer; i++) { nn->weightMatrix[0][i] = 1; }

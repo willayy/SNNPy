@@ -3,8 +3,8 @@
     #define funcPtrs_h
 
         /** pointer for a "double func(double) --> double" function */
-        typedef double (*dblA)(double);
+        typedef double (*dblAdblR)(double);
         /** pointer for a "double func(double, double) --> double" function */
-        typedef double (*dblA_dblA)(double, double);
+        typedef double (*dblAdbLAdblR)(double, double);
         
 #endif

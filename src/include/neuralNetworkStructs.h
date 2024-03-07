@@ -42,10 +42,10 @@
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            dblA activationFunction;
-            dblA lastLayerActivationFunction;
-            dblA activationFunctionDerivative;
-            dblA lastLayerActivationFunctionDerivative;
+            dblAdblR activationFunction;
+            dblAdblR lastLayerActivationFunction;
+            dblAdblR activationFunctionDerivative;
+            dblAdblR lastLayerActivationFunctionDerivative;
 
             double * neuronActivationVector;
             double * hiddenActivationVector;
@@ -60,4 +60,17 @@
             double ** weightMatrix;
             double * biasVector;
         };
+        typedef struct NeuralNetwork NeuralNetwork;
+
+        /**
+         * A struct to hold the gradients of the weights and biases of a neuron.
+         * @param weightGradient: the gradient of the weights of the neuron.
+         * @param biasGradient: the gradient of the bias of the neuron. */
+        struct NeuronGradient {
+            double * weightGradient;
+            double biasGradient;
+        };
+        typedef struct NeuronGradient NeuronGradient;
+
+
 #endif

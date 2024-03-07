@@ -41,7 +41,7 @@ int main() {
     setSeed(time(NULL));
 
     // Create neural network
-    struct NeuralNetwork * nn  = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
+    NeuralNetwork * nn  = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 4, 1, 4, 16);
     initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
     initWeightsXavierNormal(nn);
