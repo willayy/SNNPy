@@ -68,7 +68,7 @@
          * @param biasGradient: the gradient of the bias of the neuron. */
         struct NeuronGradient {
             double * weightGradient;
-            double biasGradient;
+            double * biasGradient;
         };
         typedef struct NeuronGradient NeuronGradient;
 

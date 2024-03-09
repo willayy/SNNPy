@@ -201,3 +201,12 @@ void freeNeuralNetwork(NeuralNetwork * nn) {
 
     free(nn);
 }
+
+/**
+ * frees the memory allocated for a neuron gradient.
+ * @param ng: the neuron gradient to free. */
+void freeGradient(NeuronGradient * ng) {
+    free(ng->weightGradient);
+    free(ng->biasGradient);
+    free(ng);
+}

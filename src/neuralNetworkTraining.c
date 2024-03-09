@@ -10,34 +10,15 @@
 #include "neuralNetworkUtility.h"
 #include "funcPtrs.h"
 
-void freeMatrix(double ** matrix, int rows) {
+NeuronGradient ** computeGradients(const NeuralNetwork * nn, double * partialGradients) {
 
-    for (int i = 0; i < rows; i++) {
-        free(matrix[i]);
-    }
-
-    free(matrix);
-}
-
-double * computeBiasGradients(NeuralNetwork * nn, double * partialGradients) {
-
-    double * gradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons- nn->nrOfOutputNeurons);
-
-    // the derivatives of the cost function with respect to the biases first to second to last layer.
-    vectorReplace(gradients, partialGradients, nn->nrOfNeurons - nn->nrOfOutputNeurons);
-
-    return gradients;
-}
-
-double ** computeWeightGradients(NeuralNetwork * nn, double * partialGradients) {
-
-    double ** gradients = (double **) malloc(sizeof(double *) * nn->nrOfNeurons);
+    NeuronGradient ** gradients = (double **) malloc(sizeof(NeuronGradient *) * nn->nrOfNeurons);
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
         if (i < nn->nrOfNeurons - nn->neuronsPerLayer - nn->nrOfOutputNeurons ) {
-            gradients[i] = (double *) malloc(sizeof(double) * nn->neuronsPerLayer);
+            gradients[i]->weightGradient = (double *) malloc(sizeof(double) * nn->neuronsPerLayer);
         } else {
-            gradients[i] = (double *) malloc(sizeof(double) * nn->nrOfOutputNeurons);
+            gradients[i]->weightGradient = (double *) malloc(sizeof(double) * nn->nrOfOutputNeurons);
         }
     }
 
@@ -48,15 +29,20 @@ double ** computeWeightGradients(NeuralNetwork * nn, double * partialGradients) 
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             double dZdW = neuronActivations[j];
-            gradients[i][j] = (partialGradients[partialGradientIndexes[j]] * dZdW);
+            gradients[i]->weightGradient[j] = (partialGradients[partialGradientIndexes[j]] * dZdW);
         }
+    }
+
+    for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
+        gradients[i]->biasGradient = (double *) malloc(sizeof(double));
+        gradients[i]->biasGradient[0] = partialGradients[i];
     }
 
     return gradients;
 
 }
 
-double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative) {
+double * computePartialGradients(const NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative) {
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
 
@@ -71,7 +57,6 @@ double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dbl
 
     // the derivatives of the cost function with respect to the activations of the hidden layers.
     for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= 0; i--) {
-        double neuronA = nn->neuronActivationVector[i];
         double neuronZ = nn->neuronValueVector[i];
         double * weights = findOutputWeights(nn, i);
         int * connectedNeuronIndexes = findConnectedNeuronIndexes(nn, i);
@@ -88,59 +73,36 @@ double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dbl
     return partialGradients;
 }
 
-void nudgeWeight(double * weight, double gradient, double lrw) {
+NeuronGradient ** averageGradients(const NeuralNetwork * nn, NeuronGradient *** sumNg, int batchSize, int nrOfNeurons) {
 
-    weight[0] -= lrw * gradient; 
+    NeuronGradient ** avgNg = (NeuronGradient **) malloc(sizeof(NeuronGradient *) * nrOfNeurons);
+
+    for (int i = 0; i < nrOfNeurons; i++) {
+        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        avgNg[i]->weightGradient = (double *) malloc(sizeof(double) * nrOfConnectedNeurons);
+        avgNg[i]->biasGradient = (double *) malloc(sizeof(double));
+    }
+
+    //TODO: implement averaging of gradients.
+
+    return avgNg;
 }
 
-void nudgeBias(double * bias, double gradient, double lrb) {
-
-    bias[0] -= lrb * gradient;
-}
-
-void optimize(NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double lrw, double lrb) {
+void optimize(NeuralNetwork * nn, NeuronGradient ** avgNg, double lrw, double lrb) {
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
         double * weights = findOutputWeights(nn, i);
-        for (int j = 0; j < nn->neuronsPerLayer; j++) {
-            nudgeWeight(&weights[j], Wgrad[i][j], lrw);
+        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        for (int j = 0; j < nrOfConnectedNeurons; j++) {
+            double * weight = &weights[j];
+            double gradient = avgNg[i]->weightGradient[j];
+            weight[0] -= lrw * gradient;
         }
     }
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
         double * bias = &nn->biasVector[i];
-        nudgeBias(bias, Bgrad[i], lrb);
+        double gradient = avgNg[i]->biasGradient[0];
+        bias[0] -= lrb * gradient;
     }
-}
-
-double ** averageWeightGradients(NeuralNetwork * nn, double *** sumGradients, double batchSize) {
-
-    double ** averageGradients = (double **) malloc(sizeof(double *) * nn->nrOfNeurons);
-
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        averageGradients[i] = (double *) malloc(sizeof(double) * nrOfConnectedNeurons);
-        vectorReplace(averageGradients[i], sumGradients[0][i], nrOfConnectedNeurons);
-        for (int j = 1; j < batchSize; j++) {
-            vectorAdd(averageGradients[i], sumGradients[j][i], nrOfConnectedNeurons);
-        }
-        vectorDiv(averageGradients[i], batchSize, nrOfConnectedNeurons);
-    }
-
-    return averageGradients;
-}
-
-double * averageBiasGradients(NeuralNetwork * nn, double ** sumGradients, double batchSize) {
-
-    double * averageGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
-
-    vectorReplace(averageGradients, sumGradients[0], nn->nrOfNeurons);
-    
-    for (int i = 1; i < batchSize; i++) {
-        vectorAdd(averageGradients, sumGradients[i], nn->nrOfNeurons);
-    }
-
-    vectorDiv(averageGradients, batchSize, nn->nrOfNeurons);
-
-    return averageGradients;
 }

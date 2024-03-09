@@ -4,17 +4,11 @@
 #ifndef neuralNetworkTraining_h
     #define neuralNetworkTraining_h
 
-        void freeMatrix(double ** matrix, int rows);
+        NeuronGradient ** computeGradients(const NeuralNetwork * nn, double * partialGradients);
 
-        double ** averageWeightGradients(NeuralNetwork * nn, double *** sumGradients, double batchSize);
+        double * computePartialGradients(const NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative);
 
-        double * averageBiasGradients(NeuralNetwork * nn, double ** sumGradients, double batchSize);
+        NeuronGradient ** averageGradients(const NeuralNetwork * nn, NeuronGradient *** sumNg, int batchSize, int nrOfNeurons);
 
-        double ** computeWeightGradients(NeuralNetwork * nn, double * partialGradients);
-
-        double * computeBiasGradients(NeuralNetwork * nn, double * partialGradients);
-
-        double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative);
-
-        void optimize(NeuralNetwork * nn, double ** Wgrad, double * Bgrad, double lrw, double lrb);
+        void optimize(NeuralNetwork * nn, NeuronGradient ** avgNg, double lrw, double lrb);
 #endif

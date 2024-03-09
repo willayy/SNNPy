@@ -21,7 +21,7 @@ void setSeed(unsigned int newSeed) {
  * @param min: the lower bound of the random value.
  * @param max: the upper bound of the random value.
  * @return a random value between min and max. */
-double randomValue(int min, int max) {
+double randomValue(double min, double max) {
     return ( (double)rand() * ( max - min ) ) / (double)RAND_MAX + min;
 }
 
