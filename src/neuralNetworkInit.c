@@ -6,6 +6,7 @@
 
 #include "neuralNetworkStructs.h"
 #include "randomValueGenerator.h"
+#include "vectorOperations.h"
 
 
 /**
@@ -54,7 +55,7 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, i
         nn->neuronValueVector[i] = 0;
     }
 
-    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
         nn->biasVector[i] = 0;
     }
 
@@ -72,7 +73,7 @@ void initNeuralNetworkFunctions(NeuralNetwork * nn, dblAdblR activationFunction,
     nn->activationFunction = activationFunction;
     nn->activationFunctionDerivative = activationFunctionDerivative;
     nn->lastLayerActivationFunction = lastLayerActivationFunction;
-    nn->lastLayerActivationFunctionDerivative = lastLayerActivationFunction;
+    nn->lastLayerActivationFunctionDerivative = lastLayerActivationFunctionDerivative;
     
 }
 
@@ -180,33 +181,4 @@ void resetNeuralNetwork(NeuralNetwork * nn) {
         nn->neuronValueVector[i] = 0;
     }
 
-}
-
-/**
- * Frees the memory allocated for a neural network.
- * @param nn: the neural network to free. */
-void freeNeuralNetwork(NeuralNetwork * nn) {
-
-    free(nn->neuronActivationVector);
-
-    free(nn->biasVector);
-
-    free(nn->neuronValueVector);
-
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        free(nn->weightMatrix[i]);
-    }
-    
-    free(nn->weightMatrix);
-
-    free(nn);
-}
-
-/**
- * frees the memory allocated for a neuron gradient.
- * @param ng: the neuron gradient to free. */
-void freeGradient(NeuronGradient * ng) {
-    free(ng->weightGradient);
-    free(ng->biasGradient);
-    free(ng);
 }

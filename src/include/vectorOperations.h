@@ -20,4 +20,6 @@
         double * vectorCopy(double * a, int vectorSize);
 
         void vectorExtend(double * a, double * b, int from, int vectorSize);
+
+        void vectorSet(double * a, double b, int vectorSize);
 #endif

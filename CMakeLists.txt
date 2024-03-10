@@ -28,6 +28,7 @@ add_library(
 # Add shared library
 add_library(
   SNNpy SHARED
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
@@ -42,6 +43,7 @@ target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 # Add the executable for testsuite
 add_executable(
   SNNpy-tests
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
@@ -57,6 +59,7 @@ target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extli
 
 add_executable(
   SNNpy-benchmark
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmarkTest.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c

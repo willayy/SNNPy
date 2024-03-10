@@ -108,6 +108,17 @@ void vectorReplace(double * a, double * b, int vectorSize) {
 }
 
 /**
+ * Replaces all vector elements with a scalar.
+ * @param a The vector.
+ * @param b The scalar.
+ * @param vectorSize The size of the vector. */
+void vectorSet(double * a, double b, int vectorSize) {
+    for (int i = 0; i < vectorSize; i++) {
+        a[i] = b;
+    }
+}
+
+/**
  * Applies a function to each element of a vector. Function must take a double as a parameter and return an double.
  * @param a The vector.
  * @param vectorSize The size of the vector.
