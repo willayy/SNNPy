@@ -4,11 +4,13 @@
 #ifndef neuralNetworkTraining_h
     #define neuralNetworkTraining_h
 
-        NeuronGradient ** computeGradients(NeuralNetwork * nn, double * partialGradients);
+        void initGradientBatch(GradientBatch * gb, int batchSize); 
+
+        GradientVector * computeGradients(NeuralNetwork * nn, double * partialGradients);
 
         double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative);
 
-        NeuronGradient ** averageGradients(NeuralNetwork * nn, NeuronGradient *** sumNg, int batchSize);
+        GradientVector * averageGradients(GradientBatch * gb);
 
-        void optimize(NeuralNetwork * nn, NeuronGradient ** avgNg, double lrw, double lrb);
+        void optimize(NeuralNetwork * nn, GradientVector * avgNg, double lrw, double lrb);
 #endif

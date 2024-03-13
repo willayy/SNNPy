@@ -12,9 +12,8 @@ void propogateForward(NeuralNetwork * nn, double * inputData) {
 
     // Set the input data to the parameter neurons.
     for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
-
         nn->parameterValueVector[i] = inputData[i];
-        nn->parameterValueVector[i] = nn->biasVector[i];
+        nn->parameterValueVector[i] += nn->biasVector[i];
         nn->activationParameterVector[i] = nn->activationFunction(nn->neuronValueVector[i]);
     }
 
@@ -22,17 +21,18 @@ void propogateForward(NeuralNetwork * nn, double * inputData) {
 
         double neuronActivation = nn->neuronActivationVector[i];
         double * connectedWeights = findOutputWeights(nn, i);
-        double * ConnectedNeuronValues = findConnectedNeuronValues(nn, i);
+        double * connectedNeuronValues = findConnectedNeuronValues(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         double * forwardPropogatedValues = vectorMulCopy(connectedWeights, neuronActivation, nrOfConnectedNeurons);
-        vectorAdd(ConnectedNeuronValues, forwardPropogatedValues, nrOfConnectedNeurons);
+        vectorAdd(connectedNeuronValues, forwardPropogatedValues, nrOfConnectedNeurons);
         free(forwardPropogatedValues);
 
         if (isNeuronLastInLayer(nn, i)) {
 
             double * connectedActivationValues = findConnectedNeuronActivations(nn, i);
-            vectorAdd(ConnectedNeuronValues, findConnectedNeuronBiases(nn, i), nrOfConnectedNeurons);
-            vectorReplace(connectedActivationValues, ConnectedNeuronValues, nrOfConnectedNeurons);
+            double * connectedBiases = findConnectedNeuronBiases(nn, i);
+            vectorAdd(connectedNeuronValues, connectedBiases, nrOfConnectedNeurons);
+            vectorReplace(connectedActivationValues, connectedNeuronValues, nrOfConnectedNeurons);
 
             if (isNeuronLastInHiddenlayer(nn, i)) {
                 vectorOperation(connectedActivationValues, nn->lastLayerActivationFunction, nrOfConnectedNeurons); 

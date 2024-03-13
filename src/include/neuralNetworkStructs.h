@@ -64,13 +64,35 @@
 
         /**
          * A struct to hold the gradients of the weights and biases of a neuron.
+         * @param nrOfWeights: the number of weights of the neuron feeding forward.
          * @param weightGradient: the gradient of the weights of the neuron.
          * @param biasGradient: the gradient of the bias of the neuron. */
         struct NeuronGradient {
+            int nrOfWeights;
             double * weightGradient;
             double * biasGradient;
         };
         typedef struct NeuronGradient NeuronGradient;
+
+        /**
+         * A struct to hold the gradients of the weights and biases of a NeuralNetwork.
+         * @param nrOfNeurons: the number of neurons in the network that has gradients.
+         * @param gradients: the gradients of the weights and biases of the neurons. */
+        struct GradientVector {
+            int nrOfNeurons;
+            NeuronGradient ** gradients;
+        };
+        typedef struct GradientVector GradientVector;
+
+        /**
+         * A struct to hold the gradient vectors of a batch.
+         * @param batchSize: the size of the batch.
+         * @param gradientVectors: the gradients of the weights and biases of the neurons. */
+        struct GradientBatch {
+            int batchSize;
+            GradientVector ** gradientVectors;
+        };
+        typedef struct GradientBatch GradientBatch;
 
 
 #endif

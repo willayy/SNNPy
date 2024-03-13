@@ -141,15 +141,14 @@ double * findOutputWeights(NeuralNetwork * nn, int neuron) {
  * @return 1 if the neuron is the last in its layer, 0 otherwise. */
 int isNeuronLastInLayer(NeuralNetwork * nn, int neuron) {
 
-    if (neuron < nn->nrOfParameterNeurons && neuron == nn->nrOfParameterNeurons - 1) {
+    if (neuron == nn->nrOfParameterNeurons - 1) {
         return 1;
     }
 
-    else if ((neuron >= nn->nrOfParameterNeurons)
-        && (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons)
+    else if ((neuron >= nn->nrOfParameterNeurons) && (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons)
         && ((neuron - nn->nrOfParameterNeurons + 1) % nn->neuronsPerLayer == 0)) {
             return 1;
-        }
+    }
 
     if (neuron == nn->nrOfNeurons - 1) {
         return 1;

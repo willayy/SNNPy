@@ -5,10 +5,10 @@
 
     void freeNeuralNetwork(NeuralNetwork * nn);
 
-    void freeGradient(NeuronGradient * grad);
+    void freeNeuronGradient(NeuronGradient * ng);
 
-    void freeGradients(NeuronGradient ** batch, int nrOfGradients);
+    void freeGradientVector(GradientVector * gv);
 
-    void freeGradientsBatch(NeuronGradient *** batch, int nrOfGradients, int batchSize);
+    void freeGradientBatch(GradientBatch * gb);
 
 #endif

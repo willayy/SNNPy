@@ -12,7 +12,7 @@ void freeNeuralNetwork(NeuralNetwork * nn) {
 
     free(nn->neuronValueVector);
 
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
+    for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
         free(nn->weightMatrix[i]);
     }
     
@@ -21,26 +21,24 @@ void freeNeuralNetwork(NeuralNetwork * nn) {
     free(nn);
 }
 
-/**
- * frees the memory allocated for a neuron gradient.
- * @param ng: the neuron gradient to free. */
-void freeGradient(NeuronGradient * grad) {
-    free(grad->weightGradient);
-    free(grad->biasGradient);
-    free(grad);
+void freeNeuronGradient(NeuronGradient * ng) {
+    free(ng->weightGradient);
+    free(ng->biasGradient);
+    free(ng);
 }
 
-
-void freeGradients(NeuronGradient ** gradArray, int nrOfGradients) {
-    for (int i = 0; i < nrOfGradients; i++) {
-        freeGradient(gradArray[i]);
+void freeGradientVector(GradientVector * gv) {
+    for (int i = 0; i < gv->nrOfNeurons; i++) {
+        freeNeuronGradient(gv->gradients[i]);
     }
-    free(gradArray);
+    free(gv->gradients);
+    free(gv);
 }
 
-void freeGradientsBatch(NeuronGradient *** batch, int nrOfGradients, int batchSize) {
-    for (int i = 0; i < batchSize; i++) {
-        freeGradients(batch[i], nrOfGradients);
+void freeGradientBatch(GradientBatch * gb) {
+    for (int i = 0; i < gb->batchSize; i++) {
+        freeGradientVector(gb->gradientVectors[i]);
     }
-    free(batch);
+    free(gb->gradientVectors);
+    free(gb);
 }
