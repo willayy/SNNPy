@@ -62,7 +62,7 @@ double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dbl
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
 
-    // The derivatives of the cost function with respect to the activations of the output layer.
+    // Calculate dCdA and dAdZ for the output layer.
     for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i--) {
         double neuronA = nn->neuronActivationVector[i];
         double neuronZ = nn->neuronValueVector[i];
@@ -71,7 +71,8 @@ double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dbl
         partialGradients[i] = dCdA * dAdZ;
     }
 
-    // the derivatives of the cost function with respect to the activations of the hidden layers.
+    // Calculates dAdZ, dZdA (connected neurons Z value) for hidden layer and parameter neurons. 
+    // Multiplies this with connected partial gradients and sums them up.
     for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= 0; i--) {
         double neuronZ = nn->neuronValueVector[i];
         double * weights = findOutputWeights(nn, i);
@@ -89,6 +90,10 @@ double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dbl
     return partialGradients;
 }
 
+/**
+ * Averages the gradient vectors in a gradient batch.
+ * @param gb The gradient batch to average the gradients of.
+ * @return A gradient vector with the averaged gradients. */
 GradientVector * averageGradients(GradientBatch * gb) {
 
     GradientVector * gv = (GradientVector *) malloc(sizeof(GradientVector));
@@ -112,6 +117,12 @@ GradientVector * averageGradients(GradientBatch * gb) {
     return gv;
 }
 
+/**
+ * Optimizes the neural network by updating the weights and biases with the gradients.
+ * @param nn The neural network to optimize.
+ * @param avgNg The averaged gradients to use for optimization.
+ * @param lrw The learning rate for the weights.
+ * @param lrb The learning rate for the biases. */
 void optimize(NeuralNetwork * nn, GradientVector * avgNg, double lrw, double lrb) {
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {

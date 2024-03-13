@@ -43,7 +43,7 @@ int main() {
 
     // Create neural network
     NeuralNetwork * nn  = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
-    initNeuralNetwork(nn, 4, 2, 4, 16);
+    initNeuralNetwork(nn, 4, 1, 4, 16);
     initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
