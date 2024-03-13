@@ -3,14 +3,16 @@ This is a Python module with api's to a simple C implemented configurable FFN ne
 
 The training algorithm in Beta 1.0.0 uses brute force numerical derivatives to optimize weights and biases. Release Beta 2.0.0 and onwards use backpropogation as a means to opitimize weights and biases.
 
-This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand and features no support for parallelism or hardware acceleration. Code readability also takes heavy precedence over algorithm optimization (where there is a distinct choice).
+This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand. It does not feature parallelism, hardware accelaration or  any usage of optimized BLAS algorithms.
+
+And such its a naive implementation of a neural network.
 
 #### Dependencies
 
 CMake is heavily recommended as the build tool for this source code.
 No other external dependencies.
 
-#### Installation
+#### Installation/Building
 
 - Download source code.
 - (Recommended) build SNNpy-test executable to test if software works correctly in your enviorment.
@@ -25,3 +27,4 @@ No other external dependencies.
 - Build System: CMake 3.28.1
 
 #### Usage
+(PLACEHOLDER COMING SOON)
