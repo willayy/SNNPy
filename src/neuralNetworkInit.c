@@ -40,12 +40,10 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, i
 
     // allocate memory for the weight matrix
 
-    for (int i = 0; i < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i++) {
-        nn->weightMatrix[i] = (double *) malloc(sizeof(double) * (nn->neuronsPerLayer));
-    }
-
-    for (int i = nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons; i < nn->nrOfNeurons; i++) {
-        nn->weightMatrix[i] = (double *) malloc(sizeof(double) * (nn->nrOfOutputNeurons));
+    for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
+        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        nn->weightMatrix[i] = (double *) malloc(sizeof(double) * nrOfConnectedNeurons);
+        vectorSet(nn->weightMatrix[i], 0, nrOfConnectedNeurons);
     }
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {

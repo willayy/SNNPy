@@ -44,11 +44,11 @@ int * findConnectedNeuronIndexes(NeuralNetwork * nn, int neuron) {
     else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
         connectedNeurons = (int *) malloc(sizeof(int) * nn->neuronsPerLayer);
         for (int i = 0; i < nn->neuronsPerLayer; i++) {
-            connectedNeurons[i] = i + (nn->nrOfParameterNeurons) + (1 + (neuron / nn->neuronsPerLayer)) * nn->neuronsPerLayer;
+            connectedNeurons[i] = i + (nn->nrOfParameterNeurons) + (neuron / nn->neuronsPerLayer) * nn->neuronsPerLayer;
         }
         return connectedNeurons;
     }
-    else if (neuron < nn->nrOfNeurons) {
+    else if (neuron < nn->nrOfNeurons - nn->nrOfOutputNeurons) {
         connectedNeurons = (int *) malloc(sizeof(int) * nn->nrOfOutputNeurons);
         for (int i = 0; i < nn->nrOfOutputNeurons; i++) {
             connectedNeurons[i] = i + (nn->nrOfParameterNeurons) + nn->nrOfHiddenNeurons;
@@ -71,9 +71,9 @@ double * findConnectedNeuronActivations(NeuralNetwork * nn, int neuron) {
         return nn->neuronActivationVector + nn->nrOfParameterNeurons;
     }
     else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
-        return nn->hiddenActivationVector + (1 + (neuron / nn->neuronsPerLayer)) * nn->neuronsPerLayer;
+        return nn->hiddenActivationVector + (neuron / nn->neuronsPerLayer) * nn->neuronsPerLayer;
     }
-    else if (neuron < nn->nrOfNeurons) {
+    else if (neuron < nn->nrOfNeurons - nn->nrOfOutputNeurons) {
         return nn->activationOutputVector;
     }
 
@@ -91,7 +91,7 @@ double * findConnectedNeuronValues(NeuralNetwork * nn, int neuron) {
         return nn->neuronValueVector + nn->nrOfParameterNeurons;
     }
     else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
-        return nn->hiddenValueVector + nn->nrOfParameterNeurons + (1 + (neuron / nn->neuronsPerLayer)) * nn->neuronsPerLayer;
+        return nn->hiddenValueVector + nn->nrOfParameterNeurons + (neuron / nn->neuronsPerLayer) * nn->neuronsPerLayer;
     }
     else if (neuron < nn->nrOfNeurons) {
         return nn->outputValueVector;
@@ -111,7 +111,7 @@ double * findConnectedNeuronBiases(NeuralNetwork * nn, int neuron) {
         return nn->biasVector + nn->nrOfParameterNeurons;
     }
     else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
-        return nn->biasVector + (1 + (neuron / nn->neuronsPerLayer)) * nn->neuronsPerLayer;
+        return nn->biasVector + (neuron / nn->neuronsPerLayer) * nn->neuronsPerLayer;
     }
     else if (neuron < nn->nrOfNeurons) {
         return nn->biasVector + nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons;

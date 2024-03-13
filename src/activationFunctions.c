@@ -33,7 +33,8 @@ double sigmoid(double x) {
  * @param x The input value
  * @return The derivative of the sigmoid function */
 double sigmoidDerivative(double x) {
-    return sigmoid(x) * (1 - sigmoid(x));
+    double sig = sigmoid(x);
+    return sig * (1 - sig);
 }
 
 /**
@@ -65,7 +66,9 @@ double rectifiedLinearUnitDerivative(double x) {
  * @param x The input value
  * @return The hyperbolic tangent of the input value (lower bound -1, upper bound 1) */
 double hyperbolicTangent(double x) {
-    return (pow(e,x) - pow(e,-x)) / (pow(e,x) + pow(e,-x));
+    double epowx = pow(e,x);
+    double epowminusx = pow(e,-x);
+    return (epowx - epowminusx) / (epowx + epowminusx);
 }
 
 /**
@@ -73,5 +76,7 @@ double hyperbolicTangent(double x) {
  * @param x The input value
  * @return The derivative of the hyperbolic tangent function */
 double hyperbolicTangentDerivative(double x) {
-    return (4*pow(e, 2*x) / pow(pow(e, x*2) + 1, 2));
+    double e2 = pow(e,2 * x);
+    double t = (e2 - 1) / (e2 + 1);
+    return 1 - t * t;
 }
