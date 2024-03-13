@@ -5,7 +5,7 @@ The training algorithm in Beta 1.0.0 uses brute force numerical derivatives to o
 
 This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand. It does not feature parallelism, hardware accelaration or  any usage of optimized BLAS algorithms.
 
-And such its a naive implementation of a neural network.
+And such it is a naive implementation of a neural network.
 
 #### Dependencies
 
