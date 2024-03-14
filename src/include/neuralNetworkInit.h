@@ -17,7 +17,7 @@
 
         void initBiasesConstant(NeuralNetwork * nn, double b);
 
-        void initBiasesRandomUniform(NeuralNetwork * nn, double * bRange);
+        void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb);
 
-        void initWeightsRandomUniform(NeuralNetwork * nn, double * wRange);
+        void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw);
 #endif

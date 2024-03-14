@@ -82,10 +82,20 @@ void initNeuralNetworkFunctions(NeuralNetwork * nn, dblAdblR activationFunction,
  * @param seed: the seed for the random function */
 void initWeightsXavierUniform(NeuralNetwork * nn) {
 
-    double range = sqrt(6.0 / (nn->nrOfParameterNeurons + nn->neuronsPerLayer));
+    double range;
+    int nrOfConnectedNeurons;
 
-    for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
+        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        range = sqrt(6.0 / (nn->nrOfParameterNeurons + nrOfConnectedNeurons));
+        for (int j = 0; j < nrOfConnectedNeurons; j++) {
+            nn->weightMatrix[i][j] = randomValue(-range, range);
+        }
+    }
+
+    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
+        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        range = sqrt(6.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->weightMatrix[i][j] = randomValue(-range, range);
         }
@@ -98,10 +108,20 @@ void initWeightsXavierUniform(NeuralNetwork * nn) {
 *  @param seed: the seed for the random function */
 void initWeightsXavierNormal(NeuralNetwork * nn) {
 
-    double range = sqrt(2.0 / (nn->nrOfParameterNeurons + nn->neuronsPerLayer));
+    double range;
+    int nrOfConnectedNeurons;
 
-    for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
+        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        range = sqrt(2.0 / (nn->nrOfParameterNeurons + nrOfConnectedNeurons));
+        for (int j = 0; j < nrOfConnectedNeurons; j++) {
+            nn->weightMatrix[i][j] = boxMuellerTransform(0, range);
+        }
+    }
+
+    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
+        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        range = sqrt(2.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->weightMatrix[i][j] = boxMuellerTransform(0, range);
         }
@@ -123,10 +143,7 @@ void initBiasesConstant(NeuralNetwork * nn, double b) {
  * @param nn: the neural network to initialize the biases for.
  * @param bRange: the value range
  * @param seed: the seed for the random function */
-void initBiasesRandomUniform(NeuralNetwork * nn, double * bRange) {
-
-    double minb = bRange[0];
-    double maxb = bRange[1];
+void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb) {
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
         nn->biasVector[i] = randomValue(minb, maxb);
@@ -139,15 +156,12 @@ void initBiasesRandomUniform(NeuralNetwork * nn, double * bRange) {
  * @param nn: the neural network to initialize the weights for.
  * @param wRange: the value range 
  * @param seed: the seed for the random function */
-void initWeightsRandomUniform(NeuralNetwork * nn, double * wRange) {
-
-    double minw = wRange[0];
-    double maxw = wRange[1];
+void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw) {
 
     for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomValue(minw, maxw) / (1/sqrt(nn->nrOfParameterNeurons));
+            nn->weightMatrix[i][j] = randomValue(minw, maxw);
         }
     }
 

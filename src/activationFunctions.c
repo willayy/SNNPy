@@ -40,7 +40,7 @@ double sigmoidDerivative(double x) {
 /**
  * Rectified Linear Unit (ReLU) function (max(0, x))
  * @param x The input value
- * @return The ReLU of the input value (lower bound 0, upper bound x) */
+ * @return The ReLU of the input value */
 double rectifiedLinearUnit(double x) {
     if (x > 0) {
         return x;

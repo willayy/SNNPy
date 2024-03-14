@@ -41,6 +41,7 @@ int * findConnectedNeuronIndexes(NeuralNetwork * nn, int neuron) {
         }
         return connectedNeurons;
     }
+    
     else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
         connectedNeurons = (int *) malloc(sizeof(int) * nn->neuronsPerLayer);
         for (int i = 0; i < nn->neuronsPerLayer; i++) {
@@ -48,6 +49,7 @@ int * findConnectedNeuronIndexes(NeuralNetwork * nn, int neuron) {
         }
         return connectedNeurons;
     }
+    
     else if (neuron < nn->nrOfNeurons - nn->nrOfOutputNeurons) {
         connectedNeurons = (int *) malloc(sizeof(int) * nn->nrOfOutputNeurons);
         for (int i = 0; i < nn->nrOfOutputNeurons; i++) {

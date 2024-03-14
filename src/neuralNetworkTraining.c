@@ -49,9 +49,9 @@ GradientVector * computeGradients(NeuralNetwork * nn, double * partialGradients)
         gv->gradients[i] = ng;
         double dZdW = nn->neuronActivationVector[i];
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            int pgIndex = partialGradientIndexes[j];
-            gv->gradients[i]->weightGradient[j] = (partialGradients[pgIndex] * dZdW);
+            gv->gradients[i]->weightGradient[j] = (partialGradients[partialGradientIndexes[j]] * dZdW);
         }
+        free(partialGradientIndexes);
         gv->gradients[i]->biasGradient[0] = partialGradients[i];
     }
 
@@ -79,11 +79,12 @@ double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dbl
         int * connectedNeuronIndexes = findConnectedNeuronIndexes(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         double gradientSum = 0;
+        double dAdZ = nn->activationFunctionDerivative(neuronZ);
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             double dZdA = weights[j];
-            double dAdZ = nn->activationFunctionDerivative(neuronZ);
-            gradientSum += partialGradients[connectedNeuronIndexes[i]] * dZdA * dAdZ;
+            gradientSum += partialGradients[connectedNeuronIndexes[j]] * dZdA * dAdZ;
         }
+        free(connectedNeuronIndexes);
         partialGradients[i] = gradientSum;
     }
 
