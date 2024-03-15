@@ -6,9 +6,7 @@
 
         void initGradientBatch(GradientBatch * gb, int batchSize); 
 
-        GradientVector * computeGradients(NeuralNetwork * nn, double * partialGradients);
-
-        double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative);
+        GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative);
 
         GradientVector * averageGradients(GradientBatch * gb);
 
