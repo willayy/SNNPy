@@ -31,10 +31,10 @@ int main() {
 
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 4; j++) {
-            inputs[i][j] = (double) (i >> j & 1) + 0.01;
+            inputs[i][j] = (double) (i >> j & 1);
         }
         for (int j = 0; j < 16; j++) {
-            desOutputs[i][j] = (double) (i == j) + 0.01;
+            desOutputs[i][j] = (double) (i == j);
         }
     }
 
@@ -48,10 +48,10 @@ int main() {
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.20);
 
-    int epochs = 200000;
+    int epochs = 20000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.02;
+    double lrw = 0.002;
     double lrb = 0.001;
 
     for (int i = 0; i < epochs; i++) {
@@ -65,11 +65,8 @@ int main() {
 
         for (int j = 0; j < batchSize; j++) {
             double * output = inputDataToNeuralNetwork(nn, inputs[j]);
-            epochCost += sqrCostFunction(output, desOutputs[j], nn->nrOfOutputNeurons);
-            double * partialGradients = computePartialGradients(nn, desOutputs[j], &sqrCostFunctionDerivative);
-            gb->gradientVectors[j] = computeGradients(nn, partialGradients);
-
-            free(partialGradients);
+            epochCost += crossEntropyCostFunction(output, desOutputs[j], nn->nrOfOutputNeurons);
+            gb->gradientVectors[j] = computeGradients(nn, desOutputs[j], &crossEntropyCostFunctionDerivative);
             free(output);
         }
 
@@ -79,7 +76,7 @@ int main() {
 
         printf("Epoch %d, cost: %f\n", i, epochCost/batchSize);
 
-        if (epochCost/batchSize < 0.85) {
+        if (epochCost/batchSize < 1) {
             testSumConvergence = 1;
             printf("Converged after %d epochs\n", i);
             for (int j = 0; j < 16; j++) {
