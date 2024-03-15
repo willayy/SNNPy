@@ -4,5 +4,13 @@
 #ifndef neuralNetworkTraining_h
     #define neuralNetworkTraining_h
 
-        double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblP_dblP_intA costFunction, dblA_dblA costFunctionDerivative);
+        void initGradientBatch(GradientBatch * gb, int batchSize); 
+
+        GradientVector * computeGradients(NeuralNetwork * nn, double * partialGradients);
+
+        double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative);
+
+        GradientVector * averageGradients(GradientBatch * gb);
+
+        void optimize(NeuralNetwork * nn, GradientVector * avgNg, double lrw, double lrb);
 #endif

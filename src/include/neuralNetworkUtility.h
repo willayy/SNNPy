@@ -3,17 +3,19 @@
 #ifndef neuronUtility_h
     #define neuronUtility_h
 
-        double * findConnectedNeuronActivations(struct NeuralNetwork * nn, int neuron);
+        int * findConnectedNeuronIndexes(NeuralNetwork * nn, int neuron);
 
-        double * findConnectedWeights(struct NeuralNetwork * nn, int neuron);
+        double * findConnectedNeuronActivations(NeuralNetwork * nn, int neuron);
 
-        double * findNeuronActivation(struct NeuralNetwork * nn, int neuron);
+        double * findConnectedNeuronValues(NeuralNetwork * nn, int neuron);
 
-        double * findNeuronValue(struct NeuralNetwork * nn, int neuron);
+        double * findOutputWeights(NeuralNetwork * nn, int neuron);
 
-        double * findBias(struct NeuralNetwork * nn, int neuron);
+        double * findConnectedNeuronBiases(NeuralNetwork * nn, int neuron);
 
-        int isNeuronLastInLayer(struct NeuralNetwork * nn, int neuron);
+        int isNeuronLastInLayer(NeuralNetwork * nn, int neuron);
 
-        int numberOfConnectedNeurons(struct NeuralNetwork * nn, int neuron);
+        int isNeuronLastInHiddenlayer(NeuralNetwork * nn, int neuron);
+
+        int numberOfConnectedNeurons(NeuralNetwork * nn, int neuron);
 #endif

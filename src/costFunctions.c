@@ -1,5 +1,6 @@
 #include "costFunctions.h"
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * Calculates the cost of the neural network on a given input and desired output. 
@@ -10,13 +11,13 @@
  * @return The cost of the neural network on the given input and desired output. */
 double sqrCostFunction(double * output, double * desiredOutput, int outputSize) {
 
+    // cost is sum (for all x,y pairs) of: 0.5 * (x-y)^2
     double cost = 0;
-
     for (int i = 0; i < outputSize; i++) {
-        cost += (desiredOutput[i]-output[i])*(desiredOutput[i]-output[i]);
+        double error = output[i] - desiredOutput[i];
+        cost += error * error;
     }
-
-    return cost;
+    return 0.5 * cost;
 }
 
 /**
@@ -25,7 +26,7 @@ double sqrCostFunction(double * output, double * desiredOutput, int outputSize) 
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */
 double sqrCostFunctionDerivative(double output, double desiredOutput) {
-    return 2 * (desiredOutput - output);
+    return (output-desiredOutput);
 }
 
 /**
@@ -37,13 +38,16 @@ double sqrCostFunctionDerivative(double output, double desiredOutput) {
  * @return The cost of the neural network on the given input and desired output. */
 double crossEntropyCostFunction(double * output, double * desiredOutput, int outputSize) {
 
+    // Note: expected outputs are expected to all be either 0 or 1
+    // cost is sum (for all x,y pairs) of: 0.5 * (x-y)^2
     double cost = 0;
-
     for (int i = 0; i < outputSize; i++) {
-        cost += desiredOutput[i] * log(output[i]);
+        double x = output[i];
+        double y = desiredOutput[i];
+        double v = (y == 1) ? -log(x) : -log(1 - x);
+        cost += isnan(v) ? 0 : v;
     }
-
-    return -cost;
+    return cost;
 }
 
 /**
@@ -52,6 +56,9 @@ double crossEntropyCostFunction(double * output, double * desiredOutput, int out
  * @param output The output of the neural network neuron.
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */
-double crossEntropyCostFunctionDerivative(double output, double desiredOutput) {
-    return -(desiredOutput / output);
+double crossEntropyCostFunctionDerivative(double output, double desiredOutput ) {
+    double x = output;
+    double y = desiredOutput;
+    if (x == 0 || x == 1) { return 0; }
+    return (-x + y) / (x * (x - 1));
 }

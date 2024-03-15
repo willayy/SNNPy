@@ -11,36 +11,88 @@
          * @param nrOfHiddenNeurons: the number of hidden neurons in the network.
          * @param nrOfOutputNeurons: the number of output neurons in the network.
          * @param nrOfNeurons: the total number of neurons in the network.
-         * @param nrOfWeights: the total number of weights in the network.
          * @param nrOfHiddenLayers: the number of hidden layers in the network.
          * @param neuronsPerLayer: the number of neurons per hidden layer in the network.
          * 
-         * @param neuronActivationVector: a vector of all the neuron activation values in the network.
-         * @param neuronValueVector: a vector of all the neuron values in the network.
-         * @param parameterVector: a pointer to all the parameter neurons in the network (neuronVector + 0).
-         * @param hiddenVector: a pointer to all the hidden neurons in the network (neuronVector + nrOfParameterNeurons).
-         * @param outputVector: a pointer to all the output neurons in the network (neuronVector + nrOfParameterNeurons + nrOfHiddenNeurons).
-         * @param weightMatrix: a matrix of all the weights in the network [i] is the neuron and [j] are the forward connecting weights.
-         * @param biasVector: a vector of all the biases in the network.    */  
+         * @param activationFunction: the activation function used in the hidden layers of the network.
+         * @param lastLayerActivationFunction: the activation function used in the output layer of the network.
+         * @param activationFunctionDerivative: the derivative of the activation function used in the hidden layers of the network.
+         * @param lastLayerActivationFunctionDerivative: the derivative of the activation function used in the output layer of the network.
+         * 
+         * @param neuronActivationVector: the activation vector of the neurons in the network.
+         * @param hiddenActivationVector: the activation vector of the hidden neurons in the network.
+         * @param activationOutputVector: the activation vector of the output neurons in the network.
+         * @param activationParameterVector: the activation vector of the parameter neurons in the network.
+         * 
+         * @param neuronValueVector: the value vector of the neurons in the network.
+         * @param hiddenValueVector: the value vector of the hidden neurons in the network.
+         * @param outputValueVector: the value vector of the output neurons in the network.
+         * @param parameterValueVector: the value vector of the parameter neurons in the network.
+         * 
+         * The value is the sum of inputs to the neuron, and the activation is the value passed through the activation function.
+         * 
+         * @param weightMatrix: the weight matrix of the network.
+         * @param biasVector: the bias vector of the network. */
         struct NeuralNetwork {
 
             int nrOfParameterNeurons;
             int nrOfHiddenNeurons;
             int nrOfOutputNeurons;
             int nrOfNeurons;
-            int nrOfWeights;
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            dblA activationFunction;
-            dblA activationFunctionDerivative;
+            dblAdblR activationFunction;
+            dblAdblR lastLayerActivationFunction;
+            dblAdblR activationFunctionDerivative;
+            dblAdblR lastLayerActivationFunctionDerivative;
 
             double * neuronActivationVector;
+            double * hiddenActivationVector;
+            double * activationOutputVector;
+            double * activationParameterVector;
+
             double * neuronValueVector;
-            double * parameterVector;
-            double * hiddenVector;
-            double * outputVector;
+            double * hiddenValueVector;
+            double * outputValueVector;
+            double * parameterValueVector;
+    
             double ** weightMatrix;
             double * biasVector;
         };
+        typedef struct NeuralNetwork NeuralNetwork;
+
+        /**
+         * A struct to hold the gradients of the weights and biases of a neuron.
+         * @param nrOfWeights: the number of weights of the neuron feeding forward.
+         * @param weightGradient: the gradient of the weights of the neuron.
+         * @param biasGradient: the gradient of the bias of the neuron. */
+        struct NeuronGradient {
+            int nrOfWeights;
+            double * weightGradient;
+            double * biasGradient;
+        };
+        typedef struct NeuronGradient NeuronGradient;
+
+        /**
+         * A struct to hold the gradients of the weights and biases of a NeuralNetwork.
+         * @param nrOfNeurons: the number of neurons in the network that has gradients.
+         * @param gradients: the gradients of the weights and biases of the neurons. */
+        struct GradientVector {
+            int nrOfNeurons;
+            NeuronGradient ** gradients;
+        };
+        typedef struct GradientVector GradientVector;
+
+        /**
+         * A struct to hold the gradient vectors of a batch.
+         * @param batchSize: the size of the batch.
+         * @param gradientVectors: the gradients of the weights and biases of the neurons. */
+        struct GradientBatch {
+            int batchSize;
+            GradientVector ** gradientVectors;
+        };
+        typedef struct GradientBatch GradientBatch;
+
+
 #endif

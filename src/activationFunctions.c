@@ -4,6 +4,21 @@
 
 static double e = 2.7182818284590452353602874;
 
+/**
+ * The linear function (x)
+ * @param x The input value
+ * @return The input value  */
+double linear(double x) {
+    return x;
+}
+
+/**
+ * The derivative of the linear function (1)
+ * @param x The input value
+ * @return The derivative of the linear function */
+double linearDerivative(double x) {
+    return 1;
+}
 
 /**
  * The sigmoid function (1 / (1 + e^-x)
@@ -18,15 +33,20 @@ double sigmoid(double x) {
  * @param x The input value
  * @return The derivative of the sigmoid function */
 double sigmoidDerivative(double x) {
-    return sigmoid(x) * (1 - sigmoid(x));
+    double sig = sigmoid(x);
+    return sig * (1 - sig);
 }
 
 /**
  * Rectified Linear Unit (ReLU) function (max(0, x))
  * @param x The input value
- * @return The ReLU of the input value (lower bound 0, upper bound x) */
+ * @return The ReLU of the input value */
 double rectifiedLinearUnit(double x) {
-    return x > 0 ? x : 0;
+    if (x > 0) {
+        return x;
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -34,7 +54,11 @@ double rectifiedLinearUnit(double x) {
  * @param x The input value
  * @return The derivative of the ReLU function */
 double rectifiedLinearUnitDerivative(double x) {
-    return x > 0 ? 1 : 0;
+    if (x > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -42,7 +66,9 @@ double rectifiedLinearUnitDerivative(double x) {
  * @param x The input value
  * @return The hyperbolic tangent of the input value (lower bound -1, upper bound 1) */
 double hyperbolicTangent(double x) {
-    return (pow(e,x) - pow(e,-x)) / (pow(e,x) + pow(e,-x));
+    double epowx = pow(e,x);
+    double epowminusx = pow(e,-x);
+    return (epowx - epowminusx) / (epowx + epowminusx);
 }
 
 /**
@@ -50,5 +76,7 @@ double hyperbolicTangent(double x) {
  * @param x The input value
  * @return The derivative of the hyperbolic tangent function */
 double hyperbolicTangentDerivative(double x) {
-    return (4*pow(e, 2*x) / pow(pow(e, x*2) + 1, 2));
+    double e2 = pow(e,2 * x);
+    double t = (e2 - 1) / (e2 + 1);
+    return 1 - t * t;
 }

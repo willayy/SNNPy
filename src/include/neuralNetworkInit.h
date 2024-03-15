@@ -3,19 +3,21 @@
 #ifndef neuralNetworkInit_h
     #define neuralNetworkInit_h
 
-        void initNeuralNetwork(struct NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs, dblA activationFunction, dblA activationFunctionDerivative);
+        void initNeuralNetwork(NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs);
 
-        void resetNeuralNetwork(struct NeuralNetwork * nn);
+        void initNeuralNetworkFunctions(NeuralNetwork * nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative, dblAdblR lastLayerActivationFunction, dblAdblR lastLayerActivationFunctionDerivative);
 
-        void freeNeuralNetwork(struct NeuralNetwork * nn);
+        void resetNeuralNetwork(NeuralNetwork * nn);
 
-        void initWeightsXavierUniform(struct NeuralNetwork * nn, unsigned int seed);
+        void freeNeuralNetwork(NeuralNetwork * nn);
 
-        void initWeightsXavierNormal(struct NeuralNetwork * nn, unsigned int seed);
+        void initWeightsXavierUniform(NeuralNetwork * nn);
 
-        void initBiasesConstant(struct NeuralNetwork * nn, double b);
+        void initWeightsXavierNormal(NeuralNetwork * nn);
 
-        void initBiasesRandomUniform(struct NeuralNetwork * nn, double * bRange, unsigned int seed);
+        void initBiasesConstant(NeuralNetwork * nn, double b);
 
-        void initWeightsRandomUniform(struct NeuralNetwork * nn, double * wRange, unsigned int seed);
+        void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb);
+
+        void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw);
 #endif

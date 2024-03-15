@@ -10,113 +10,131 @@
 #include "neuralNetworkUtility.h"
 #include "funcPtrs.h"
 
-/**
- * Calculates the derivatives for the output layer of the neural network.
- * @param nn The neural network.
- * @param desiredOutput The desired output of the neural network. */
-void outputLayerDerivatives(struct NeuralNetwork * nn, double * desiredOutput, dblA_dblA costFunctionDerivative) {
+void initGradient(NeuronGradient * ng, int nrOfConnectedNeurons) {
+    ng->nrOfWeights = nrOfConnectedNeurons;
+    ng->weightGradient = (double *) malloc(sizeof(double) * nrOfConnectedNeurons);
+    ng->biasGradient = (double *) malloc(sizeof(double));
+    vectorSet(ng->weightGradient, 0, nrOfConnectedNeurons);
+    ng->biasGradient[0] = 0;
+}
 
-    for (int i = nn->nrOfNeurons - 1; i >= (nn->nrOfNeurons - nn->nrOfOutputNeurons); i--) {
-        
-        double * neuronValue = findNeuronValue(nn, i);
-        double * neuronActivation = findNeuronActivation(nn, i);
-        double dCdA = costFunctionDerivative(nn->neuronActivationVector[i], desiredOutput[nn->nrOfNeurons - i - 1]);
-        double dAdZ = nn->activationFunctionDerivative(neuronValue[0]);
-        neuronActivation[0] = dCdA * dAdZ;
+void initGradientVector(GradientVector * gv, int size) {
+    gv->nrOfNeurons = size;
+    gv->gradients = (NeuronGradient **) malloc(sizeof(NeuronGradient *) * (gv->nrOfNeurons));
+    for (int i = 0; i < gv->nrOfNeurons; i++) {
+        gv->gradients[i] = NULL;
     }
 }
 
-/**
- * Calculates the derivatives for the hidden layers of the neural network. 
- * @param nn The neural network. */
-void hiddenLayerDerivatives(struct NeuralNetwork * nn) {
+void initGradientBatch(GradientBatch * gb, int batchSize) {
+    gb->batchSize = batchSize;
+    gb->gradientVectors = (GradientVector **) malloc(sizeof(GradientVector *) * batchSize);
+    for (int i = 0; i < batchSize; i++) {
+        gb->gradientVectors[i] = NULL;
+    }
+}
 
-    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= nn->nrOfParameterNeurons; i--) {
-        
+GradientVector * computeGradients(NeuralNetwork * nn, double * partialGradients) {
+
+    GradientVector * gv = (GradientVector *) malloc(sizeof(GradientVector));
+
+    initGradientVector(gv, nn->nrOfNeurons);
+
+    // the derivatives of the cost function with respect to the weights and biases from first to second to last layer.
+    for (int i = 0; i < gv->nrOfNeurons; i++) {
+        int * partialGradientIndexes = findConnectedNeuronIndexes(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        double * neuronValue = findNeuronValue(nn, i);
-        double * connectedNeurons = findConnectedNeuronActivations(nn, i);
-        double * connectedWeights = findConnectedWeights(nn, i);
-        double derivativeSum = 0;
-
+        NeuronGradient * ng = (NeuronGradient *) malloc(sizeof(NeuronGradient));
+        initGradient(ng, nrOfConnectedNeurons);
+        gv->gradients[i] = ng;
+        double dZdW = nn->neuronActivationVector[i];
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-
-            double dZdA = connectedWeights[j];
-            derivativeSum += dZdA * connectedNeurons[j];
+            gv->gradients[i]->weightGradient[j] = (partialGradients[partialGradientIndexes[j]] * dZdW);
         }
-
-        double dAdZ = sigmoidDerivative(neuronValue[0]);
-        nn->neuronActivationVector[i] = derivativeSum * dAdZ; 
+        free(partialGradientIndexes);
+        gv->gradients[i]->biasGradient[0] = partialGradients[i];
     }
+
+    return gv;
 }
 
-void optimizeWeight(double * weight, double frontNeuronValue, double backNeuronValue, double lrw) {
+double * computePartialGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative) {
 
-    double dZdW = backNeuronValue; 
-    weight[0] -= lrw * dZdW * frontNeuronValue; 
-}
+    double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
 
-void optimizeBias(double * bias, double frontNeuronValue, double lrb) {
+    // Calculate dCdA and dAdZ for the output layer.
+    for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i--) {
+        double neuronA = nn->neuronActivationVector[i];
+        double neuronZ = nn->neuronValueVector[i];
+        double dCdA = costFunctionDerivative(neuronA, desiredOutput[i]);
+        double dAdZ = nn->lastLayerActivationFunctionDerivative(neuronZ);
+        partialGradients[i] = dCdA * dAdZ;
+    }
 
-    double dZdB = 1;
-    bias[0] -= lrb * dZdB * frontNeuronValue;
-}
-
-/**
- * Optimizes the weights and biases of the neural network.
- * @param nn The neural network.
- * @param lrw The learning rate for the weights.
- * @param lrb The learning rate for the biases. */
-void optimize(struct NeuralNetwork * nn, double lrw, double lrb) {
-
-    for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
-
-        double * backNeuronValue = findNeuronValue(nn, i);
-        double * bias = findBias(nn, i);
+    // Calculates dAdZ, dZdA (connected neurons Z value) for hidden layer and parameter neurons. 
+    // Multiplies this with connected partial gradients and sums them up.
+    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= 0; i--) {
+        double neuronZ = nn->neuronValueVector[i];
+        double * weights = findOutputWeights(nn, i);
+        int * connectedNeuronIndexes = findConnectedNeuronIndexes(nn, i);
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        double * connectedNeurons = findConnectedNeuronActivations(nn, i);
-        double * connectedWeights = findConnectedWeights(nn, i);
-        double sumConnectedNeurons = 0;
-
+        double gradientSum = 0;
+        double dAdZ = nn->activationFunctionDerivative(neuronZ);
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-
-            double * weight = &connectedWeights[j];
-            optimizeWeight(weight, connectedNeurons[j], backNeuronValue[0], lrw);
-            sumConnectedNeurons += connectedNeurons[j];
+            double dZdA = weights[j];
+            gradientSum += partialGradients[connectedNeuronIndexes[j]] * dZdA * dAdZ;
         }
-
-        optimizeBias(bias, sumConnectedNeurons, lrb);
+        free(connectedNeuronIndexes);
+        partialGradients[i] = gradientSum;
     }
+
+    return partialGradients;
 }
 
 /**
- * Backpropogates the error through the neural network and optimizes the weights and biases.
- * @param nn The neural network.
- * @param desiredOutput The desired output of the neural network.
- * @param lrw The learning rate for the weights.
- * @param lrb The learning rate for the biases. */
-void backPropogate(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblA_dblA costFunctionDerivative) {
+ * Averages the gradient vectors in a gradient batch.
+ * @param gb The gradient batch to average the gradients of.
+ * @return A gradient vector with the averaged gradients. */
+GradientVector * averageGradients(GradientBatch * gb) {
 
-    outputLayerDerivatives(nn, desiredOutput, costFunctionDerivative);
-    
-    hiddenLayerDerivatives(nn);
+    GradientVector * gv = (GradientVector *) malloc(sizeof(GradientVector));
 
-    optimize(nn, lrw, lrb);
+    initGradientVector(gv, gb->gradientVectors[0]->nrOfNeurons);
+
+    const double avg = 1.0/gb->batchSize;
+
+    for (int i = 0; i < gb->batchSize; i++) {
+        for (int j = 0; j < gv->nrOfNeurons; j++) {
+            NeuronGradient * ng = (NeuronGradient *) malloc(sizeof(NeuronGradient));
+            initGradient(ng, gb->gradientVectors[i]->gradients[j]->nrOfWeights);
+            gv->gradients[j] = ng;
+            for (int k = 0; k < gv->gradients[j]->nrOfWeights; k++) {
+                gv->gradients[j]->weightGradient[k] += (gb->gradientVectors[i]->gradients[j]->weightGradient[k])*avg;
+            }
+            gv->gradients[j]->biasGradient[0] += (gb->gradientVectors[i]->gradients[j]->biasGradient[0]) * avg;
+        }
+    }
+
+    return gv;
 }
 
 /**
- * Trains the neural network on a given input and desired output.
- * This is done by first propogating the data forward through the neural network, then backpropogating the error and optimizing the weights and biases.
- * @param nn The neural network.
- * @param input The input vector of the neural network.
- * @param desiredOutput The desired output vector of the neural network.
+ * Optimizes the neural network by updating the weights and biases with the gradients.
+ * @param nn The neural network to optimize.
+ * @param avgNg The averaged gradients to use for optimization.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-double fit(struct NeuralNetwork * nn, double * desiredOutput, double lrw, double lrb, dblP_dblP_intA costFunction, dblA_dblA costFunctionDerivative) {
-    
-    double cost = costFunction(nn->outputVector, desiredOutput, nn->nrOfOutputNeurons);
-    
-    backPropogate(nn, desiredOutput, lrw, lrb, costFunctionDerivative);
+void optimize(NeuralNetwork * nn, GradientVector * avgNg, double lrw, double lrb) {
 
-    return cost;
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
+        double * weights = findOutputWeights(nn, i);
+        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        for (int j = 0; j < nrOfConnectedNeurons; j++) {
+            double gradient = avgNg->gradients[i]->weightGradient[j];
+            weights[j] -= lrw * gradient;
+        }
+        double gradient = avgNg->gradients[i]->biasGradient[0];
+        nn->biasVector[i] -= lrb * gradient;
+    }
+
 }

@@ -3,5 +3,5 @@
 #ifndef neuralNetworkOperations_h
     #define neuralNetworkOperations_h
 
-        void inputDataToNeuralNetwork(struct NeuralNetwork * nn, double * inputData);
+        double * inputDataToNeuralNetwork(NeuralNetwork * nn, double * inputData);
 #endif

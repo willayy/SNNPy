@@ -6,8 +6,12 @@
 #include "neuralNetworkInit.h"
 #include "neuralNetworkTraining.h"
 #include "neuralNetworkOperations.h"
+#include "neuralNetworkUtility.h"
+#include "vectorOperations.h"
 #include "costFunctions.h"
+#include "randomValueGenerator.h"
 #include "activationFunctions.h"
+#include "nnMemManagement.h"
 
 int main() {
 
@@ -15,120 +19,90 @@ int main() {
 
     int testSumConvergence = 0;
 
-    struct NeuralNetwork * nn  = (struct NeuralNetwork *) malloc(sizeof(struct NeuralNetwork));
-    initNeuralNetwork(nn, 4, 2, 16, 16, &sigmoid, &sigmoidDerivative);
-    initWeightsXavierNormal(nn, time(NULL));
-    initBiasesConstant(nn, 0.1);
+    // Create data set
 
-    double * input0 = (double *) malloc(sizeof(double) * 4);
-    double * input1 = (double *) malloc(sizeof(double) * 4);
-    double * input2 = (double *) malloc(sizeof(double) * 4);
-    double * input3 = (double *) malloc(sizeof(double) * 4);
-    double * input4 = (double *) malloc(sizeof(double) * 4);
-    double * input5 = (double *) malloc(sizeof(double) * 4);
-    double * input6 = (double *) malloc(sizeof(double) * 4);
-    double * input7 = (double *) malloc(sizeof(double) * 4);
-    double * input8 = (double *) malloc(sizeof(double) * 4);
-    double * input9 = (double *) malloc(sizeof(double) * 4);
-    double * input10 = (double *) malloc(sizeof(double) * 4);
-    double * input11 = (double *) malloc(sizeof(double) * 4);
-    double * input12 = (double *) malloc(sizeof(double) * 4);
-    double * input13 = (double *) malloc(sizeof(double) * 4);
-    double * input14 = (double *) malloc(sizeof(double) * 4);
-    double * input15 = (double *) malloc(sizeof(double) * 4);
+    double ** inputs = (double **) malloc(sizeof(double *) * 16);
+    double ** desOutputs = (double **) malloc(sizeof(double *) * 16);
 
-    double * output0 = (double *) malloc(sizeof(double) * 16);
-    double * output1 = (double *) malloc(sizeof(double) * 16);
-    double * output2 = (double *) malloc(sizeof(double) * 16);
-    double * output3 = (double *) malloc(sizeof(double) * 16);
-    double * output4 = (double *) malloc(sizeof(double) * 16);
-    double * output5 = (double *) malloc(sizeof(double) * 16);
-    double * output6 = (double *) malloc(sizeof(double) * 16);
-    double * output7 = (double *) malloc(sizeof(double) * 16);
-    double * output8 = (double *) malloc(sizeof(double) * 16);
-    double * output9 = (double *) malloc(sizeof(double) * 16);
-    double * output10 = (double *) malloc(sizeof(double) * 16);
-    double * output11 = (double *) malloc(sizeof(double) * 16);
-    double * output12 = (double *) malloc(sizeof(double) * 16);
-    double * output13 = (double *) malloc(sizeof(double) * 16);
-    double * output14 = (double *) malloc(sizeof(double) * 16);
-    double * output15 = (double *) malloc(sizeof(double) * 16);    
+    for (int i = 0; i < 16; i++) {
+        inputs[i] = (double *) malloc(sizeof(double) * 4);
+        desOutputs[i] = (double *) malloc(sizeof(double) * 16);
+    }
 
-    input0 = (double[]) {0, 0, 0, 0};
-    input1 = (double[]) {1, 0, 0, 0};
-    input2 = (double[]) {0, 1, 0, 0};
-    input3 = (double[]) {1, 1, 0, 0};
-    input4 = (double[]) {0, 0, 1, 0};
-    input5 = (double[]) {1, 0, 1, 0};
-    input6 = (double[]) {0, 1, 1, 0};
-    input7 = (double[]) {1, 1, 1, 0};
-    input8 = (double[]) {0, 0, 0, 1};
-    input9 = (double[]) {1, 0, 0, 1};
-    input10 = (double[]) {0, 1, 0, 1};
-    input11 = (double[]) {1, 1, 0, 1};
-    input12 = (double[]) {0, 0, 1, 1};
-    input13 = (double[]) {1, 0, 1, 1};
-    input14 = (double[]) {0, 1, 1, 1};
-    input15 = (double[]) {1, 1, 1, 1};
-
-    output0 = (double[]) {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    output1 = (double[]) {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    output2 = (double[]) {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    output3 = (double[]) {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0};
-    output4 = (double[]) {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0};
-    output5 = (double[]) {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0};
-    output6 = (double[]) {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
-    output7 = (double[]) {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
-    output8 = (double[]) {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0};
-    output9 = (double[]) {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0};
-    output10 = (double[]) {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0};
-    output11 = (double[]) {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0};
-    output12 = (double[]) {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0};
-    output13 = (double[]) {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0};
-    output14 = (double[]) {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0};
-    output15 = (double[]) {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
-
-    double cost;
-
-    for (int i = 0; i < 10000; i++) {
-        cost = 0;
-        inputDataToNeuralNetwork(nn, input0);
-        cost += fit(nn, output0, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input1);
-        cost +=fit(nn, output1, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input2);
-        cost +=fit(nn, output2, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input3);
-        cost +=fit(nn, output3, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input4);
-        cost +=fit(nn, output4, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input5);
-        cost +=fit(nn, output5, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input6);
-        cost +=fit(nn, output6, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input7);
-        cost +=fit(nn, output7, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input8);
-        cost +=fit(nn, output8, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input9);
-        cost +=fit(nn, output9, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input10);
-        cost +=fit(nn, output10, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input11);
-        cost +=fit(nn, output11, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input12);
-        cost +=fit(nn, output12, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input13);
-        cost +=fit(nn, output13, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input14);
-        cost +=fit(nn, output14, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-        inputDataToNeuralNetwork(nn, input15);
-        cost +=fit(nn, output15, 0.1, 0.01, &sqrCostFunction, &sqrCostFunctionDerivative);
-
-        if (cost < 0.1) {
-            printf("Converged after %d iterations\n", i);
-            break;
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 4; j++) {
+            inputs[i][j] = (double) (i >> j & 1) + 0.01;
+        }
+        for (int j = 0; j < 16; j++) {
+            desOutputs[i][j] = (double) (i == j) + 0.01;
         }
     }
-    printf("Neural network did not converge final Cost: %f\n", cost);
+
+    // Initialize random number generator
+    setSeed(time(NULL));
+
+    // Create neural network
+    NeuralNetwork * nn  = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
+    initNeuralNetwork(nn, 4, 1, 4, 16);
+    initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
+    initWeightsXavierNormal(nn);
+    initBiasesConstant(nn, 0.20);
+
+    int epochs = 200000;
+    int batchSize = 16;
+    double epochCost;
+    double lrw = 0.02;
+    double lrb = 0.001;
+
+    for (int i = 0; i < epochs; i++) {
+        epochCost = 0;
+        GradientBatch * gb = (GradientBatch *) malloc(sizeof(GradientBatch));
+        initGradientBatch(gb, batchSize);
+
+        if (i == 5000) {
+            printf("Sumsing");
+        }
+
+        for (int j = 0; j < batchSize; j++) {
+            double * output = inputDataToNeuralNetwork(nn, inputs[j]);
+            epochCost += sqrCostFunction(output, desOutputs[j], nn->nrOfOutputNeurons);
+            double * partialGradients = computePartialGradients(nn, desOutputs[j], &sqrCostFunctionDerivative);
+            gb->gradientVectors[j] = computeGradients(nn, partialGradients);
+
+            free(partialGradients);
+            free(output);
+        }
+
+        GradientVector * avgGradient = averageGradients(gb);
+        
+        optimize(nn, avgGradient, lrw, lrb);
+
+        printf("Epoch %d, cost: %f\n", i, epochCost/batchSize);
+
+        if (epochCost/batchSize < 0.85) {
+            testSumConvergence = 1;
+            printf("Converged after %d epochs\n", i);
+            for (int j = 0; j < 16; j++) {
+                double * output = inputDataToNeuralNetwork(nn, inputs[j]);
+                printf("Input: %f %f %f %f ", inputs[j][0], inputs[j][1], inputs[j][2], inputs[j][3]);
+                printf("Output: %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\n", output[0], output[1], output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[9], output[10], output[11], output[12], output[13], output[14], output[15]);
+                free(output);
+            }
+            break;
+        }
+
+        freeGradientVector(avgGradient);
+        freeGradientBatch(gb);
+    }
+
+    freeNeuralNetwork(nn);
+
+    for (int i = 0; i < 16; i++) {
+        free(inputs[i]);
+        free(desOutputs[i]);
+    }
+    free(inputs);
+    free(desOutputs);
+
+    return testSumConvergence;
 }

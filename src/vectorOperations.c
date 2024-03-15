@@ -33,7 +33,7 @@ void vectorExtend(double * a, double * b, int from, int vectorSize) {
  * @param a The first vector.
  * @param b The second vector.
  * @param vectorSize The size of the vectors. */
-double dotProduct(double *a, double *b, int vectorSize) {
+double dotProduct(double * a, double * b, int vectorSize) {
     double sum = 0;
 
     for (int i = 0; i < vectorSize; i++) {
@@ -52,6 +52,19 @@ void vectorMul(double * a, double b, int vectorSize) {
 
     for (int i = 0; i < vectorSize; i++) {
         a[i] = a[i] * b;
+    }
+
+}
+
+/**
+ * Divides a vector with a scalar.
+ * @param a The vector.
+ * @param b The scalar.
+ * @param vectorSize The size of the vector. */
+void vectorDiv(double * a, double b, int vectorSize) {
+
+    for (int i = 0; i < vectorSize; i++) {
+        a[i] = a[i] / b;
     }
 
 }
@@ -79,7 +92,7 @@ double * vectorMulCopy(double * a, double b, int vectorSize) {
  * @param vectorSize The size of the vectors. */
 void vectorAdd(double * a, double * b, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
-        a[i] = a[i] + b[i];
+        a[i] += b[i];
     }
 }
 
@@ -95,11 +108,22 @@ void vectorReplace(double * a, double * b, int vectorSize) {
 }
 
 /**
+ * Replaces all vector elements with a scalar.
+ * @param a The vector.
+ * @param b The scalar.
+ * @param vectorSize The size of the vector. */
+void vectorSet(double * a, double b, int vectorSize) {
+    for (int i = 0; i < vectorSize; i++) {
+        a[i] = b;
+    }
+}
+
+/**
  * Applies a function to each element of a vector. Function must take a double as a parameter and return an double.
  * @param a The vector.
  * @param vectorSize The size of the vector.
  * @param operation The function to be applied to each element of the vector. */
-void vectorOperation(double * a, dblA operation, int vectorSize) {
+void vectorOperation(double * a, dblAdblR operation, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
         a[i] = operation(a[i]);
     }

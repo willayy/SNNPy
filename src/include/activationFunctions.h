@@ -1,6 +1,10 @@
 #ifndef activationFunctions_h
     #define activationFunctions_h
 
+        double linear(double x);
+
+        double linearDerivative(double x);
+
         double sigmoid(double x);
 
         double sigmoidDerivative(double x);

@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.20)
 
 # Project name
 project(
-  SNNpy
+  SNNPy
   VERSION 2.0.0
   LANGUAGES C
 )  
@@ -27,7 +27,8 @@ add_library(
 
 # Add shared library
 add_library(
-  SNNpy SHARED
+  SNNPy SHARED
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
@@ -37,11 +38,12 @@ add_library(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )
-target_include_directories(SNNpy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+target_include_directories(SNNPy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
 # Add the executable for testsuite
 add_executable(
-  SNNpy-tests
+  SNNPy-tests
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
@@ -52,11 +54,12 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )
-target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
-target_include_directories(SNNpy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src/)
+target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src/)
 
 add_executable(
-  SNNpy-benchmark
+  SNNPy-benchmark
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmarkTest.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
@@ -67,15 +70,15 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
 )
-target_include_directories(SNNpy-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+target_include_directories(SNNPy-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
 # Set the output directory for the testsuite
-set_target_properties(SNNpy-tests PROPERTIES
+set_target_properties(SNNPy-tests PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
 )
 
 # Set the output directory for the benchmark
-set_target_properties(SNNpy-benchmark PROPERTIES
+set_target_properties(SNNPy-benchmark PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
 )
 
@@ -85,18 +88,18 @@ set_target_properties(testing PROPERTIES
 )
 
 if (WIN32) # Windows output directory for shared library
-  set_target_properties(SNNpy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
-  set_target_properties(SNNpy PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+  set_target_properties(SNNPy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+  set_target_properties(SNNPy PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
 endif()
 
 if (UNIX) # Linux or MacOS output directory for shared library
-  set_target_properties(SNNpy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+  set_target_properties(SNNPy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
 endif()
 
 # Set the C standard to C17
-target_compile_features(SNNpy PRIVATE c_std_17)
+target_compile_features(SNNPy PRIVATE c_std_17)
 
 # Link the executable to the library
-target_link_libraries(SNNpy-tests testing)
+target_link_libraries(SNNPy-tests testing)
 
 

@@ -5,7 +5,7 @@
 
         void setSeed(unsigned int seed);
 
-        double randomValue(int min, int max);
+        double randomValue(double min, double max);
 
         double boxMuellerTransform(double mean, double stddev);
 #endif
