@@ -3,8 +3,7 @@
 #include <stdlib.h>
 
 /**
- * Calculates the cost of the neural network on a given input and desired output. 
- * Calculating how good bad the current biases and edges are for a certain input.
+ * Calculates the mean square cost of the neural network on a given input and desired output. 
  * @param output The output of the neural network.
  * @param desiredOutput The desired output of the neural network.
  * @param outputSize The size of the output array.
@@ -13,15 +12,16 @@ double sqrCostFunction(double * output, double * desiredOutput, int outputSize) 
 
     // cost is sum (for all x,y pairs) of: 0.5 * (x-y)^2
     double cost = 0;
+    double error;
     for (int i = 0; i < outputSize; i++) {
-        double error = output[i] - desiredOutput[i];
+        error = output[i] - desiredOutput[i];
         cost += error * error;
     }
     return 0.5 * cost;
 }
 
 /**
- * Calculates the derivative of the cost function for a single output.
+ * Calculates the derivative of the mean square cost function for a single output.
  * @param output The output of the neural network neuron.
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */
@@ -31,7 +31,7 @@ double sqrCostFunctionDerivative(double output, double desiredOutput) {
 
 /**
  * Calculates the cross entropy cost of the neural network on a given input and desired output.
- * Use this loss function with softmax activation.
+ * Works best for binary classification.
  * @param output The output of the neural network.
  * @param desiredOutput The desired output of the neural network.
  * @param outputSize The size of the output array.
@@ -41,10 +41,13 @@ double crossEntropyCostFunction(double * output, double * desiredOutput, int out
     // Note: expected outputs are expected to all be either 0 or 1
     // cost is sum (for all x,y pairs) of: 0.5 * (x-y)^2
     double cost = 0;
+    double x;
+    double y;
+    double v;
     for (int i = 0; i < outputSize; i++) {
-        double x = output[i];
-        double y = desiredOutput[i];
-        double v = (y == 1) ? -log(x) : -log(1 - x);
+        x = output[i];
+        y = desiredOutput[i];
+        v = (y == 1) ? -log(x) : -log(1 - x);
         cost += isnan(v) ? 0 : v;
     }
     return cost;
@@ -52,7 +55,6 @@ double crossEntropyCostFunction(double * output, double * desiredOutput, int out
 
 /**
  * Calculates the derivative of the cross entropy cost function for a single output.
- * Use this loss function with softmax activation.
  * @param output The output of the neural network neuron.
  * @param desiredOutput The desired output of the neural network.
  * @return The derivative of the cost function. */

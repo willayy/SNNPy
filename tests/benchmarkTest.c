@@ -34,6 +34,7 @@ int main() {
             inputs[i][j] = (double) (i >> j & 1);
         }
         for (int j = 0; j < 16; j++) {
+            printf("%d ", (i == j));
             desOutputs[i][j] = (double) (i == j);
         }
     }
@@ -46,27 +47,26 @@ int main() {
     initNeuralNetwork(nn, 4, 1, 4, 16);
     initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
     initWeightsXavierNormal(nn);
-    initBiasesConstant(nn, 0.20);
+    initBiasesConstant(nn, 0.10);
 
-    int epochs = 20000;
+    int epochs = 100000;
     int batchSize = 16;
     double epochCost;
     double lrw = 0.002;
-    double lrb = 0.001;
+    double lrb = 0.0001;
+    int inputIndex;
 
     for (int i = 0; i < epochs; i++) {
+
         epochCost = 0;
         GradientBatch * gb = (GradientBatch *) malloc(sizeof(GradientBatch));
         initGradientBatch(gb, batchSize);
 
-        if (i == 5000) {
-            printf("Sumsing");
-        }
-
         for (int j = 0; j < batchSize; j++) {
-            double * output = inputDataToNeuralNetwork(nn, inputs[j]);
-            epochCost += crossEntropyCostFunction(output, desOutputs[j], nn->nrOfOutputNeurons);
-            gb->gradientVectors[j] = computeGradients(nn, desOutputs[j], &crossEntropyCostFunctionDerivative);
+            inputIndex = randomInt(0, 15);
+            double * output = inputDataToNeuralNetwork(nn, inputs[inputIndex]);
+            epochCost += crossEntropyCostFunction(output, desOutputs[inputIndex], nn->nrOfOutputNeurons);
+            gb->gradientVectors[j] = computeGradients(nn, desOutputs[inputIndex], &crossEntropyCostFunctionDerivative);
             free(output);
         }
 

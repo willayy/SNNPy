@@ -42,11 +42,7 @@ double sigmoidDerivative(double x) {
  * @param x The input value
  * @return The ReLU of the input value */
 double rectifiedLinearUnit(double x) {
-    if (x > 0) {
-        return x;
-    } else {
-        return 0;
-    }
+    return (x > 0) ? x : 0;
 }
 
 /**
@@ -54,11 +50,7 @@ double rectifiedLinearUnit(double x) {
  * @param x The input value
  * @return The derivative of the ReLU function */
 double rectifiedLinearUnitDerivative(double x) {
-    if (x > 0) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return (x > 0) ? 1 : 0;
 }
 
 /**

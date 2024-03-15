@@ -26,6 +26,15 @@ double randomValue(double min, double max) {
 }
 
 /**
+ * Generates a random integer between min and max (inclusive) uniformly.
+ * @param min: the lower bound of the random integer.
+ * @param max: the upper bound of the random integer.
+ * @return a random integer between min and max. */
+int randomInt(int min, int max) {
+    return rand() % (max - min + 1) + min;
+}
+
+/**
  * Generates a normally distributed random value using the Box-Mueller transform.
  * @param mean: the mean of the normal distribution.
  * @param stddev: the standard deviation of the normal distribution.
