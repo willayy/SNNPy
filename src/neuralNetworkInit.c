@@ -9,6 +9,20 @@
 #include "vectorOperations.h"
 #include "neuralNetworkUtility.h"
 
+void initNeuron(Neuron * n) {
+    n->A = 0;
+    n->Z = 0;
+    n->conections = 0;
+    n->weights = NULL;
+    n->bias = 0;
+    n->activationFunctions = NULL;
+    n->connectedNeurons = NULL;
+}
+
+void initParameter(Parameter * p) {
+    p->value = 0;
+    p->connectedNeurons = NULL;
+}
 
 /**
  * Creates a neural network.
@@ -22,40 +36,38 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, i
     nn->nrOfHiddenLayers = nrOfLayers;
     nn->neuronsPerLayer = neuronsPerLayer;
     nn->nrOfOutputNeurons = nrOfOutputs;
-    nn->nrOfNeurons = nrOfParameters + neuronsPerLayer*nrOfLayers + nrOfOutputs;
+    nn->nrOfNeurons = neuronsPerLayer * nrOfLayers + nrOfOutputs;
     nn->nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
- 
-    nn->neuronActivationVector = (double *) malloc(sizeof(double) * (nn->nrOfNeurons));
-    nn->activationParameterVector = nn->neuronActivationVector;
-    nn->hiddenActivationVector = nn->neuronActivationVector + nn->nrOfParameterNeurons;
-    nn->activationOutputVector = nn->neuronActivationVector + nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons;
+    
+    nn->parameters = (Parameter **) malloc(sizeof(Parameter *) * nrOfParameters); // allocate memory for the parameters
+    nn->neurons = (Neuron **) malloc(sizeof(Neuron *) * nn->nrOfNeurons); // allocate memory for the neurons
 
-    nn->neuronValueVector = (double *) malloc(sizeof(double) * (nn->nrOfNeurons));
-    nn->parameterValueVector = nn->neuronValueVector;
-    nn->hiddenValueVector = nn->neuronValueVector + nn->nrOfParameterNeurons;
-    nn->outputValueVector = nn->neuronValueVector + nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons;
-
-    nn->biasVector = (double *) malloc(sizeof(double) * (nn->nrOfNeurons));
-    nn->weightMatrix = (double **) malloc(sizeof(double *) * (nn->nrOfNeurons-nn->nrOfOutputNeurons));
-
-    // allocate memory for the weight matrix
-
-    for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        nn->weightMatrix[i] = (double *) malloc(sizeof(double) * nrOfConnectedNeurons);
-        vectorSet(nn->weightMatrix[i], 0, nrOfConnectedNeurons);
+    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
+        nn->parameters[i] = (Parameter *) malloc(sizeof(Parameter)); // allocate memory for the parameters
+        initParameter(nn->parameters[i]);
     }
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->neuronActivationVector[i] = 0;
+        nn->neurons[i] = (Neuron *) malloc(sizeof(Neuron)); // allocate memory for the neurons
+        initNeuron(nn->neurons[i]);
     }
 
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->neuronValueVector[i] = 0;
+    // Connect parameters to first layer neurons
+    for (int i = 0; i < nn->nrOfParameterNeurons; i++) { 
+        nn->parameters[i]->connections = neuronsPerLayer;
+        nn->parameters[i]->connectedNeurons = (Neuron **) malloc(sizeof(Neuron *) * neuronsPerLayer);
+        for (int j = 0; j < neuronsPerLayer; j++) {
+            nn->parameters[i]->connectedNeurons[j] = nn->neurons[j];
+        }
     }
 
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->biasVector[i] = 0;
+    // Connect neurons to neurons
+    for (int i = 0; i < nn->nrOfHiddenNeurons - nn->neuronsPerLayer; i++) {
+        nn->neurons[i]->conections = neuronsPerLayer;
+        nn->neurons[i]->connectedNeurons = (Neuron **) malloc(sizeof(Neuron *) * neuronsPerLayer);
+        for (int j = 0; j < neuronsPerLayer; j++) {
+            //TODO: fix this;
+        }
     }
 
 }
@@ -69,11 +81,16 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfParameters, int nrOfLayers, i
  * @param lastLayerActivationFunctionDerivative: the derivative of the activation function for the output layer. */
 void initNeuralNetworkFunctions(NeuralNetwork * nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative, dblAdblR lastLayerActivationFunction, dblAdblR lastLayerActivationFunctionDerivative) {
     
-    nn->activationFunction = activationFunction;
-    nn->activationFunctionDerivative = activationFunctionDerivative;
-    nn->lastLayerActivationFunction = lastLayerActivationFunction;
-    nn->lastLayerActivationFunctionDerivative = lastLayerActivationFunctionDerivative;
-    
+    for (int i = 0; i < nn->nrOfHiddenNeurons - nn->neuronsPerLayer; i++) {
+        nn->neurons[i]->activationFunctions = (dblAdblR *) malloc(sizeof(dblAdblR *) * 2);
+        nn->neurons[i]->activationFunctions[0] = activationFunction;
+        nn->neurons[i]->activationFunctions[1] = activationFunctionDerivative;
+    }
+    for (int i = nn->nrOfHiddenLayers - nn->neuronsPerLayer; i < nn->nrOfHiddenLayers; i++) {
+        nn->neurons[i]->activationFunctions = (dblAdblR *) malloc(sizeof(dblAdblR *) * 2);
+        nn->neurons[i]->activationFunctions[0] = lastLayerActivationFunction;
+        nn->neurons[i]->activationFunctions[1] = lastLayerActivationFunctionDerivative;
+    }
 }
 
 /**
@@ -86,18 +103,18 @@ void initWeightsXavierUniform(NeuralNetwork * nn) {
     int nrOfConnectedNeurons;
 
     for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
-        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        nrOfConnectedNeurons = nn->neurons[i]->conections;
         range = sqrt(6.0 / (nn->nrOfParameterNeurons + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomDouble(-range, range);
+            nn->neurons[i]->weights[j] = randomDouble(-range, range);
         }
     }
 
-    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
+        nrOfConnectedNeurons = nn->neurons[i]->conections;
         range = sqrt(6.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomDouble(-range, range);
+            nn->neurons[i]->weights[j] = randomDouble(-range, range);
         }
     }
 }
@@ -112,18 +129,18 @@ void initWeightsXavierNormal(NeuralNetwork * nn) {
     int nrOfConnectedNeurons;
 
     for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
-        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        nrOfConnectedNeurons = nn->neurons[i]->conections;
         range = sqrt(2.0 / (nn->nrOfParameterNeurons + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = boxMuellerTransform(0, range);
+            nn->neurons[i]->weights[j] = boxMuellerTransform(0, range);
         }
     }
 
     for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        nrOfConnectedNeurons = nn->neurons[i]->conections;
         range = sqrt(2.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = boxMuellerTransform(0, range);
+            nn->neurons[i]->weights[j] = boxMuellerTransform(0, range);
         }
     }
 }
@@ -133,8 +150,8 @@ void initWeightsXavierNormal(NeuralNetwork * nn) {
  * @param nn: the neural network to initialize the biases for.
  * @param b: the constant value to initialize the biases to. */
 void initBiasesConstant(NeuralNetwork * nn, double b) {
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->biasVector[i] = b;
+    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons; i++) {
+        nn->neurons[i]->bias = b;
     }
 }
 
@@ -145,8 +162,8 @@ void initBiasesConstant(NeuralNetwork * nn, double b) {
  * @param seed: the seed for the random function */
 void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb) {
 
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->biasVector[i] = randomDouble(minb, maxb);
+    for (int i = nn->nrOfParameterNeurons; i < nn->nrOfNeurons; i++) {
+        nn->neurons[i]->bias = randomDouble(minb, maxb);
     }
 }
 
@@ -159,9 +176,9 @@ void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb) {
 void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw) {
 
     for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
+        int nrOfConnectedNeurons = nn->neurons[i]->conections;
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomDouble(minw, maxw);
+            nn->neurons[i]->weights[j] = randomDouble(minw, maxw);
         }
     }
 
@@ -173,11 +190,11 @@ void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw) {
 void resetNeuralNetwork(NeuralNetwork * nn) {
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->neuronActivationVector[i] = 0;
+        nn->neurons[i]->A = 0;
     }
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->neuronValueVector[i] = 0;
+        nn->neurons[i] = 0;
     }
 
 }

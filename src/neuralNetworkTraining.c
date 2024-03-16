@@ -75,7 +75,7 @@ GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, db
 
     // Calculates dAdZ, dZdA (connected neurons Z value) for hidden layer and parameter neurons. 
     // Multiplies this with connected partial gradients and sums them up.
-    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= 0; i--) {
+    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= nn->nrOfParameterNeurons; i--) {
         neuronZ = nn->neuronValueVector[i];
         outputWeights = findOutputWeights(nn, i);
         connectedNeuronIndexes = findConnectedNeuronIndexes(nn, i);

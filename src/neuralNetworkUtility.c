@@ -110,9 +110,9 @@ double * findConnectedNeuronValues(NeuralNetwork * nn, int neuron) {
 double * findConnectedNeuronBiases(NeuralNetwork * nn, int neuron) {
 
     if (neuron < nn->nrOfParameterNeurons) {
-        return nn->biasVector + nn->nrOfParameterNeurons;
+        return nn->biasVector;
     }
-    else if (neuron < nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
+    else if (neuron <= nn->nrOfParameterNeurons + nn->nrOfHiddenNeurons - nn->neuronsPerLayer) {
         return nn->biasVector + (neuron / nn->neuronsPerLayer) * nn->neuronsPerLayer;
     }
     else if (neuron < nn->nrOfNeurons) {
@@ -171,4 +171,28 @@ int isNeuronLastInHiddenlayer(NeuralNetwork * nn, int neuron) {
     }
 
     return 0;
+}
+
+/**
+ * Finds the bias of a given neuron.
+ * @param nn The neural network.
+ * @param neuron The neuron to find the bias of.
+ * @return The bias of the neuron. */
+double findBias(NeuralNetwork * nn, int neuron) {
+    if (neuron < nn->nrOfParameterNeurons || neuron >= nn->nrOfNeurons) {
+        return 0;
+    }
+    return nn->biasVector[neuron - nn->nrOfParameterNeurons];
+}
+
+/**
+ * Finds the activation of a given neuron.
+ * @param nn The neural network.
+ * @param neuron The neuron to find the activation of.
+ * @return The activation of the neuron. */
+double findActivation(NeuralNetwork * nn, int neuron) {
+    if (neuron < nn->nrOfParameterNeurons || neuron >= nn->nrOfNeurons) {
+        return 0;
+    }
+    return nn->neuronActivationVector[neuron - nn->nrOfParameterNeurons];
 }

@@ -11,11 +11,7 @@
 void propogateForward(NeuralNetwork * nn, double * inputData) {
 
     // Set the input data to the parameter neurons.
-    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
-        nn->parameterValueVector[i] = inputData[i];
-        nn->parameterValueVector[i] += nn->biasVector[i];
-        nn->activationParameterVector[i] = nn->activationFunction(nn->neuronValueVector[i]);
-    }
+    vectorReplace(nn->parameterValueVector, inputData, nn->nrOfParameterNeurons);
 
     for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
 
