@@ -89,7 +89,7 @@ void initWeightsXavierUniform(NeuralNetwork * nn) {
         nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         range = sqrt(6.0 / (nn->nrOfParameterNeurons + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomValue(-range, range);
+            nn->weightMatrix[i][j] = randomDouble(-range, range);
         }
     }
 
@@ -97,7 +97,7 @@ void initWeightsXavierUniform(NeuralNetwork * nn) {
         nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         range = sqrt(6.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomValue(-range, range);
+            nn->weightMatrix[i][j] = randomDouble(-range, range);
         }
     }
 }
@@ -146,7 +146,7 @@ void initBiasesConstant(NeuralNetwork * nn, double b) {
 void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb) {
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
-        nn->biasVector[i] = randomValue(minb, maxb);
+        nn->biasVector[i] = randomDouble(minb, maxb);
     }
 }
 
@@ -161,7 +161,7 @@ void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw) {
     for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
         int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
-            nn->weightMatrix[i][j] = randomValue(minw, maxw);
+            nn->weightMatrix[i][j] = randomDouble(minw, maxw);
         }
     }
 

@@ -34,7 +34,6 @@ int main() {
             inputs[i][j] = (double) (i >> j & 1);
         }
         for (int j = 0; j < 16; j++) {
-            printf("%d ", (i == j));
             desOutputs[i][j] = (double) (i == j);
         }
     }
@@ -47,23 +46,24 @@ int main() {
     initNeuralNetwork(nn, 4, 1, 4, 16);
     initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
     initWeightsXavierNormal(nn);
-    initBiasesConstant(nn, 0.10);
+    initBiasesConstant(nn, 0.1);
 
-    int epochs = 100000;
+    int epochs = 10000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.002;
-    double lrb = 0.0001;
-    int inputIndex;
+    double lrw = 0.02;
+    double lrb = 0.001;
+    int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     for (int i = 0; i < epochs; i++) {
 
         epochCost = 0;
         GradientBatch * gb = (GradientBatch *) malloc(sizeof(GradientBatch));
         initGradientBatch(gb, batchSize);
+        fisherYatesShuffle(indexes, 16);
 
         for (int j = 0; j < batchSize; j++) {
-            inputIndex = randomInt(0, 15);
+            int inputIndex = indexes[j];
             double * output = inputDataToNeuralNetwork(nn, inputs[inputIndex]);
             epochCost += crossEntropyCostFunction(output, desOutputs[inputIndex], nn->nrOfOutputNeurons);
             gb->gradientVectors[j] = computeGradients(nn, desOutputs[inputIndex], &crossEntropyCostFunctionDerivative);
@@ -76,20 +76,15 @@ int main() {
 
         printf("Epoch %d, cost: %f\n", i, epochCost/batchSize);
 
-        if (epochCost/batchSize < 1) {
-            testSumConvergence = 1;
-            printf("Converged after %d epochs\n", i);
-            for (int j = 0; j < 16; j++) {
-                double * output = inputDataToNeuralNetwork(nn, inputs[j]);
-                printf("Input: %f %f %f %f ", inputs[j][0], inputs[j][1], inputs[j][2], inputs[j][3]);
-                printf("Output: %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\n", output[0], output[1], output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[9], output[10], output[11], output[12], output[13], output[14], output[15]);
-                free(output);
-            }
-            break;
-        }
-
         freeGradientVector(avgGradient);
         freeGradientBatch(gb);
+    }
+
+    for (int j = 0; j < 16; j++) {
+        double * output = inputDataToNeuralNetwork(nn, inputs[j]);
+        printf("Input: %.2f %.2f %.2f %.2f ", inputs[j][0], inputs[j][1], inputs[j][2], inputs[j][3]);
+        printf("Output: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,\n", output[0], output[1], output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[9], output[10], output[11], output[12], output[13], output[14], output[15]);
+        free(output);
     }
 
     freeNeuralNetwork(nn);
@@ -98,6 +93,7 @@ int main() {
         free(inputs[i]);
         free(desOutputs[i]);
     }
+
     free(inputs);
     free(desOutputs);
 

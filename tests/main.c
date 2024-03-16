@@ -169,7 +169,7 @@ int main() {
     setSeed(time(NULL));
     double sum = 0;
     for (int i = 0; i < 10000; i++) {
-        sum += randomValue(-10, 10);
+        sum += randomDouble(-10, 10);
     }
     double average = sum / 10000;
     testSumRandomValueGenerator += dbl_assertBetween(-0.2, 0.2, average, "uniformRandomValue mean -10, 10");

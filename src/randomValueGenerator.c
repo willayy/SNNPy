@@ -17,12 +17,12 @@ void setSeed(unsigned int newSeed) {
 }
 
 /**
- * Generates a random value between min and max uniformly.
+ * Generates a random value between min and max (inclusive) uniformly.
  * @param min: the lower bound of the random value.
  * @param max: the upper bound of the random value.
  * @return a random value between min and max. */
-double randomValue(double min, double max) {
-    return ( (double)rand() * ( max - min ) ) / (double)RAND_MAX + min;
+double randomDouble(double min, double max) {
+    return ( (double) rand() * ( max - min ) ) / (double)RAND_MAX + min;
 }
 
 /**
@@ -46,4 +46,17 @@ double boxMuellerTransform(double mean, double stddev) {
     double z0 = sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2);
     
     return mean + z0 * stddev;
+}
+
+// Perform Fisher-Yates shuffle algorithm
+void fisherYatesShuffle(int * arr, int n) {
+    for (int i = n - 1; i > 0; i--) {
+        // Generate a random index between 0 and i
+        int j = rand() % (i + 1);
+        
+        // Swap arr[i] with arr[j]
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
 }

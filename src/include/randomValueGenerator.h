@@ -5,9 +5,11 @@
 
         void setSeed(unsigned int seed);
 
-        double randomValue(double min, double max);
+        double randomDouble(double min, double max);
 
         int randomInt(int min, int max);
 
         double boxMuellerTransform(double mean, double stddev);
+
+        void fisherYatesShuffle(int * arr, int n);
 #endif
