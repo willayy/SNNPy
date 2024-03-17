@@ -4,41 +4,26 @@
 
 #include "neuralNetworkUtility.h"
 #include "neuralNetworkInit.h"
-#include "vectorOperations.h"
 #include "neuralNetworkStructs.h"
 #include "activationFunctions.h"
 
 void propogateForward(NeuralNetwork * nn, double * inputData) {
 
-    // Set the input data to the parameter neurons.
-    for (int i = 0; i < nn->nrOfParameterNeurons; i++) {
-        nn->parameterValueVector[i] = inputData[i];
-        nn->parameterValueVector[i] += nn->biasVector[i];
-        nn->activationParameterVector[i] = nn->activationFunction(nn->neuronValueVector[i]);
+    // Set the input layer to the input data.
+    for (int i = 0; i < nn->nrOfInputNeurons; i++) {
+        nn->neurons[i]->Z = inputData[i];
     }
 
-    for (int i = 0; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
+    int nrOfConnections;
+    Neuron * n;
 
-        double neuronActivation = nn->neuronActivationVector[i];
-        double * connectedWeights = findOutputWeights(nn, i);
-        double * connectedNeuronValues = findConnectedNeuronValues(nn, i);
-        int nrOfConnectedNeurons = numberOfConnectedNeurons(nn, i);
-        double * forwardPropogatedValues = vectorMulCopy(connectedWeights, neuronActivation, nrOfConnectedNeurons);
-        vectorAdd(connectedNeuronValues, forwardPropogatedValues, nrOfConnectedNeurons);
-        free(forwardPropogatedValues);
-
-        if (isNeuronLastInLayer(nn, i)) {
-
-            double * connectedActivationValues = findConnectedNeuronActivations(nn, i);
-            double * connectedBiases = findConnectedNeuronBiases(nn, i);
-            vectorAdd(connectedNeuronValues, connectedBiases, nrOfConnectedNeurons);
-            vectorReplace(connectedActivationValues, connectedNeuronValues, nrOfConnectedNeurons);
-
-            if (isNeuronLastInHiddenlayer(nn, i)) {
-                vectorOperation(connectedActivationValues, nn->lastLayerActivationFunction, nrOfConnectedNeurons); 
-            } else { 
-                vectorOperation(connectedActivationValues, nn->activationFunction, nrOfConnectedNeurons); 
-            }
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
+        n = nn->neurons[i];
+        n->Z += n->bias;
+        n->A = n->activationFunctions[0](n->Z);
+        nrOfConnections = n->conections;
+        for (int j = 0; j < nrOfConnections; j++) {
+            n->connectedNeurons[j]->Z += n->weights[j] * n->A;
         }
     }
 }
@@ -57,7 +42,7 @@ double * inputDataToNeuralNetwork(NeuralNetwork * nn, double * inputData) {
     double * result = (double *) malloc(sizeof(double) * nn->nrOfOutputNeurons);
 
     for (int i = 0; i < nn->nrOfOutputNeurons; i++) {
-        result[i] = nn->activationOutputVector[i];
+        result[i] = nn->outputLayer[i]->A;
     }
     
     return result;

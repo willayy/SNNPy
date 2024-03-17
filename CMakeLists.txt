@@ -31,7 +31,6 @@ add_library(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
@@ -47,7 +46,6 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
@@ -63,7 +61,6 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmarkTest.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/vectorOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
