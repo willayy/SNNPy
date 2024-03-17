@@ -52,8 +52,8 @@ int main() {
     int epochs = 10000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.02;
-    double lrb = 0.001;
+    double lrw = 0.005;
+    double lrb = 0.005;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     for (int i = 0; i < epochs; i++) {
@@ -75,7 +75,7 @@ int main() {
         
         optimize(nn, avgGradient, lrw, lrb);
 
-        printf("Epoch %d, cost: %f\n", i, epochCost/batchSize);
+        printf("Epoch %d, avg batch cost: %f\n", i, epochCost/batchSize);
 
         freeGradientVector(avgGradient);
         freeGradientBatch(gb);

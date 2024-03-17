@@ -13,6 +13,16 @@
 #include <math.h>
 
 int main() {
+    
+    printf("\nRunning tests for cost function \n\n");
+
+    int testSumCostFunction = 0;
+
+    double desiredOutput[] = {1, 0, 0, 0, 0};
+    double output[] = {1, 0, 0, 0, 0};
+    testSumCostFunction = dbl_assertEqual(0, crossEntropyCostFunction(output, desiredOutput, 5), "sqrCostFunction cost 0");
+
+    if (!testSumCostFunction) { printf("All tests for costFunctions.c passed\n");} else { printf("Some tests for costFunctions.c failed\n"); }
 
     printf("\nRunning tests for randomValueGenerator.c to check for good distribution\n\n");
 
@@ -37,10 +47,10 @@ int main() {
     average = sum / 10000;
     double stddev = sqrt(ssd / 10000);
 
-    testSumRandomValueGenerator += dbl_assertBetween(5.8, 6.2, average, "boxMuellerTransform mean 6, 4");
-    testSumRandomValueGenerator += dbl_assertBetween(1.8, 2.2, stddev, "boxMuellerTransform stdev 6, 4");
+    testSumRandomValueGenerator += dbl_assertBetween(5.8, 6.2, average, "boxMuellerTransform mean 6");
+    testSumRandomValueGenerator += dbl_assertBetween(1.8, 2.2, stddev, "boxMuellerTransform stdev 2");
 
     if (!testSumRandomValueGenerator) { printf("All tests for randomValueGenerator.c passed\n");} else { printf("Some tests for randomValueGenerator.c failed\n"); }
  
-    return testSumRandomValueGenerator;
+    return testSumRandomValueGenerator + testSumCostFunction;
 }
