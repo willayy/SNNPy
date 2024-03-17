@@ -4,7 +4,6 @@
 
 #include "neuralNetworkUtility.h"
 #include "neuralNetworkInit.h"
-#include "vectorOperations.h"
 #include "neuralNetworkStructs.h"
 #include "activationFunctions.h"
 

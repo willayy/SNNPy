@@ -7,7 +7,6 @@
 #include "neuralNetworkTraining.h"
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkUtility.h"
-#include "vectorOperations.h"
 #include "costFunctions.h"
 #include "randomValueGenerator.h"
 #include "activationFunctions.h"

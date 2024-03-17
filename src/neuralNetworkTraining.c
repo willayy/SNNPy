@@ -4,7 +4,6 @@
 
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"
-#include "vectorOperations.h"
 #include "costFunctions.h"
 #include "activationFunctions.h"
 #include "neuralNetworkUtility.h"
@@ -17,7 +16,7 @@ void initGradient(NeuronGradient * ng, int nrOfConnectedNeurons) {
     } else {
         ng->weightGradient = NULL;
     }
-    vectorSet(ng->weightGradient, 0, nrOfConnectedNeurons);
+    for (int i = 0; i < nrOfConnectedNeurons; i++) {ng->weightGradient[i] = 0;}
     ng->biasGradient = 0;
 }
 
@@ -46,7 +45,7 @@ void initGradientBatch(GradientBatch * gb, int batchSize) {
 GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative) {
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
-    vectorSet(partialGradients, 0, nn->nrOfNeurons);
+    for (int i = 0; i < nn->nrOfNeurons; i++) { partialGradients[i] = 0;}
     GradientVector * gv = (GradientVector *) malloc(sizeof(GradientVector));
     initGradientVector(gv, nn->nrOfNeurons);
 

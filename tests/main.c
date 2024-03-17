@@ -1,7 +1,6 @@
 #include "neuralNetworkStructs.h"
 #include "neuralNetworkUtility.h"
 #include "neuralNetworkInit.h"
-#include "vectorOperations.h"
 #include "randomValueGenerator.h"
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkTraining.h"

@@ -6,7 +6,6 @@
 
 #include "neuralNetworkStructs.h"
 #include "randomValueGenerator.h"
-#include "vectorOperations.h"
 #include "neuralNetworkUtility.h"
 
 void initNeuron(Neuron * n, int nrOfConnections) {
