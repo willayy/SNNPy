@@ -44,7 +44,9 @@ int main() {
     // Create neural network
     NeuralNetwork * nn  = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 4, 1, 4, 16);
-    initNeuralNetworkFunctions(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative, &sigmoid, &sigmoidDerivative);
+    setInputLayerActivationFunction(nn, &linear, &linearDerivative);
+    setHiddenLayerActivationFunction(nn, &rectifiedLinearUnit, &rectifiedLinearUnitDerivative);
+    setOutputLayerActivationFunction(nn, &sigmoid, &sigmoidDerivative);
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
 
@@ -82,8 +84,14 @@ int main() {
 
     for (int j = 0; j < 16; j++) {
         double * output = inputDataToNeuralNetwork(nn, inputs[j]);
+        int biggestProbIndex = 0;
+        for (int i = 0; i < 16; i++) {
+            if (output[i] > output[biggestProbIndex]) {
+                biggestProbIndex = i;
+            }
+        }  
         printf("Input: %.2f %.2f %.2f %.2f ", inputs[j][0], inputs[j][1], inputs[j][2], inputs[j][3]);
-        printf("Output: %.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,\n", output[0], output[1], output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[9], output[10], output[11], output[12], output[13], output[14], output[15]);
+        printf("Output: %d, with %.3f probability,\n", biggestProbIndex, output[biggestProbIndex]);
         free(output);
     }
 

@@ -1,29 +1,28 @@
 #include "neuralNetworkStructs.h"
 #include <stdlib.h>
 
+void freeNeuron(Neuron * n) {
+    free(n->weights);
+    free(n->connectedNeurons);
+    free(n);
+}
+
 /**
  * Frees the memory allocated for a neural network.
  * @param nn: the neural network to free. */
 void freeNeuralNetwork(NeuralNetwork * nn) {
-
-    free(nn->neuronActivationVector);
-
-    free(nn->biasVector);
-
-    free(nn->neuronValueVector);
-
-    for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        free(nn->weightMatrix[i]);
+    free(nn->inputLayerActivationFunctions);
+    free(nn->hiddenLayerActivationFunctions);
+    free(nn->outputLayerActivationFunctions);
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
+        freeNeuron(nn->neurons[i]);
     }
-    
-    free(nn->weightMatrix);
-
+    free(nn->neurons);
     free(nn);
 }
 
 void freeNeuronGradient(NeuronGradient * ng) {
     free(ng->weightGradient);
-    free(ng->biasGradient);
     free(ng);
 }
 

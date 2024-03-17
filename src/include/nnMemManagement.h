@@ -5,6 +5,8 @@
 
     void freeNeuralNetwork(NeuralNetwork * nn);
 
+    void freeNeuron(Neuron * n);
+
     void freeNeuronGradient(NeuronGradient * ng);
 
     void freeGradientVector(GradientVector * gv);

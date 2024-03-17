@@ -23,17 +23,6 @@
         typedef struct Neuron Neuron;
 
         /**
-         * A struct to hold the parameters of a neural network.
-         * @param value: the value of the parameter.
-         * @param connectedNeurons: the neurons connected to the parameter. */
-        struct Parameter {
-            double value;
-            int connections;
-            Neuron ** connectedNeurons;
-        }; 
-        typedef struct Parameter Parameter;
-
-        /**
          * A Neural network implemented as a struct.
          * @param nrOfParameterNeurons: the number of parameter neurons.
          * @param nrOfHiddenNeurons: the number of hidden neurons.
@@ -44,15 +33,19 @@
          * @param neurons: the neurons in the network. */
         struct NeuralNetwork {
 
-            int nrOfParameterNeurons;
+            int nrOfInputNeurons;
             int nrOfHiddenNeurons;
             int nrOfOutputNeurons;
             int nrOfNeurons;
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            Parameter ** parameters;
+            dblAdblR * inputLayerActivationFunctions;
+            dblAdblR * hiddenLayerActivationFunctions;
+            dblAdblR * outputLayerActivationFunctions;
+
             Neuron ** neurons;
+            Neuron ** outputLayer;
         };
         typedef struct NeuralNetwork NeuralNetwork;
 
@@ -64,7 +57,7 @@
         struct NeuronGradient {
             int nrOfWeights;
             double * weightGradient;
-            double * biasGradient;
+            double biasGradient;
         };
         typedef struct NeuronGradient NeuronGradient;
 
