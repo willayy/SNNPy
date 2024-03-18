@@ -33,8 +33,8 @@ No other external dependencies.
 
 #### This project was developed and tested using:
 
-- OS: Microsoft Windows 11 version 23H2, MacOs Sonoma version 14
-- Compiler: GCC 13.10.0
+- Tested OS: Microsoft Windows 11 version 23H2, MacOs Sonoma version 14
+- Tested compilers: GCC 13.10.0, Clang 15.0.0
 - Build System: CMake 3.28.1
 
 #### Usage
