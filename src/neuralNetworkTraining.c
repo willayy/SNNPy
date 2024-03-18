@@ -58,7 +58,7 @@ GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, db
     int outputIndex;
 
     // Calculate dCdA and dAdZ for the output layer.
-    for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i--) {
+    for (int i = nn->nrOfNeurons - 1; i > (nn->nrOfNeurons - nn->nrOfOutputNeurons - 1); i--) {
         n = nn->neurons[i];
         outputIndex = i - (nn->nrOfNeurons - nn->nrOfOutputNeurons);
         dCdA = costFunctionDerivative(n->A, desiredOutput[outputIndex]);
@@ -72,7 +72,7 @@ GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, db
 
     // Calculates dAdZ, dZdA (connected neurons Z value) for hidden layer and parameter neurons. 
     // Multiplies this with connected partial gradients and sums them up.
-    for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i >= 0; i--) {
+    for (int i = (nn->nrOfNeurons - nn->nrOfOutputNeurons - 1); i >= 0; i--) {
         n = nn->neurons[i];
         dAdZ = n->activationFunctions[1](n->Z);
         connectedNeuronIndexes = findConnectedNeuronIndexes(nn, i);
