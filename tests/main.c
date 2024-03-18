@@ -41,7 +41,7 @@ int main() {
 
     int testSumRandomValueGenerator = 0;
 
-    setSeed(time(NULL));
+    setRngSeed(time(NULL));
     double sum = 0;
     for (int i = 0; i < 10000; i++) {
         sum += randomDouble(-10, 10);

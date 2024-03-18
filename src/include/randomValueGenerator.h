@@ -1,9 +1,9 @@
 #ifndef randomValueGenerator_h
     #define randomValueGenerator_h
 
-        int getSeed();
+        int getRngSeed();
 
-        void setSeed(unsigned int seed);
+        void setRngSeed(unsigned int seed);
 
         double randomDouble(double min, double max);
 

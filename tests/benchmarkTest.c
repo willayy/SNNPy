@@ -38,7 +38,7 @@ int main() {
     }
 
     // Initialize random number generator
-    setSeed(time(NULL));
+    setRngSeed(time(NULL));
 
     // Create neural network
     NeuralNetwork * nn  = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
@@ -71,12 +71,7 @@ int main() {
             free(output);
         }
 
-        
         GradientVector * avgGradient = averageGradients(gb);
-        NeuronGradient * avG[24];
-        for (int i = 0; i < 24; i++) {
-            avG[i] = avgGradient->gradients[i];
-        }
         
         optimize(nn, avgGradient, lrw, lrb);
 
@@ -86,7 +81,7 @@ int main() {
         freeGradientBatch(gb);
     }
 
-
+    // Printing the output of the neural network after its convergence / training
     for (int j = 0; j < 16; j++) {
         double * output = inputDataToNeuralNetwork(nn, inputs[j]);
 

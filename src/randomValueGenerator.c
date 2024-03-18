@@ -7,11 +7,11 @@ static double pi = 3.14159265358979323846;
 
 static int seed = 0;
 
-int getSeed() {
+int getRngSeed() {
     return seed;
 }
 
-void setSeed(unsigned int newSeed) {
+void setRngSeed(unsigned int newSeed) {
     seed = newSeed;
     srand(seed);
 }
@@ -48,7 +48,10 @@ double boxMuellerTransform(double mean, double stddev) {
     return mean + z0 * stddev;
 }
 
-// Perform Fisher-Yates shuffle algorithm
+/**
+ * Shuffles an array using the Fisher-Yates algorithm.
+ * @param arr: the array to shuffle.
+ * @param n: the length of the array. */
 void fisherYatesShuffle(int * arr, int n) {
     for (int i = n - 1; i > 0; i--) {
         // Generate a random index between 0 and i
