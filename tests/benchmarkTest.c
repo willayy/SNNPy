@@ -49,11 +49,11 @@ int main() {
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
 
-    int epochs = 10000;
+    int epochs = 50000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.005;
-    double lrb = 0.005;
+    double lrw = 0.03;
+    double lrb = 0.01;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     for (int i = 0; i < epochs; i++) {
@@ -71,7 +71,12 @@ int main() {
             free(output);
         }
 
+        
         GradientVector * avgGradient = averageGradients(gb);
+        NeuronGradient * avG[24];
+        for (int i = 0; i < 24; i++) {
+            avG[i] = avgGradient->gradients[i];
+        }
         
         optimize(nn, avgGradient, lrw, lrb);
 
@@ -81,8 +86,10 @@ int main() {
         freeGradientBatch(gb);
     }
 
+
     for (int j = 0; j < 16; j++) {
         double * output = inputDataToNeuralNetwork(nn, inputs[j]);
+
         int biggestProbIndex = 0;
         for (int i = 0; i < 16; i++) {
             if (output[i] > output[biggestProbIndex]) {

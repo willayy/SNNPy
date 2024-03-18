@@ -55,11 +55,13 @@ GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, db
     double dZdA;
     double dZdW;
     int * connectedNeuronIndexes;
+    int outputIndex;
 
     // Calculate dCdA and dAdZ for the output layer.
     for (int i = nn->nrOfNeurons - 1; i > nn->nrOfNeurons - nn->nrOfOutputNeurons - 1; i--) {
         n = nn->neurons[i];
-        dCdA = costFunctionDerivative(n->A, desiredOutput[i]);
+        outputIndex = i - (nn->nrOfNeurons - nn->nrOfOutputNeurons);
+        dCdA = costFunctionDerivative(n->A, desiredOutput[outputIndex]);
         dAdZ = n->activationFunctions[1](n->Z);
         partialGradients[i] = dCdA * dAdZ;
         NeuronGradient * ng = (NeuronGradient *) malloc(sizeof(NeuronGradient));
