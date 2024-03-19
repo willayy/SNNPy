@@ -61,3 +61,17 @@ int * findConnectedNeuronIndexes(NeuralNetwork * nn, int neuron) {
     return 0;
 
 }
+
+/**
+ * Returns the index of the biggest activation value of the output layer.
+ * @param output The output of the neural network.
+ * @return The index of the biggest activation value. */
+int findBiggestOutputIndex(double * output, int outputSize) {
+    int biggestProbIndex = 0;
+        for (int i = 0; i < outputSize; i++) {
+            if (output[i] > output[biggestProbIndex]) {
+                biggestProbIndex = i;
+            }
+        }  
+    return biggestProbIndex;
+}

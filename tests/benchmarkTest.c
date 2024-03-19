@@ -49,13 +49,17 @@ int main() {
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
 
-    int epochs = 50000;
+    int epochs = 500000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.03;
-    double lrb = 0.01;
+    double lrw = 0.07;
+    double lrb = 0.02;
+    double lambda = 0;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
+    printf("Training setup for the neural network with %d epochs, the neural network should convert 4 bit binary numbers into integers ranging from 0-15\n", epochs);
+    printf("Press any key to start training: ");  scanf("Press any key to continue...");
+   
     for (int i = 0; i < epochs; i++) {
 
         epochCost = 0;
@@ -73,9 +77,9 @@ int main() {
 
         GradientVector * avgGradient = averageGradients(gb);
         
-        optimize(nn, avgGradient, lrw, lrb);
+        optimize(nn, avgGradient, NULL, lrw, lrb, lambda);
 
-        printf("Epoch %d, avg batch cost: %f\n", i, epochCost/batchSize);
+        printf("Epoch %d, avg batch cost: %.4f\n", i, epochCost/batchSize);
 
         freeGradientVector(avgGradient);
         freeGradientBatch(gb);
@@ -84,15 +88,9 @@ int main() {
     // Printing the output of the neural network after its convergence / training
     for (int j = 0; j < 16; j++) {
         double * output = inputDataToNeuralNetwork(nn, inputs[j]);
-
-        int biggestProbIndex = 0;
-        for (int i = 0; i < 16; i++) {
-            if (output[i] > output[biggestProbIndex]) {
-                biggestProbIndex = i;
-            }
-        }  
-        printf("Input: %.2f %.2f %.2f %.2f ", inputs[j][0], inputs[j][1], inputs[j][2], inputs[j][3]);
-        printf("Output: %d, with %.3f probability,\n", biggestProbIndex, output[biggestProbIndex]);
+        int biggestOutputIndex = findBiggestOutputIndex(output, nn->nrOfOutputNeurons);
+        printf("Input: %.0f %.0f %.0f %.0f ", inputs[j][0], inputs[j][1], inputs[j][2], inputs[j][3]);
+        printf("Output: %d, with %.3f activation,\n", biggestOutputIndex, output[biggestOutputIndex]);
         free(output);
     }
 

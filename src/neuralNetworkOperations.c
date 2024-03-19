@@ -21,7 +21,7 @@ void propogateForward(NeuralNetwork * nn, double * inputData) {
         n = nn->neurons[i];
         n->Z += n->bias;
         n->A = n->activationFunctions[0](n->Z);
-        nrOfConnections = n->conections;
+        nrOfConnections = n->connections;
         for (int j = 0; j < nrOfConnections; j++) {
             n->connectedNeurons[j]->Z += n->weights[j] * n->A;
         }

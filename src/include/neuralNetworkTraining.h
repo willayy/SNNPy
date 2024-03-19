@@ -10,5 +10,5 @@
 
         GradientVector * averageGradients(GradientBatch * gb);
 
-        void optimize(NeuralNetwork * nn, GradientVector * avgNg, double lrw, double lrb);
+        void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblAdblR regularizationDerivative, double lrw, double lrb, double lambda);
 #endif

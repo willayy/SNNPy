@@ -15,7 +15,7 @@
             double A;
             double Z;
             double bias;
-            int conections;
+            int connections;
             double * weights;
             dblAdblR * activationFunctions; // Store activation in [0] and derivative in [1].
             struct Neuron ** connectedNeurons;
