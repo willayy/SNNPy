@@ -1,4 +1,5 @@
 #include "costFunctions.h"
+#include "neuralNetworkStructs.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -63,4 +64,37 @@ double crossEntropyCostFunctionDerivative(double output, double desiredOutput ) 
     double y = desiredOutput;
     if (x == 0 || x == 1) { return 0; }
     return (-x + y) / (x * (x - 1));
+}
+
+double l1Regularization(NeuralNetwork * nn) {
+    double sum = 0;
+    double weight;
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
+        for (int j = 0; j < (nn->neurons[i])->connections; j++) {
+            weight = nn->neurons[i]->weights[j];
+            sum += fabs(weight);
+        }
+    }
+    return sum;
+}
+
+double l2Regularization(NeuralNetwork * nn) {
+    double sum = 0;
+    double weight;
+    for (int i = 0; i < nn->nrOfNeurons; i++) {
+        for (int j = 0; j < (nn->neurons[i])->connections; j++) {
+            weight = nn->neurons[i]->weights[j];
+            sum += weight * weight;
+        }
+    }
+    return sum;
+}
+
+double l1RegularizationDerivative(double weight) {
+    if (weight == 0) { return 0; }
+    return (weight > 0) ? 1 : -1;
+}
+
+double l2RegularizationDerivative(double weight) {
+    return 2*weight;
 }

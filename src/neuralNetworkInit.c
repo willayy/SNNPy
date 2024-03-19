@@ -11,7 +11,7 @@
 void initNeuron(Neuron * n, int nrOfConnections) {
     n->A = 0;
     n->Z = 0;
-    n->conections = nrOfConnections;
+    n->connections = nrOfConnections;
     n->weights = (double *) malloc(sizeof(double) * nrOfConnections);
     n->bias = 0;
     n->activationFunctions = NULL;
@@ -50,7 +50,7 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfInputs, int nrOfLayers, int n
     // Connect the neurons
     for (int i = 0; i < nn->nrOfNeurons; i++) {
         int * connectedNeuronsIndexes = findConnectedNeuronIndexes(nn, i);
-        for (int j = 0; j < nn->neurons[i]->conections; j++) {
+        for (int j = 0; j < nn->neurons[i]->connections; j++) {
             nn->neurons[i]->connectedNeurons[j] = nn->neurons[connectedNeuronsIndexes[j]];
         }
         free(connectedNeuronsIndexes);
@@ -106,7 +106,7 @@ void initWeightsXavierUniform(NeuralNetwork * nn) {
     int nrOfConnectedNeurons;
 
     for (int i = 0; i < nn->nrOfInputNeurons; i++) {
-        nrOfConnectedNeurons = nn->neurons[i]->conections;
+        nrOfConnectedNeurons = nn->neurons[i]->connections;
         range = sqrt(6.0 / (nn->nrOfInputNeurons + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->neurons[i]->weights[j] = randomDouble(-range, range);
@@ -114,7 +114,7 @@ void initWeightsXavierUniform(NeuralNetwork * nn) {
     }
 
     for (int i = nn->nrOfInputNeurons; i < nn->nrOfNeurons - nn->nrOfOutputNeurons; i++) {
-        nrOfConnectedNeurons = nn->neurons[i]->conections;
+        nrOfConnectedNeurons = nn->neurons[i]->connections;
         range = sqrt(6.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->neurons[i]->weights[j] = randomDouble(-range, range);
@@ -132,7 +132,7 @@ void initWeightsXavierNormal(NeuralNetwork * nn) {
     int nrOfConnectedNeurons;
 
     for (int i = 0; i < nn->nrOfInputNeurons; i++) {
-        nrOfConnectedNeurons = nn->neurons[i]->conections;
+        nrOfConnectedNeurons = nn->neurons[i]->connections;
         range = sqrt(2.0 / (nn->nrOfInputNeurons + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->neurons[i]->weights[j] = boxMuellerTransform(0, range);
@@ -140,7 +140,7 @@ void initWeightsXavierNormal(NeuralNetwork * nn) {
     }
 
     for (int i = nn->nrOfInputNeurons; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        nrOfConnectedNeurons = nn->neurons[i]->conections;
+        nrOfConnectedNeurons = nn->neurons[i]->connections;
         range = sqrt(2.0 / (nn->neuronsPerLayer + nrOfConnectedNeurons));
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->neurons[i]->weights[j] = boxMuellerTransform(0, range);
@@ -179,7 +179,7 @@ void initBiasesRandomUniform(NeuralNetwork * nn, double minb, double maxb) {
 void initWeightsRandomUniform(NeuralNetwork * nn, double minw, double maxw) {
 
     for (int i = 0; i < nn->nrOfNeurons-nn->nrOfOutputNeurons; i++) {
-        int nrOfConnectedNeurons = nn->neurons[i]->conections;
+        int nrOfConnectedNeurons = nn->neurons[i]->connections;
         for (int j = 0; j < nrOfConnectedNeurons; j++) {
             nn->neurons[i]->weights[j] = randomDouble(minw, maxw);
         }

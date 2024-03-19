@@ -77,17 +77,17 @@ GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, db
         dAdZ = n->activationFunctions[1](n->Z);
         connectedNeuronIndexes = findConnectedNeuronIndexes(nn, i);
 
-        for (int j = 0; j < n->conections; j++) {
+        for (int j = 0; j < n->connections; j++) {
             dZdA = n->weights[j];
             partialGradients[i] += partialGradients[connectedNeuronIndexes[j]] * dZdA * dAdZ;
         }
 
         NeuronGradient * ng = (NeuronGradient *) malloc(sizeof(NeuronGradient));
-        initGradient(ng, n->conections);
+        initGradient(ng, n->connections);
         dZdW = n->A;
 
         
-        for (int j = 0; j < n->conections; j++) {
+        for (int j = 0; j < n->connections; j++) {
             ng->weightGradient[j] = (partialGradients[connectedNeuronIndexes[j]] * dZdW);
         }
 
@@ -138,16 +138,19 @@ GradientVector * averageGradients(GradientBatch * gb) {
  * @param avgNg The averaged gradients to use for optimization.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-void optimize(NeuralNetwork * nn, GradientVector * avgNg, double lrw, double lrb) {
+void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblAdblR regularizationDerivative, double lrw, double lrb, double lambda) {
     
     double gradient;
     Neuron * n;
 
     for (int i = 0; i < nn->nrOfNeurons; i++) {
         n = nn->neurons[i];
-        for (int j = 0; j < n->conections; j++) {
+        for (int j = 0; j < n->connections; j++) {
             gradient = avgNg->gradients[i]->weightGradient[j];
             n->weights[j] -= lrw * gradient;
+            if (regularizationDerivative != NULL) {
+                n->weights[j] -= regularizationDerivative(n->weights[j]) * lambda;
+            }
         }
         gradient = avgNg->gradients[i]->biasGradient;
         n->bias -= lrb * gradient;
