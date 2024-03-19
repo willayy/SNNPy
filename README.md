@@ -18,14 +18,13 @@ The neural network has the following features.
 - Configurable learning rates.
 - Fully configurable feed forward network structures (only requirement being there should be at least 1 input, 1 hidden layer neuron and 1 output neuron).
 - Gradient batch averaging.
-
+- L1 and L2 Regularization
+  
 #### Dependencies
-
 CMake is heavily recommended as the build tool for this source code.
 No other external dependencies.
 
 #### Installation/Building
-
 - Download source code.
 - (Recommended) build SNNpy-test executable to test if software works correctly in your enviorment.
 - (Recommended) build SNNpy-benchmark executable to further test integrity and to benchmark software
@@ -33,7 +32,6 @@ No other external dependencies.
 - Start using python module!
 
 #### This project was developed and tested using:
-
 - Tested OS: Microsoft Windows 11 version 23H2, MacOs Sonoma version 14
 - Tested compilers: GCC 13.10.0, Clang 15.0.0
 - Build System: CMake 3.28.1
