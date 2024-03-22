@@ -25,22 +25,6 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.h
 )
 
-# Add the executable for testsuite
-add_executable(
-  SNNPy-tests
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
-)
-target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
-target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
-
 # Add shared library
 add_library(
   SNNPy SHARED
@@ -71,11 +55,6 @@ add_executable(
 )
 target_include_directories(SNNPy-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
-# Set the output directory for the testsuite
-set_target_properties(SNNPy-tests PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
-)
-
 # Set the output directory for the benchmark
 set_target_properties(SNNPy-benchmark PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
@@ -99,6 +78,6 @@ endif()
 target_compile_features(SNNPy PRIVATE c_std_17)
 
 # Link the executable to the library
-target_link_libraries(SNNPy-tests testing)
+target_link_libraries(SNNPy testing)
 
 

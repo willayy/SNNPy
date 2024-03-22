@@ -26,7 +26,6 @@ No other external dependencies.
 
 #### Installation/Building
 - Download source code.
-- (Recommended) build SNNpy-test executable to test if software works correctly in your enviorment.
 - (Recommended) build SNNpy-benchmark executable to further test integrity and to benchmark software
 - Build the shared libraries for the python module using CMake (recommended build tool).
 - Start using python module!

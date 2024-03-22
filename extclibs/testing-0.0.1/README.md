@@ -1,0 +1,1 @@
+Made testing functions as an external library to simplify future developement on it as a standalone library
