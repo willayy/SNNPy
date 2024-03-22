@@ -21,9 +21,25 @@ endif()
 # Adding the testing library
 add_library(
   testing STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src/testing.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src/testing.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.h
 )
+
+# Add the executable for testsuite
+add_executable(
+  SNNPy-tests
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
+)
+target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
 
 # Add shared library
 add_library(
@@ -36,24 +52,10 @@ add_library(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.c
 )
 target_include_directories(SNNPy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
-
-# Add the executable for testsuite
-add_executable(
-  SNNPy-tests
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
-)
-target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
-target_include_directories(SNNPy-tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/testing-0.0.1/src/)
+target_include_directories(SNNPy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
 
 add_executable(
   SNNPy-benchmark
