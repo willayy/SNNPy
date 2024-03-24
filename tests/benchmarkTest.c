@@ -49,11 +49,11 @@ int main() {
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
 
-    int epochs = 500000;
+    int epochs = 200000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.07;
-    double lrb = 0.02;
+    double lrw = 0.16;
+    double lrb = 0.16;
     double lambda = 0;
     int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 

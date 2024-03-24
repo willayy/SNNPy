@@ -20,24 +20,18 @@ int runTests() {
     //////////////////////////      TESTING COST FUNCTIONS       //////////////////////////////////
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    
-    printf("\nRunning tests for cost function \n\n");
 
     int testSumCostFunction = 0;
 
     double desiredOutput[] = {1, 0, 0, 0, 0};
     double output[] = {1, 0, 0, 0, 0};
-    testSumCostFunction = dbl_assertEqual(0, crossEntropyCostFunction(output, desiredOutput, 5), "crossEntropyCost function cost");
-
-    if (!testSumCostFunction) { printf("All tests for cost functions passed\n");} else { printf("Some tests for cost functions failed\n"); }
+    testSumCostFunction = dbl_assertEqual(0, crossEntropyCostFunction(output, desiredOutput, 5), "");
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////      TESTING RANDOM VALUE GENERATOR       //////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    printf("\nRunning tests for random value generator to check for good distribution\n\n");
 
     int testSumRandomValueGenerator = 0;
 
@@ -47,7 +41,7 @@ int runTests() {
         sum += randomDouble(-10, 10);
     }
     double average = sum / 10000;
-    testSumRandomValueGenerator += dbl_assertBetween(-0.2, 0.2, average, "uniformRandomValue mean");
+    testSumRandomValueGenerator += dbl_assertBetween(-0.2, 0.2, average, "");
 
     sum = 0;
     double ssd = 0;
@@ -60,20 +54,14 @@ int runTests() {
     average = sum / 10000;
     double stddev = sqrt(ssd / 10000);
 
-    testSumRandomValueGenerator += dbl_assertBetween(5.8, 6.2, average, "boxMuellerTransform mean");
-    testSumRandomValueGenerator += dbl_assertBetween(1.8, 2.2, stddev, "boxMuellerTransform stdev");
-
-    
-
-    if (!testSumRandomValueGenerator) { printf("All tests for random value generator passed\n");} else { printf("Some tests for random value generator failed\n"); }
+    testSumRandomValueGenerator += dbl_assertBetween(5.8, 6.2, average, "");
+    testSumRandomValueGenerator += dbl_assertBetween(1.8, 2.2, stddev, "");
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     
     //////////////////////////      TESTING FORWARD AND BACK PROPOGATION       //////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    printf("\nRunning tests for forward and back propogation\n\n");
 
     int testSumForwardBackPropogation = 0;
 
@@ -102,8 +90,8 @@ int runTests() {
 
     double * nnoutput = inputDataToNeuralNetwork(nn, input);
 
-    testSumRandomValueGenerator += dbl_assertBetween(0.81, 0.83, nnoutput[0], "forward propogation output 1");
-    testSumRandomValueGenerator += dbl_assertBetween(0.82, 0.84, nnoutput[1], "forward propogation output 2");
+    testSumRandomValueGenerator += dbl_assertBetween(0.81, 0.83, nnoutput[0], "");
+    testSumRandomValueGenerator += dbl_assertBetween(0.82, 0.84, nnoutput[1], "");
 
     GradientVector * gv = computeGradients(nn, desOutput, &sqrCostFunctionDerivative);
 
@@ -112,8 +100,6 @@ int runTests() {
     freeGradientVector(gv);
     free(nnoutput);
     freeNeuralNetwork(nn);
-
-    if (!testSumForwardBackPropogation) { printf("All tests for forward and back propogation passed\n\n");} else { printf("Some tests for forward and back propogation failed\n\n"); }
 
     return testSumRandomValueGenerator + testSumCostFunction + testSumForwardBackPropogation;
 }

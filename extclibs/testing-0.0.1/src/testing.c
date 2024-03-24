@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "testing.h"
 
 /**
@@ -9,10 +10,10 @@
  * @return 0 if the test passes, 1 if the test fails */
 int int_assertEqual(int expected, int actual, char* message) {
     if (expected == actual) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
@@ -25,10 +26,10 @@ int int_assertEqual(int expected, int actual, char* message) {
  * @return 0 if the test passes, 1 if the test fails */
 int dbl_assertEqual(double expected, double actual, char* message) {
     if (expected == actual) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
@@ -41,10 +42,10 @@ int dbl_assertEqual(double expected, double actual, char* message) {
  * @return 1 if the test passes, 1 if the test fails */
 int int_assertNotEqual(int expected, int actual, char* message) {
     if (expected != actual) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
@@ -57,10 +58,10 @@ int int_assertNotEqual(int expected, int actual, char* message) {
  * @return 0 if the test passes, 1 if the test fails */
 int dbl_assertNotEqual(double expected, double actual, char* message) {
     if (expected != actual) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
@@ -72,10 +73,10 @@ int dbl_assertNotEqual(double expected, double actual, char* message) {
  * @return 0 if the test passes, 1 if the test fails */
 int assertTrue(int booleanExpression, char* message) {
     if (booleanExpression) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
@@ -87,10 +88,10 @@ int assertTrue(int booleanExpression, char* message) {
  * @return 0 if the test passes, 1 if the test fails */
 int assertFalse(int booleanExpression, char* message) {
     if (!booleanExpression) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
@@ -104,10 +105,10 @@ int assertFalse(int booleanExpression, char* message) {
  * @return 0 if the test passes, 1 if the test fails */
 int dbl_assertBetween(double min, double max, double actual, char* message) {
     if (actual >= min && actual <= max) {
-        printf("Test PASSED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test PASSED: %s\n", message); }
         return 0;
     } else {
-        printf("Test FAILED: %s\n", message);
+        if (strcmp("",message) != 0) { printf("Test FAILED: %s\n", message); }
         return 1;
     }
 }
