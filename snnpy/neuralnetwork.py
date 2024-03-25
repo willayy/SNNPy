@@ -37,6 +37,36 @@ class CNeuralNetwork(ctypes.Structure):
             ("outputLayer", ctypes.POINTER(ctypes.POINTER(CNeuron)))
         ]
 
+class CNeuronGradient(ctypes.Structure):
+    '''
+        Python copy representing the NeuronGradient struct in the shared library
+    '''
+    def __init__(self):
+        self._fields_ = [
+            ("nrOfWeights", ctypes.c_int),
+            ("weightGradient", ctypes.POINTER(ctypes.c_double)),
+            ("biasGradient", ctypes.c_double),
+        ]
+
+class CGradientVector(ctypes.Structure):
+    '''
+        Python copy representing the GradientVector struct in the shared library
+    '''
+    def __init__(self):
+        self._fields_ = [
+            ("nrOfNeurons", ctypes.c_int),
+            ("gradients", ctypes.POINTER(ctypes.POINTER(CNeuronGradient)))
+        ]
+
+class CBatch(ctypes.Structure):
+    '''
+        Python copy representing the Batch struct in the shared library
+    '''
+    def __init__(self):
+        self._fields_ = [
+            ("batchSize", ctypes.c_int),
+            ("gradientVectors", ctypes.POINTER(ctypes.POINTER(CGradientVector)))
+        ]
 
 class NeuralNetwork:
     '''
