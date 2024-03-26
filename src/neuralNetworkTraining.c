@@ -8,6 +8,8 @@
 #include "activationFunctions.h"
 #include "neuralNetworkUtility.h"
 #include "funcPtrs.h"
+#include "randomValueGenerator.h"
+#include "nnMemManagement.h"
 
 void initGradient(NeuronGradient * ng, int nrOfConnectedNeurons) {
     ng->nrOfWeights = nrOfConnectedNeurons;
@@ -154,6 +156,60 @@ void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblAdblR regularizatio
         }
         gradient = avgNg->gradients[i]->biasGradient;
         n->bias -= lrb * gradient;
+    }
+
+}
+
+double returnZero(double x) { 
+    return 0; 
+};
+
+/**
+ * Trains a neural network for a number of epochs using a set of inputs with labels.
+ * @param nn The neural network to train.
+ * @param inputsWithLabel The inputs with labels to train the neural network with.
+ * @param nrInputs The number of inputs in the inputsWithLabel array.
+ * @param epochs The number of epochs to train the neural network for.
+ * @param batchSize The size of the batches to use for training.
+ * @param lrw The learning rate for the weights.
+ * @param lrb The learning rate for the biases.
+ * @param regularization The regularization function to use.
+ * @param lambda The regularization parameter.
+ * @param costFunctionDerivative The derivative of the cost function to use for the output layer. */
+void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** labels, int epochs, int batchSize, 
+                               double lrw, double lrb, dblAdblR regularizationDerivative, nnAvoidR regularization, 
+                               double lambda, dblAdbLAdblR costFunctionDerivative, int verbose) {
+
+    double epochCost;
+    int batchIndexes[batchSize];
+    for (int i = 0; i < batchSize; i++) {batchIndexes[i] = i;}
+    double * output;
+    if (regularizationDerivative != NULL) { regularizationDerivative = &(*regularizationDerivative); };
+    if (regularization == NULL) { regularization = returnZero; };
+
+    for (int i = 0; i < epochs; i++) {
+
+        epochCost = 0;
+        GradientBatch * gb = (GradientBatch *) malloc(sizeof(GradientBatch));
+        initGradientBatch(gb, batchSize);
+        fisherYatesShuffle(batchIndexes, batchSize);
+
+        for (int j = 0; j < batchSize; j++) {
+            output = inputDataToNeuralNetwork(nn, inputs[batchIndexes[j]]);
+            epochCost += crossEntropyCostFunction(output, labels[batchIndexes[j]], nn->nrOfOutputNeurons);
+            epochCost += regularization(nn);
+            gb->gradientVectors[j] = computeGradients(nn, labels[batchIndexes[j]], &(*costFunctionDerivative));
+            free(output);
+        }
+
+        GradientVector * avgGradient = averageGradients(gb);
+        
+        if (verbose) { printf("Epoch %d: total epoch cost: %f\n", i, epochCost); }
+
+        optimize(nn, avgGradient, regularizationDerivative, lrw, lrb, lambda);
+
+        freeGradientVector(avgGradient);
+        freeGradientBatch(gb);
     }
 
 }

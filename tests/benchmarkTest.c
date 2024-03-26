@@ -60,30 +60,7 @@ int main() {
     printf("Training setup for the neural network with %d epochs, the neural network should convert 4 bit binary numbers into integers ranging from 0-15\n", epochs);
     printf("Press any key to start training: ");  scanf("Press any key to continue...");
    
-    for (int i = 0; i < epochs; i++) {
-
-        epochCost = 0;
-        GradientBatch * gb = (GradientBatch *) malloc(sizeof(GradientBatch));
-        initGradientBatch(gb, batchSize);
-        fisherYatesShuffle(indexes, 16);
-
-        for (int j = 0; j < batchSize; j++) {
-            int inputIndex = indexes[j];
-            double * output = inputDataToNeuralNetwork(nn, inputs[inputIndex]);
-            epochCost += crossEntropyCostFunction(output, desOutputs[inputIndex], nn->nrOfOutputNeurons);
-            gb->gradientVectors[j] = computeGradients(nn, desOutputs[inputIndex], &crossEntropyCostFunctionDerivative);
-            free(output);
-        }
-
-        GradientVector * avgGradient = averageGradients(gb);
-        
-        optimize(nn, avgGradient, NULL, lrw, lrb, lambda);
-
-        printf("Epoch %d, avg batch cost: %.4f\n", i, epochCost/batchSize);
-
-        freeGradientVector(avgGradient);
-        freeGradientBatch(gb);
-    }
+    trainNeuralNetworkOnBatch(nn, inputs, desOutputs, epochs, batchSize, lrw, lrb, NULL, NULL, lambda, &sqrCostFunctionDerivative);
 
     // Printing the output of the neural network after its convergence / training
     for (int j = 0; j < 16; j++) {

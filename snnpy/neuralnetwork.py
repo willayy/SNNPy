@@ -1,7 +1,6 @@
 from __future__ import annotations
 import ctypes
 
-
 class CNeuron(ctypes.Structure):
     '''
         Python copy representing the Neuron struct in the shared library
@@ -16,7 +15,6 @@ class CNeuron(ctypes.Structure):
             ("activationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
             ("connectedNeurons", ctypes.POINTER(ctypes.POINTER(CNeuron))),
         ]        
-
 
 class CNeuralNetwork(ctypes.Structure):
     '''
@@ -72,8 +70,12 @@ class NeuralNetwork:
     '''
         A Python object wrapper for a C NeuralNetwork struct from the shared library
     '''
-    def __init__(self):
+    def __init__(self, nr_of_inputs: int, nr_of_layers: int, neurons_per_layer: int, nr_of_outputs: int):
         self.c_nn_ptr = ctypes.pointer(CNeuralNetwork)
+        self.nr_of_inputs = nr_of_inputs
+        self.nr_of_layers = nr_of_layers
+        self.neurons_per_layer = neurons_per_layer
+        self.nr_of_outputs = nr_of_outputs
         
 
 

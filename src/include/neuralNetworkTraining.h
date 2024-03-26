@@ -11,4 +11,8 @@
         GradientVector * averageGradients(GradientBatch * gb);
 
         void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblAdblR regularizationDerivative, double lrw, double lrb, double lambda);
+
+        void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** labels, int epochs, 
+                                       int batchSize, double lrw, double lrb, dblAdblR regularizationDerivative, nnAvoidR regularization, 
+                                       double lambda, dblAdbLAdblR costFunctionDerivative);
 #endif

@@ -81,5 +81,8 @@
         };
         typedef struct GradientBatch GradientBatch;
 
+        // Needs to be here to avoid recursion in the includes.
+        /** pointer for a "double func(NeuralNetwork *)" function */
+        typedef double (*nnAvoidR)(NeuralNetwork *);
 
 #endif
