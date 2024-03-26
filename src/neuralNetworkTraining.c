@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "neuralNetworkTraining.h"
 
@@ -44,7 +45,7 @@ void initGradientBatch(GradientBatch * gb, int batchSize) {
  * @param desiredOutput The desired output of the neural network.
  * @param costFunctionDerivative The derivative of the cost function to use for the output layer.
  * @return A gradient vector with the computed gradients. */
-GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, dblAdbLAdblR costFunctionDerivative) {
+GradientVector * computeGradients(NeuralNetwork * nn, double * desiredOutput, dblA_dbLA_dblR costFunctionDerivative) {
 
     double * partialGradients = (double *) malloc(sizeof(double) * nn->nrOfNeurons);
     for (int i = 0; i < nn->nrOfNeurons; i++) { partialGradients[i] = 0;}
@@ -140,7 +141,7 @@ GradientVector * averageGradients(GradientBatch * gb) {
  * @param avgNg The averaged gradients to use for optimization.
  * @param lrw The learning rate for the weights.
  * @param lrb The learning rate for the biases. */
-void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblAdblR regularizationDerivative, double lrw, double lrb, double lambda) {
+void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblA_dblR regularizationDerivative, double lrw, double lrb, double lambda) {
     
     double gradient;
     Neuron * n;
@@ -160,7 +161,7 @@ void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblAdblR regularizatio
 
 }
 
-double returnZero(double x) { 
+double returnZeroRegularization(NeuralNetwork * nn) { 
     return 0; 
 };
 
@@ -177,15 +178,15 @@ double returnZero(double x) {
  * @param lambda The regularization parameter.
  * @param costFunctionDerivative The derivative of the cost function to use for the output layer. */
 void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** labels, int epochs, int batchSize, 
-                               double lrw, double lrb, dblAdblR regularizationDerivative, nnAvoidR regularization, 
-                               double lambda, dblAdbLAdblR costFunctionDerivative, int verbose) {
+                               double lrw, double lrb, dblA_dblR regularizationDerivative, nnA_dblR regularization, 
+                               double lambda, dblA_dbLA_dblR costFunctionDerivative, dblpA_dblpA_intA_dblR costFunction, int verbose) {
 
     double epochCost;
     int batchIndexes[batchSize];
     for (int i = 0; i < batchSize; i++) {batchIndexes[i] = i;}
     double * output;
     if (regularizationDerivative != NULL) { regularizationDerivative = &(*regularizationDerivative); };
-    if (regularization == NULL) { regularization = returnZero; };
+    if (regularization == NULL) { regularization = returnZeroRegularization; };
 
     for (int i = 0; i < epochs; i++) {
 
@@ -196,7 +197,7 @@ void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** l
 
         for (int j = 0; j < batchSize; j++) {
             output = inputDataToNeuralNetwork(nn, inputs[batchIndexes[j]]);
-            epochCost += crossEntropyCostFunction(output, labels[batchIndexes[j]], nn->nrOfOutputNeurons);
+            epochCost += costFunction(output, labels[batchIndexes[j]], nn->nrOfOutputNeurons);
             epochCost += regularization(nn);
             gb->gradientVectors[j] = computeGradients(nn, labels[batchIndexes[j]], &(*costFunctionDerivative));
             free(output);

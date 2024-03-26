@@ -17,7 +17,7 @@
             double bias;
             int connections;
             double * weights;
-            dblAdblR * activationFunctions; // Store activation in [0] and derivative in [1].
+            dblA_dblR * activationFunctions; // Store activation in [0] and derivative in [1].
             struct Neuron ** connectedNeurons;
         };
         typedef struct Neuron Neuron;
@@ -40,9 +40,9 @@
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            dblAdblR * inputLayerActivationFunctions;
-            dblAdblR * hiddenLayerActivationFunctions;
-            dblAdblR * outputLayerActivationFunctions;
+            dblA_dblR * inputLayerActivationFunctions;
+            dblA_dblR * hiddenLayerActivationFunctions;
+            dblA_dblR * outputLayerActivationFunctions;
 
             Neuron ** neurons;
             Neuron ** outputLayer;
@@ -83,6 +83,6 @@
 
         // Needs to be here to avoid recursion in the includes.
         /** pointer for a "double func(NeuralNetwork *)" function */
-        typedef double (*nnAvoidR)(NeuralNetwork *);
+        typedef double (*nnA_dblR)(NeuralNetwork *);
 
 #endif

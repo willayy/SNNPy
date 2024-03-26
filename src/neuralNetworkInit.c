@@ -33,9 +33,9 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfInputs, int nrOfLayers, int n
     nn->nrOfNeurons = neuronsPerLayer * nrOfLayers + nrOfOutputs + nrOfInputs;
     nn->nrOfHiddenNeurons = neuronsPerLayer * nrOfLayers;
     
-    nn->inputLayerActivationFunctions = (dblAdblR *) malloc(sizeof(dblAdblR) * 2);
-    nn->hiddenLayerActivationFunctions = (dblAdblR *) malloc(sizeof(dblAdblR) * 2);
-    nn->outputLayerActivationFunctions = (dblAdblR *) malloc(sizeof(dblAdblR) * 2);
+    nn->inputLayerActivationFunctions = (dblA_dblR *) malloc(sizeof(dblA_dblR) * 2);
+    nn->hiddenLayerActivationFunctions = (dblA_dblR *) malloc(sizeof(dblA_dblR) * 2);
+    nn->outputLayerActivationFunctions = (dblA_dblR *) malloc(sizeof(dblA_dblR) * 2);
 
     nn->neurons = (Neuron **) malloc(sizeof(Neuron *) * nn->nrOfNeurons); // allocate memory for the neurons
     nn->outputLayer = nn->neurons + nn->nrOfNeurons - nn->nrOfOutputNeurons;
@@ -62,7 +62,7 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfInputs, int nrOfLayers, int n
  * @param nn: the neural network to set the activation function for.
  * @param activationFunction: the activation function to set for the input layer.
  * @param activationFunctionDerivative: the derivative of the activation function to set for the input layer. */
-void setInputLayerActivationFunction(NeuralNetwork *nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative) {
+void setInputLayerActivationFunction(NeuralNetwork *nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative) {
     nn->inputLayerActivationFunctions[0] = activationFunction;
     nn->inputLayerActivationFunctions[1] = activationFunctionDerivative;
     for (int i = 0; i < nn->nrOfInputNeurons; i++) {
@@ -75,7 +75,7 @@ void setInputLayerActivationFunction(NeuralNetwork *nn, dblAdblR activationFunct
  * @param nn: the neural network to set the activation function for.
  * @param activationFunction: the activation function to set for the hidden layer.
  * @param activationFunctionDerivative: the derivative of the activation function to set for the hidden layer. */
-void setHiddenLayerActivationFunction(NeuralNetwork *nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative) {
+void setHiddenLayerActivationFunction(NeuralNetwork *nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative) {
     nn->hiddenLayerActivationFunctions[0] = activationFunction;
     nn->hiddenLayerActivationFunctions[1] = activationFunctionDerivative;
     for (int i = nn->nrOfInputNeurons; i < nn->nrOfHiddenNeurons + nn->nrOfInputNeurons; i++) {
@@ -88,7 +88,7 @@ void setHiddenLayerActivationFunction(NeuralNetwork *nn, dblAdblR activationFunc
  * @param nn: the neural network to set the activation function for.
  * @param activationFunction: the activation function to set for the output layer.
  * @param activationFunctionDerivative: the derivative of the activation function to set for the output layer. */
-void setOutputLayerActivationFunction(NeuralNetwork *nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative) {
+void setOutputLayerActivationFunction(NeuralNetwork *nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative) {
     nn->outputLayerActivationFunctions[0] = activationFunction;
     nn->outputLayerActivationFunctions[1] = activationFunctionDerivative;
     for (int i = nn->nrOfNeurons - nn->nrOfOutputNeurons; i < nn->nrOfNeurons; i++) {

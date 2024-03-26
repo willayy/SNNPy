@@ -49,18 +49,17 @@ int main() {
     initWeightsXavierNormal(nn);
     initBiasesConstant(nn, 0.1);
 
-    int epochs = 200000;
+    int epochs = 250000;
     int batchSize = 16;
     double epochCost;
-    double lrw = 0.16;
-    double lrb = 0.16;
+    double lrw = 0.08;
+    double lrb = 0.08;
     double lambda = 0;
-    int indexes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     printf("Training setup for the neural network with %d epochs, the neural network should convert 4 bit binary numbers into integers ranging from 0-15\n", epochs);
     printf("Press any key to start training: ");  scanf("Press any key to continue...");
    
-    trainNeuralNetworkOnBatch(nn, inputs, desOutputs, epochs, batchSize, lrw, lrb, NULL, NULL, lambda, &sqrCostFunctionDerivative);
+    trainNeuralNetworkOnBatch(nn, inputs, desOutputs, epochs, batchSize, lrw, lrb, NULL, NULL, lambda, crossEntropyCostFunctionDerivative, crossEntropyCostFunction, 1);
 
     // Printing the output of the neural network after its convergence / training
     for (int j = 0; j < 16; j++) {

@@ -5,11 +5,11 @@
 
         void initNeuralNetwork(NeuralNetwork * nn, int nrOfInputs, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs);
 
-        void setInputLayerActivationFunction(NeuralNetwork * nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative);
+        void setInputLayerActivationFunction(NeuralNetwork * nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative);
 
-        void setHiddenLayerActivationFunction(NeuralNetwork * nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative);
+        void setHiddenLayerActivationFunction(NeuralNetwork * nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative);
 
-        void setOutputLayerActivationFunction(NeuralNetwork * nn, dblAdblR activationFunction, dblAdblR activationFunctionDerivative);
+        void setOutputLayerActivationFunction(NeuralNetwork * nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative);
 
         void resetNeuralNetwork(NeuralNetwork * nn);
 
