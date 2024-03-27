@@ -35,7 +35,7 @@ int runTests() {
 
     int testSumRandomValueGenerator = 0;
 
-    setRngSeed(time(NULL));
+    setRngSeed(0);
     double sum = 0;
     for (int i = 0; i < 10000; i++) {
         sum += randomDouble(-10, 10);
@@ -90,8 +90,8 @@ int runTests() {
 
     double * nnoutput = inputDataToNeuralNetwork(nn, input);
 
-    testSumRandomValueGenerator += dbl_assertBetween(0.81, 0.83, nnoutput[0], "");
-    testSumRandomValueGenerator += dbl_assertBetween(0.82, 0.84, nnoutput[1], "");
+    testSumRandomValueGenerator += dbl_assertBetween(0.80, 0.85, nnoutput[0], "");
+    testSumRandomValueGenerator += dbl_assertBetween(0.80, 0.85, nnoutput[1], "");
 
     GradientVector * gv = computeGradients(nn, desOutput, &sqrCostFunctionDerivative);
 

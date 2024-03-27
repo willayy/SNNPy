@@ -21,8 +21,8 @@ endif()
 # Adding the testing library
 add_library(
   testing STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.h
 )
 
 # Add shared library
@@ -52,8 +52,10 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
   ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.c
 )
 target_include_directories(SNNPy-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+target_include_directories(SNNPy-benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
 
 # Set the output directory for the benchmark
 set_target_properties(SNNPy-benchmark PROPERTIES
@@ -79,5 +81,6 @@ target_compile_features(SNNPy PRIVATE c_std_17)
 
 # Link the executable to the library
 target_link_libraries(SNNPy testing)
+target_link_libraries(SNNPy-benchmark testing)
 
 

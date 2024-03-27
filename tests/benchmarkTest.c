@@ -11,12 +11,11 @@
 #include "randomValueGenerator.h"
 #include "activationFunctions.h"
 #include "nnMemManagement.h"
+#include "tests.h"
 
 int main() {
 
     printf("\nRunning a simple neural network convergence test\n\n");
-
-    int testSumConvergence = 0;
 
     // Create data set
 
@@ -80,5 +79,5 @@ int main() {
     free(inputs);
     free(desOutputs);
 
-    return testSumConvergence;
+    return 0;
 }

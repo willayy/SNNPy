@@ -1,12 +1,13 @@
 import platform, os, ctypes
 
-LIB: ctypes.CDLL = None
+
 
 def _find_lib(extension: str) -> ctypes.CDLL:
-    shared_lib_path: str = os.path.join(os.path.dirname(__file__), f"sharedlib/libSNNPy.{extension}")
+    shared_lib_path: str = os.path.join(os.path.dirname(__file__), f"sharedlib//libSNNPy.{extension}")
     if not os.path.isfile(shared_lib_path):
         raise FileNotFoundError(f"Shared library not found at {shared_lib_path}")
-    return ctypes.CDLL(shared_lib_path)
+    c_lib = ctypes.CDLL(shared_lib_path)
+    return c_lib
     
 def _verify_lib(lib: ctypes.CDLL) -> None:
     if lib.runTests() != 0:
@@ -15,14 +16,14 @@ def _verify_lib(lib: ctypes.CDLL) -> None:
 # Defines initialization logic
 def _initialize():
     os_type: str = platform.system()
-
+    global c_lib 
     if os_type == "Darwin":
-        LIB = _find_lib("dylib")
-        _verify_lib(LIB)
+        c_lib = _find_lib("dylib")
+        _verify_lib(c_lib)
         
     elif os_type == "Windows":
-        LIB = ctypes.CDLL = _find_lib("dll")
-        _verify_lib(LIB)
+        c_lib = ctypes.CDLL = _find_lib("dll")
+        _verify_lib(c_lib)
 
     else :
         raise OSError(f"Unsupported OS: {os_type}")

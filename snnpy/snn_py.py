@@ -1,23 +1,23 @@
 import atexit, ctypes
-from __init__ import LIB
-from neuralnetwork import NeuralNetwork
+from snnpy import c_lib
+from snnpy.neuralnetwork import NeuralNetwork
 
 def _cleanup_nn(neural_network: NeuralNetwork):
     '''
         Cleans up the memory allocated for a neural network at script exit
     '''
-    LIB.freeNeuralNetwork(neural_network.c_nn_ptr)
+    c_lib.freeNeuralNetwork(neural_network.c_nn_ptr)
     
-def _get_activation_function(name: str) -> ctypes._FuncPointer:
+def _get_activation_function(name: str) -> ctypes.pointer:
     '''
         Returns the activation function with the specified name
     '''
 
     case_ac_f = {
-        "sigmoid": LIB.sigmoid,
-        "relu": LIB.rectifiedLinearUnit,
-        "tanh": LIB.hyperbolicTangent,
-        "linear": LIB.linear
+        "sigmoid": c_lib.sigmoid,
+        "relu": c_lib.rectifiedLinearUnit,
+        "tanh": c_lib.hyperbolicTangent,
+        "linear": c_lib.linear
     }
     func = case_ac_f[name]
     if func is None:
@@ -25,16 +25,16 @@ def _get_activation_function(name: str) -> ctypes._FuncPointer:
 
     return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double))
 
-def _get_activation_function_derivative(name: str) -> ctypes._FuncPointer:
+def _get_activation_function_derivative(name: str) -> ctypes.pointer:
     '''
         Returns the derivative of the activation function with the specified name
     '''
 
     case_ac_f_derivative = {
-        "sigmoid": LIB.sigmoidDerivative,
-        "relu": LIB.rectifiedLinearUnitDerivative,
-        "tanh": LIB.hyperbolicTangentDerivative,
-        "linear": LIB.linearDerivative
+        "sigmoid": c_lib.sigmoidDerivative,
+        "relu": c_lib.rectifiedLinearUnitDerivative,
+        "tanh": c_lib.hyperbolicTangentDerivative,
+        "linear": c_lib.linearDerivative
     }
     func = case_ac_f_derivative[name]
     if func is None:
@@ -42,14 +42,14 @@ def _get_activation_function_derivative(name: str) -> ctypes._FuncPointer:
     
     return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double))
 
-def _get_cost_function(name: str) -> ctypes._FuncPointer:
+def _get_cost_function(name: str) -> ctypes.pointer:
     '''
         Returns the cost function with the specified name
     '''
 
     case_cost_f = {
-        "mse": LIB.sqrCostFunction,
-        "cross_entropy": LIB.crossEntropyCostFunction
+        "mse": c_lib.sqrCostFunction,
+        "cross_entropy": c_lib.crossEntropyCostFunction
     }
     func = case_cost_f[name]
     if func is None:
@@ -57,14 +57,14 @@ def _get_cost_function(name: str) -> ctypes._FuncPointer:
 
     return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, [ctypes.c_double, ctypes.c_double]))
 
-def _get_cost_function_derivative(name: str) -> ctypes._FuncPointer:
+def _get_cost_function_derivative(name: str) -> ctypes.pointer:
     '''
         Returns the derivative of the cost function with the specified name
     '''
 
     case_cost_f_derivative = {
-        "mse": LIB.sqrCostFunctionDerivative,
-        "cross_entropy": LIB.crossEntropyCostFunctionDerivative
+        "mse": c_lib.sqrCostFunctionDerivative,
+        "cross_entropy": c_lib.crossEntropyCostFunctionDerivative
     }
     func = case_cost_f_derivative[name]
     if func is None:
@@ -74,18 +74,18 @@ def _get_cost_function_derivative(name: str) -> ctypes._FuncPointer:
 
 # Initialization methods
 
-def initialize_rng(seed: int) -> None:
+def set_rng_seed(seed: int) -> None:
     '''
         Assures that the random number generator is initialized
     '''
     arg = ctypes.c_int(seed)
-    LIB.initRNG(arg)
+    c_lib.setRngSeed(arg)
 
 def get_rng_seed() -> int:
     '''
         Returns the seed of the random number generator
     '''
-    return int(LIB.getSeed())
+    return int(c_lib.getSeed())
 
 def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer: int, nr_outputs: int) -> NeuralNetwork | None:
     '''
@@ -94,11 +94,11 @@ def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer
     if not all(isinstance(arg, int) for arg in [nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs]):
         raise TypeError("create_neural_network arguments must be integers")
     neural_network: NeuralNetwork = NeuralNetwork(nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
-    LIB.initNeuralNetwork(neural_network.c_nn_ptr, nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
+    c_lib.initNeuralNetwork(neural_network.c_nn_ptr, nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
     atexit.register(_cleanup_nn, neural_network)
     return neural_network
 
-def set_input_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
+def set_input_layer_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
     '''
         Sets the activation function for the input layer
         ### Args:
@@ -109,7 +109,7 @@ def set_input_activation_function(neural_network: NeuralNetwork, activation_func
     '''
     activation_function = _get_activation_function(activation_function)
     activation_function_derivative = _get_activation_function_derivative(activation_function)
-    LIB.setInputLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
+    c_lib.setInputLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
 
 def set_hidden_layer_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
     '''
@@ -122,7 +122,7 @@ def set_hidden_layer_activation_function(neural_network: NeuralNetwork, activati
     '''
     activation_function = _get_activation_function(activation_function)
     activation_function_derivative = _get_activation_function_derivative(activation_function)
-    LIB.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
+    c_lib.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
   
 def set_output_layer_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
     '''
@@ -135,27 +135,27 @@ def set_output_layer_activation_function(neural_network: NeuralNetwork, activati
     '''
     activation_function = _get_activation_function(activation_function)
     activation_function_derivative = _get_activation_function_derivative(activation_function)
-    LIB.setOutputLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
+    c_lib.setOutputLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
 
 def init_weights_xavier_normal(neural_network: NeuralNetwork) -> None:
-    LIB.initWeightsXavierNormal(neural_network.c_nn_ptr)
+    c_lib.initWeightsXavierNormal(neural_network.c_nn_ptr)
 
 def init_weights_xavier_uniform(neural_network: NeuralNetwork) -> None:
-    LIB.initWeightsXavierUniform(neural_network.c_nn_ptr)
+    c_lib.initWeightsXavierUniform(neural_network.c_nn_ptr)
 
 def init_weights_random_uniform(neural_network: NeuralNetwork, min_w: float, max_w: float) -> None:
     min_w_arg = ctypes.c_double(min_w)
     max_w_arg = ctypes.c_double(max_w)
-    LIB.initWeightsRandomUniform(neural_network.c_nn_ptr, min_w_arg, max_w_arg)
+    c_lib.initWeightsRandomUniform(neural_network.c_nn_ptr, min_w_arg, max_w_arg)
 
 def init_biases_random_uniform(neural_network: NeuralNetwork, min_b: float, max_b: float) -> None:
     min_b_arg = ctypes.c_double(min_b)
     max_b_arg = ctypes.c_double(max_b)
-    LIB.initBiasesRandomUniform(neural_network.c_nn_ptr, min_b_arg, max_b_arg)
+    c_lib.initBiasesRandomUniform(neural_network.c_nn_ptr, min_b_arg, max_b_arg)
 
 def init_biases_constant(neural_network: NeuralNetwork, bias_v: float) -> None:
     bias_arg = ctypes.c_double(bias_v)
-    LIB.initBiasesConstant(neural_network.c_nn_ptr, bias_arg)
+    c_lib.initBiasesConstant(neural_network.c_nn_ptr, bias_arg)
 
 # Training methods
     
@@ -213,12 +213,18 @@ def train_neural_network(neural_network: NeuralNetwork,
     for i, label in enumerate(labels):
         double_ptr_labels[i] = (ctypes.c_double * len(label))(*label)
 
+    learing_rate_w = ctypes.c_double(learing_rate_w)
+    learning_rate_b = ctypes.c_double(learning_rate_b)
+    lambda_reg = ctypes.c_double(lambda_reg)
+    batch_size = ctypes.c_int(batch_size)
+    amount_epochs = ctypes.c_int(amount_epochs)
+
     if l1_reg:
-        regularization_function = LIB.l1Regularization
-        regularization_function_derivative = LIB.l1RegularizationDerivative
+        regularization_function = c_lib.l1Regularization
+        regularization_function_derivative = c_lib.l1RegularizationDerivative
     elif l2_reg:
-        regularization_function = LIB.l2Regularization
-        regularization_function_derivative = LIB.l2RegularizationDerivative
+        regularization_function = c_lib.l2Regularization
+        regularization_function_derivative = c_lib.l2RegularizationDerivative
     else:
         regularization_function = ctypes.c_void_p(0)
         regularization_function_derivative = ctypes.c_void_p(0)
@@ -228,7 +234,7 @@ def train_neural_network(neural_network: NeuralNetwork,
 
     verbose = ctypes.c_int(1) if verbose else ctypes.c_int(0)
 
-    LIB.trainNeuralNetwork(neural_network.c_nn_ptr, double_ptr_inputs, double_ptr_labels, amount_epochs, batch_size, 
+    c_lib.trainNeuralNetwork(neural_network.c_nn_ptr, double_ptr_inputs, double_ptr_labels, amount_epochs, batch_size, 
                            learing_rate_w, learning_rate_b, regularization_function_derivative, regularization_function,
                            lambda_reg, cost_function, cost_function_derivative, verbose)
     
