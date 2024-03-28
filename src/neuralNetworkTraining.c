@@ -151,19 +151,13 @@ void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblA_dblR regularizati
         for (int j = 0; j < n->connections; j++) {
             gradient = avgNg->gradients[i]->weightGradient[j];
             n->weights[j] -= lrw * gradient;
-            if (regularizationDerivative != NULL) {
-                n->weights[j] -= regularizationDerivative(n->weights[j]) * lambda;
-            }
+            n->weights[j] -= regularizationDerivative(n->weights[j]) * lambda;
         }
         gradient = avgNg->gradients[i]->biasGradient;
         n->bias -= lrb * gradient;
     }
 
 }
-
-double returnZeroRegularization(NeuralNetwork * nn) { 
-    return 0; 
-};
 
 /**
  * Trains a neural network for a number of epochs using a set of inputs with labels.
@@ -173,21 +167,15 @@ double returnZeroRegularization(NeuralNetwork * nn) {
  * @param epochs The number of epochs to train the neural network for.
  * @param batchSize The size of the batches to use for training.
  * @param lrw The learning rate for the weights.
- * @param lrb The learning rate for the biases.
- * @param regularization The regularization function to use.
- * @param lambda The regularization parameter.
- * @param costFunctionDerivative The derivative of the cost function to use for the output layer. */
-void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** labels, int epochs, int batchSize, 
-                               double lrw, double lrb, dblA_dblR regularizationDerivative, nnA_dblR regularization, 
-                               double lambda, dblA_dbLA_dblR costFunctionDerivative, dblpA_dblpA_intA_dblR costFunction, int verbose) {
+ * @param lrb The learning rate for the biases..
+ * @param lambda The regularization parameter.*/
+void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** labels, int epochs, int batchSize, double lrw, double lrb, double lambda, int verbose) {
 
     double epochCost;
     int batchIndexes[batchSize];
     for (int i = 0; i < batchSize; i++) {batchIndexes[i] = i;}
     double * output;
-    if (regularizationDerivative != NULL) { regularizationDerivative = &(*regularizationDerivative); };
-    if (regularization == NULL) { regularization = returnZeroRegularization; };
-
+    
     for (int i = 0; i < epochs; i++) {
 
         epochCost = 0;
@@ -197,9 +185,9 @@ void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** l
 
         for (int j = 0; j < batchSize; j++) {
             output = inputDataToNeuralNetwork(nn, inputs[batchIndexes[j]]);
-            epochCost += costFunction(output, labels[batchIndexes[j]], nn->nrOfOutputNeurons);
-            epochCost += regularization(nn);
-            gb->gradientVectors[j] = computeGradients(nn, labels[batchIndexes[j]], &(*costFunctionDerivative));
+            epochCost += nn->costFunction(output, labels[batchIndexes[j]], nn->nrOfOutputNeurons);
+            epochCost += nn->regularization(nn->neurons, nn->nrOfNeurons);
+            gb->gradientVectors[j] = computeGradients(nn, labels[batchIndexes[j]], nn->costFunctionDerivative);
             free(output);
         }
 
@@ -207,7 +195,7 @@ void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** l
         
         if (verbose) { printf("Epoch %d: total epoch cost: %f\n", i, epochCost); }
 
-        optimize(nn, avgGradient, regularizationDerivative, lrw, lrb, lambda);
+        optimize(nn, avgGradient, nn->regularizationDerivative, lrw, lrb, lambda);
 
         freeGradientVector(avgGradient);
         freeGradientBatch(gb);

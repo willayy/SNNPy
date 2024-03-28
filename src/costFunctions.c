@@ -66,24 +66,32 @@ double crossEntropyCostFunctionDerivative(double output, double desiredOutput ) 
     return (-x + y) / (x * (x - 1));
 }
 
-double l1Regularization(NeuralNetwork * nn) {
+double noRegularization(Neuron ** nv, int nrOfNeurons) {
+    return 0;
+}
+
+double noRegularizationDerivative(double weight) {
+    return 0;
+}
+
+double l1Regularization(Neuron ** nv, int nrOfNeurons) {
     double sum = 0;
     double weight;
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        for (int j = 0; j < (nn->neurons[i])->connections; j++) {
-            weight = nn->neurons[i]->weights[j];
+    for (int i = 0; i < nrOfNeurons; i++) {
+        for (int j = 0; j < (nv[i])->connections; j++) {
+            weight = nv[i]->weights[j];
             sum += fabs(weight);
         }
     }
     return sum;
 }
 
-double l2Regularization(NeuralNetwork * nn) {
+double l2Regularization(Neuron ** nv, int nrOfNeurons) {
     double sum = 0;
     double weight;
-    for (int i = 0; i < nn->nrOfNeurons; i++) {
-        for (int j = 0; j < (nn->neurons[i])->connections; j++) {
-            weight = nn->neurons[i]->weights[j];
+    for (int i = 0; i < nrOfNeurons; i++) {
+        for (int j = 0; j < (nv[i])->connections; j++) {
+            weight = nv[i]->weights[j];
             sum += weight * weight;
         }
     }

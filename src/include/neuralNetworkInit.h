@@ -11,6 +11,10 @@
 
         void setOutputLayerActivationFunction(NeuralNetwork * nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative);
 
+        void setCostFunction(NeuralNetwork * nn, dblpA_dblpA_intA_dblR costFunction, dblA_dbLA_dblR costFunctionDerivative);
+
+        void setRegularization(NeuralNetwork * nn, nA_intA_dblR regularization, dblA_dblR regularizationDerivative);
+
         void resetNeuralNetwork(NeuralNetwork * nn);
 
         void initWeightsXavierUniform(NeuralNetwork * nn);

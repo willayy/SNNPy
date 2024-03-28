@@ -22,6 +22,10 @@
         };
         typedef struct Neuron Neuron;
 
+        // Needs to be here to avoid recursion in the includes.
+        /** pointer for a "double func(NeuralNetwork *)" function */
+        typedef double (*nA_intA_dblR)(Neuron **, int);
+
         /**
          * A Neural network implemented as a struct.
          * @param nrOfParameterNeurons: the number of parameter neurons.
@@ -40,7 +44,11 @@
             int nrOfHiddenLayers;
             int neuronsPerLayer;
 
-            dblA_dblR * inputLayerActivationFunctions;
+            dblpA_dblpA_intA_dblR costFunction;
+            dblA_dbLA_dblR costFunctionDerivative;
+            nA_intA_dblR regularization;
+            dblA_dblR regularizationDerivative;
+            dblA_dblR * inputLayerActivationFunctions; // Store activation in [0] and derivative in [1] to save space in Neuron.
             dblA_dblR * hiddenLayerActivationFunctions;
             dblA_dblR * outputLayerActivationFunctions;
 
@@ -81,8 +89,6 @@
         };
         typedef struct GradientBatch GradientBatch;
 
-        // Needs to be here to avoid recursion in the includes.
-        /** pointer for a "double func(NeuralNetwork *)" function */
-        typedef double (*nnA_dblR)(NeuralNetwork *);
+        
 
 #endif

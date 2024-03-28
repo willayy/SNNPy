@@ -11,9 +11,13 @@
 
         double crossEntropyCostFunction(double * output, double * desiredOutput, int outputSize);
 
-        double l1Regularization(NeuralNetwork * nn);
+        double noRegularization(Neuron ** nv, int nrOfNeurons);
 
-        double l2Regularization(NeuralNetwork * nn);
+        double l1Regularization(Neuron ** nv, int nrOfNeurons);
+
+        double l2Regularization(Neuron ** nv, int nrOfNeurons);
+
+        double noRegularizationDerivative(double weight);
 
         double l1RegularizationDerivative(double weight);
 

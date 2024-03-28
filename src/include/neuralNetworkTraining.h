@@ -13,6 +13,5 @@
         void optimize(NeuralNetwork * nn, GradientVector * avgNg, dblA_dblR regularizationDerivative, double lrw, double lrb, double lambda);
 
         void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** labels, int epochs, int batchSize, 
-                               double lrw, double lrb, dblA_dblR regularizationDerivative, nnA_dblR regularization, 
-                               double lambda, dblA_dbLA_dblR costFunctionDerivative, dblpA_dblpA_intA_dblR costFunction, int verbose);
+                               double lrw, double lrb, double lambda, int verbose);
 #endif

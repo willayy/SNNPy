@@ -7,40 +7,44 @@ def _cleanup_nn(neural_network: NeuralNetwork):
         Cleans up the memory allocated for a neural network at script exit
     '''
     c_lib.freeNeuralNetwork(neural_network.c_nn_ptr)
-    
+
 def _get_activation_function(name: str) -> ctypes.pointer:
     '''
         Returns the activation function with the specified name
     '''
 
-    case_ac_f = {
+    func_dict = {
+        "linear": c_lib.linear,
         "sigmoid": c_lib.sigmoid,
         "relu": c_lib.rectifiedLinearUnit,
-        "tanh": c_lib.hyperbolicTangent,
-        "linear": c_lib.linear
+        "tanh": c_lib.hyperbolicTangent
     }
-    func = case_ac_f[name]
+
+    func = func_dict.get(name)
+    
     if func is None:
         raise ValueError(f"Activation function {name} not found")
 
-    return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double))
+    return func
 
 def _get_activation_function_derivative(name: str) -> ctypes.pointer:
     '''
         Returns the derivative of the activation function with the specified name
     '''
 
-    case_ac_f_derivative = {
+    func_dict = {
+        "linear": c_lib.linearDerivative,
         "sigmoid": c_lib.sigmoidDerivative,
         "relu": c_lib.rectifiedLinearUnitDerivative,
-        "tanh": c_lib.hyperbolicTangentDerivative,
-        "linear": c_lib.linearDerivative
+        "tanh": c_lib.hyperbolicTangentDerivative
     }
-    func = case_ac_f_derivative[name]
+
+    func = func_dict.get(name)
+
     if func is None:
         raise ValueError(f"Activation function {name} not found")
     
-    return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double))
+    return func
 
 def _get_cost_function(name: str) -> ctypes.pointer:
     '''
@@ -55,7 +59,7 @@ def _get_cost_function(name: str) -> ctypes.pointer:
     if func is None:
         raise ValueError(f"Cost function {name} not found")
 
-    return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, [ctypes.c_double, ctypes.c_double]))
+    return func
 
 def _get_cost_function_derivative(name: str) -> ctypes.pointer:
     '''
@@ -70,7 +74,49 @@ def _get_cost_function_derivative(name: str) -> ctypes.pointer:
     if func is None:
         raise ValueError(f"Cost function {name} not found")
     
-    return ctypes.cast(func, ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double))
+    return func
+
+def _get_regularization(name: str) -> ctypes.pointer:
+    '''
+        Returns the regularization function with the specified name
+    '''
+
+    case_reg_f = {
+        "l1": c_lib.l1Regularization,
+        "l2": c_lib.l2Regularization,
+        "no_reg": c_lib.noRegularization
+    }
+    func = case_reg_f[name]
+    if func is None:
+        raise ValueError(f"Regularization function {name} not found")
+
+    return func
+
+def _get_regularization_derivative(name: str) -> ctypes.pointer:
+    '''
+        Returns the derivative of the regularization function with the specified name
+    '''
+
+    case_reg_f_derivative = {
+        "l1": c_lib.l1RegularizationDerivative,
+        "l2": c_lib.l2RegularizationDerivative,
+        "no_reg": c_lib.noRegularizationDerivative
+    }
+    func = case_reg_f_derivative[name]
+    if func is None:
+        raise ValueError(f"Regularization function {name} not found")
+    
+    return func
+
+def _python_2d_list_to_c_array(py_list: list[list[float]]) -> ctypes.pointer:
+    '''
+        Converts a 2D python list to a 2D C array
+    '''
+    c_array = (ctypes.c_double * len(py_list[0]) * len(py_list))()
+    for i in range(len(py_list)):
+        for j in range(len(py_list[0])):
+            c_array[i][j] = ctypes.c_double(py_list[i][j])
+    return c_array
 
 # Initialization methods
 
@@ -107,16 +153,26 @@ def set_activation_functions(neural_network: NeuralNetwork, input_layer: str, hi
             * #### "tanh": Hyperbolic Tangent
             * #### "linear": Linear
     '''
-    input_layer = _get_activation_function(input_layer)
-    input_layer_derivative = _get_activation_function_derivative(input_layer)
-    hidden_layer = _get_activation_function(hidden_layer)
-    hidden_layer_derivative = _get_activation_function_derivative(hidden_layer)
-    output_layer = _get_activation_function(output_layer)
-    output_layer_derivative = _get_activation_function_derivative(output_layer)
+    input_layer_f = _get_activation_function(input_layer)
+    input_layer_derivative_f = _get_activation_function_derivative(input_layer)
+    hidden_layer_f = _get_activation_function(hidden_layer)
+    hidden_layer_derivative_f = _get_activation_function_derivative(hidden_layer)
+    output_layer_f = _get_activation_function(output_layer)
+    output_layer_derivative_f = _get_activation_function_derivative(output_layer)
 
-    c_lib.setInputLayerActivationFunction(neural_network.c_nn_ptr, input_layer, input_layer_derivative)
-    c_lib.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, hidden_layer, hidden_layer_derivative)
-    c_lib.setOutputLayerActivationFunction(neural_network.c_nn_ptr, output_layer, output_layer_derivative)
+    c_lib.setInputLayerActivationFunction(neural_network.c_nn_ptr, input_layer_f, input_layer_derivative_f)
+    c_lib.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, hidden_layer_f, hidden_layer_derivative_f)
+    c_lib.setOutputLayerActivationFunction(neural_network.c_nn_ptr, output_layer_f, output_layer_derivative_f)
+
+def set_cost_function(neural_network: NeuralNetwork, cost_function: str) -> None:
+    cost_function_f = _get_cost_function(cost_function)
+    cost_function_derivative_f = _get_cost_function_derivative(cost_function)
+    c_lib.setCostFunction(neural_network.c_nn_ptr, cost_function_f, cost_function_derivative_f)
+
+def set_regularization(neural_network: NeuralNetwork, regularization: str) -> None:
+    regularization_f = _get_regularization(regularization)
+    regularization_derivative_f = _get_regularization_derivative(regularization)
+    c_lib.setRegularization(neural_network.c_nn_ptr, regularization_f, regularization_derivative_f)
 
 def init_weights_xavier_normal(neural_network: NeuralNetwork) -> None:
     c_lib.initWeightsXavierNormal(neural_network.c_nn_ptr)
@@ -147,10 +203,7 @@ def train_neural_network(neural_network: NeuralNetwork,
                          amount_epochs: int,
                          learing_rate_w: float,
                          learning_rate_b: float,
-                         cost_function: str,
                          lambda_reg: float = 0,
-                         l1_reg: bool = False,
-                         l2_reg: bool = False,
                          verbose: bool = True) -> None:
     '''
         Trains the neural network with the specified inputs and desired outputs. The
@@ -184,38 +237,17 @@ def train_neural_network(neural_network: NeuralNetwork,
         raise ValueError(f"inputs and labels must have the same length, got {length} and {len(labels)}")
     if not all(len(inputs[i]) == neural_network.nr_of_inputs and len(labels[i]) for i in range(length)):
         raise ValueError("inputs and labels must have the same length for each element")
-    if l1_reg and l2_reg:
-        raise ValueError("Cannot use both L1 and L2 regularization at the same time")
-    
-    double_ptr_inputs = (ctypes.c_double * len(inputs))()
-    for i, input in enumerate(inputs):
-        double_ptr_inputs[i] = (ctypes.c_double * len(input))(*input)
-    double_ptr_labels = (ctypes.c_double * len(labels))()
-    for i, label in enumerate(labels):
-        double_ptr_labels[i] = (ctypes.c_double * len(label))(*label)
 
+    double_ptr_inputs = _python_2d_list_to_c_array(inputs)
+    double_ptr_labels = _python_2d_list_to_c_array(labels)
     learing_rate_w = ctypes.c_double(learing_rate_w)
     learning_rate_b = ctypes.c_double(learning_rate_b)
     lambda_reg = ctypes.c_double(lambda_reg)
     batch_size = ctypes.c_int(batch_size)
     amount_epochs = ctypes.c_int(amount_epochs)
 
-    if l1_reg:
-        regularization_function = c_lib.l1Regularization
-        regularization_function_derivative = c_lib.l1RegularizationDerivative
-    elif l2_reg:
-        regularization_function = c_lib.l2Regularization
-        regularization_function_derivative = c_lib.l2RegularizationDerivative
-    else:
-        regularization_function = ctypes.c_void_p(0)
-        regularization_function_derivative = ctypes.c_void_p(0)
-
-    cost_function = _get_cost_function(cost_function)
-    cost_function_derivative = _get_cost_function_derivative(cost_function)
-
     verbose = ctypes.c_int(1) if verbose else ctypes.c_int(0)
 
-    c_lib.trainNeuralNetwork(neural_network.c_nn_ptr, double_ptr_inputs, double_ptr_labels, amount_epochs, batch_size, 
-                           learing_rate_w, learning_rate_b, regularization_function_derivative, regularization_function,
-                           lambda_reg, cost_function, cost_function_derivative, verbose)
+    c_lib.trainNeuralNetworkOnBatch(neural_network.c_nn_ptr, double_ptr_inputs, double_ptr_labels, amount_epochs, 
+                                    batch_size, learing_rate_w, learning_rate_b, lambda_reg, verbose)
     

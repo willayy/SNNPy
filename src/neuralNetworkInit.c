@@ -97,6 +97,26 @@ void setOutputLayerActivationFunction(NeuralNetwork *nn, dblA_dblR activationFun
 }
 
 /**
+ * Sets the cost function for the neural network.
+ * @param nn: the neural network to set the cost function for.
+ * @param costFunction: the cost function to set for the neural network.
+ * @param costFunctionDerivative: the derivative of the cost function to set for the neural network. */
+void setCostFunction(NeuralNetwork * nn, dblpA_dblpA_intA_dblR costFunction, dblA_dbLA_dblR costFunctionDerivative) {
+    nn->costFunction = costFunction;
+    nn->costFunctionDerivative = costFunctionDerivative;
+}
+
+/**
+ * Sets the regularization for the neural network.
+ * @param nn: the neural network to set the regularization for.
+ * @param regularization: the regularization function to set for the neural network.
+ * @param regularizationDerivative: the derivative of the regularization function to set for the neural network. */
+void setRegularization(NeuralNetwork * nn, nA_intA_dblR regularization, dblA_dblR regularizationDerivative) {
+    nn->regularization = regularization;
+    nn->regularizationDerivative = regularizationDerivative;
+}
+
+/**
  * Initializes the weights of the neural network to a random number within "Xavier" range uniformly.
  * @param nn: the neural network to initialize the weights for.
  * @param seed: the seed for the random function */
