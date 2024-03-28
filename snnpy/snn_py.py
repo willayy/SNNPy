@@ -1,6 +1,6 @@
 import atexit, ctypes
 from snnpy import c_lib
-from snnpy.neuralnetwork import NeuralNetwork
+from snnpy.neuralnetwork import NeuralNetwork, CNeuron
 
 def _cleanup_nn(neural_network: NeuralNetwork):
     '''
@@ -12,6 +12,8 @@ def _get_activation_function(name: str) -> ctypes.pointer:
     '''
         Returns the activation function with the specified name
     '''
+
+    activation_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)
 
     func_dict = {
         "linear": c_lib.linear,
@@ -25,12 +27,16 @@ def _get_activation_function(name: str) -> ctypes.pointer:
     if func is None:
         raise ValueError(f"Activation function {name} not found")
 
+    func = ctypes.cast(func, activation_functype)
+
     return func
 
 def _get_activation_function_derivative(name: str) -> ctypes.pointer:
     '''
         Returns the derivative of the activation function with the specified name
     '''
+
+    activation_derivative_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)
 
     func_dict = {
         "linear": c_lib.linearDerivative,
@@ -44,6 +50,8 @@ def _get_activation_function_derivative(name: str) -> ctypes.pointer:
     if func is None:
         raise ValueError(f"Activation function {name} not found")
     
+    func = ctypes.cast(func, activation_derivative_functype)
+    
     return func
 
 def _get_cost_function(name: str) -> ctypes.pointer:
@@ -51,13 +59,19 @@ def _get_cost_function(name: str) -> ctypes.pointer:
         Returns the cost function with the specified name
     '''
 
+    cost_function_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int)
+
     case_cost_f = {
         "mse": c_lib.sqrCostFunction,
         "cross_entropy": c_lib.crossEntropyCostFunction
     }
+
     func = case_cost_f[name]
+
     if func is None:
         raise ValueError(f"Cost function {name} not found")
+    
+    func = ctypes.cast(func, cost_function_functype)
 
     return func
 
@@ -66,13 +80,19 @@ def _get_cost_function_derivative(name: str) -> ctypes.pointer:
         Returns the derivative of the cost function with the specified name
     '''
 
+    cost_function_derivative_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double, ctypes.c_double)
+
     case_cost_f_derivative = {
         "mse": c_lib.sqrCostFunctionDerivative,
         "cross_entropy": c_lib.crossEntropyCostFunctionDerivative
     }
+
     func = case_cost_f_derivative[name]
+
     if func is None:
         raise ValueError(f"Cost function {name} not found")
+    
+    func = ctypes.cast(func, cost_function_derivative_functype)
     
     return func
 
@@ -81,14 +101,20 @@ def _get_regularization(name: str) -> ctypes.pointer:
         Returns the regularization function with the specified name
     '''
 
+    regularization_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(CNeuron)), ctypes.c_int)
+
     case_reg_f = {
         "l1": c_lib.l1Regularization,
         "l2": c_lib.l2Regularization,
         "no_reg": c_lib.noRegularization
     }
+
     func = case_reg_f[name]
+
     if func is None:
         raise ValueError(f"Regularization function {name} not found")
+    
+    func = ctypes.cast(func, regularization_functype)
 
     return func
 
@@ -97,26 +123,43 @@ def _get_regularization_derivative(name: str) -> ctypes.pointer:
         Returns the derivative of the regularization function with the specified name
     '''
 
+    regularization_derivative_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)
+
     case_reg_f_derivative = {
         "l1": c_lib.l1RegularizationDerivative,
         "l2": c_lib.l2RegularizationDerivative,
         "no_reg": c_lib.noRegularizationDerivative
     }
+
     func = case_reg_f_derivative[name]
+
     if func is None:
         raise ValueError(f"Regularization function {name} not found")
     
+    func = ctypes.cast(func, regularization_derivative_functype)
+
     return func
 
 def _python_2d_list_to_c_array(py_list: list[list[float]]) -> ctypes.pointer:
     '''
         Converts a 2D python list to a 2D C array
     '''
-    c_array = (ctypes.c_double * len(py_list[0]) * len(py_list))()
+    for inner_list in py_list:
+        if len(inner_list) != len(py_list[0]):
+            raise ValueError("All inner lists must have the same length")
+
+    c_double_array = (ctypes.c_double * len(py_list[0]) * len(py_list))()
+    for i, inner_list in enumerate(py_list):
+        c_double_array[i] = (ctypes.c_double * len(inner_list))(*inner_list)
+
+    double_pointer = (ctypes.POINTER(ctypes.c_double) * len(py_list))()
     for i in range(len(py_list)):
-        for j in range(len(py_list[0])):
-            c_array[i][j] = ctypes.c_double(py_list[i][j])
-    return c_array
+        double_pointer[i] = ctypes.cast(c_double_array[i], ctypes.POINTER(ctypes.c_double))
+
+    double_pointer = ctypes.cast(c_double_array, ctypes.POINTER(ctypes.POINTER(ctypes.c_double)))
+
+    return double_pointer
+
 
 # Initialization methods
 
@@ -208,7 +251,12 @@ def train_neural_network(neural_network: NeuralNetwork,
     '''
         Trains the neural network with the specified inputs and desired outputs. The
         training is done by dividing up the inputs in to the specified batch size, shuffling them, 
-        calculating the gradients, averaging them and updating the weights and biases. \n
+        calculating the gradients, averaging them and updating the weights and biases.\n
+
+        ## Notice!:
+        The inputs and labels will be freed automatically after the training is done, 
+        so make sure to keep a copy of them if you need them later.\n
+
         ## Args:
             * #### neural_network: 
             The neural network to train 
@@ -226,10 +274,6 @@ def train_neural_network(neural_network: NeuralNetwork,
             The learning rate for the biases
             * #### lambda_reg:
             The regularization parameter
-            * #### l1_reg:
-            Whether to use L1 regularization
-            * #### l2_reg:
-            Whether to use L2 regularization
             * #### verbose:
             Whether to print the training progress  
     '''

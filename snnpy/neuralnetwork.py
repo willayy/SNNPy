@@ -34,7 +34,6 @@ class CNeuralNetwork(ctypes.Structure):
         ("outputLayer", ctypes.POINTER(ctypes.POINTER(CNeuron)))
     ]
         
-
 class CNeuronGradient(ctypes.Structure):
     '''
         Python copy representing the NeuronGradient struct in the shared library
@@ -44,7 +43,6 @@ class CNeuronGradient(ctypes.Structure):
         ("weightGradient", ctypes.POINTER(ctypes.c_double)),
         ("biasGradient", ctypes.c_double),
     ]
-
 
 class CGradientVector(ctypes.Structure):
     '''

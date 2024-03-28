@@ -201,4 +201,10 @@ void trainNeuralNetworkOnBatch(NeuralNetwork * nn, double ** inputs, double ** l
         freeGradientBatch(gb);
     }
 
+    for (int i = 0; i < batchSize; i++) {
+        free(inputs[i]);
+        free(labels[i]);
+    }
+    free(inputs);
+    free(labels);
 }

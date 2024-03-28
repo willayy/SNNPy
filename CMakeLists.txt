@@ -24,6 +24,24 @@ set_target_properties(testing PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
 
+# Add testing executable
+add_executable(
+  SNN-Benchmark
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/snnbenchmark.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tests.c
+)
+set_target_properties(SNN-Benchmark PROPERTIES VERSION ${PROJECT_VERSION})
+target_include_directories(SNN-Benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
+target_include_directories(SNN-Benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
+
 # Add shared library
 add_library(
   ${PROJECT_NAME} SHARED
@@ -55,6 +73,7 @@ endif()
 
 # Link the executable to the library
 target_link_libraries(${PROJECT_NAME} testing)
+target_link_libraries(SNN-Benchmark testing)
 
 
 
