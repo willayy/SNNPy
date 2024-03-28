@@ -1,8 +1,10 @@
 import atexit, ctypes
 from snnpy import c_lib
-from snnpy.neuralnetwork import NeuralNetwork, CNeuron
+from snnpy.neuralnetwork import PyNeuralNetwork, Neuron
 
-def _cleanup_nn(neural_network: NeuralNetwork):
+# Inner module private functions
+
+def _cleanup_nn(neural_network: PyNeuralNetwork):
     '''
         Cleans up the memory allocated for a neural network at script exit
     '''
@@ -101,7 +103,7 @@ def _get_regularization(name: str) -> ctypes.pointer:
         Returns the regularization function with the specified name
     '''
 
-    regularization_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(CNeuron)), ctypes.c_int)
+    regularization_functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(Neuron)), ctypes.c_int)
 
     case_reg_f = {
         "l1": c_lib.l1Regularization,
@@ -160,7 +162,6 @@ def _python_2d_list_to_c_array(py_list: list[list[float]]) -> ctypes.pointer:
 
     return double_pointer
 
-
 # Initialization methods
 
 def set_rng_seed(seed: int) -> None:
@@ -176,18 +177,18 @@ def get_rng_seed() -> int:
     '''
     return int(c_lib.getSeed())
 
-def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer: int, nr_outputs: int) -> NeuralNetwork | None:
+def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer: int, nr_outputs: int) -> PyNeuralNetwork | None:
     '''
         Creates a neural network with the specified number of inputs, hidden layers, neurons per layer and outputs
     '''
     if not all(isinstance(arg, int) for arg in [nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs]):
         raise TypeError("create_neural_network arguments must be integers")
-    neural_network: NeuralNetwork = NeuralNetwork(nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
+    neural_network: PyNeuralNetwork = PyNeuralNetwork(nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
     c_lib.initNeuralNetwork(neural_network.c_nn_ptr, nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
     atexit.register(_cleanup_nn, neural_network)
     return neural_network
 
-def set_activation_functions(neural_network: NeuralNetwork, input_layer: str, hidden_layer: str, output_layer: str) -> None:
+def set_activation_functions(neural_network: PyNeuralNetwork, input_layer: str, hidden_layer: str, output_layer: str) -> None:
     '''
         Sets the activation function for the layers of the neural network, all hidden layers will have the same activation function
         ### Args:
@@ -207,39 +208,39 @@ def set_activation_functions(neural_network: NeuralNetwork, input_layer: str, hi
     c_lib.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, hidden_layer_f, hidden_layer_derivative_f)
     c_lib.setOutputLayerActivationFunction(neural_network.c_nn_ptr, output_layer_f, output_layer_derivative_f)
 
-def set_cost_function(neural_network: NeuralNetwork, cost_function: str) -> None:
+def set_cost_function(neural_network: PyNeuralNetwork, cost_function: str) -> None:
     cost_function_f = _get_cost_function(cost_function)
     cost_function_derivative_f = _get_cost_function_derivative(cost_function)
     c_lib.setCostFunction(neural_network.c_nn_ptr, cost_function_f, cost_function_derivative_f)
 
-def set_regularization(neural_network: NeuralNetwork, regularization: str) -> None:
+def set_regularization(neural_network: PyNeuralNetwork, regularization: str) -> None:
     regularization_f = _get_regularization(regularization)
     regularization_derivative_f = _get_regularization_derivative(regularization)
     c_lib.setRegularization(neural_network.c_nn_ptr, regularization_f, regularization_derivative_f)
 
-def init_weights_xavier_normal(neural_network: NeuralNetwork) -> None:
+def init_weights_xavier_normal(neural_network: PyNeuralNetwork) -> None:
     c_lib.initWeightsXavierNormal(neural_network.c_nn_ptr)
 
-def init_weights_xavier_uniform(neural_network: NeuralNetwork) -> None:
+def init_weights_xavier_uniform(neural_network: PyNeuralNetwork) -> None:
     c_lib.initWeightsXavierUniform(neural_network.c_nn_ptr)
 
-def init_weights_random_uniform(neural_network: NeuralNetwork, min_w: float, max_w: float) -> None:
+def init_weights_random_uniform(neural_network: PyNeuralNetwork, min_w: float, max_w: float) -> None:
     min_w_arg = ctypes.c_double(min_w)
     max_w_arg = ctypes.c_double(max_w)
     c_lib.initWeightsRandomUniform(neural_network.c_nn_ptr, min_w_arg, max_w_arg)
 
-def init_biases_random_uniform(neural_network: NeuralNetwork, min_b: float, max_b: float) -> None:
+def init_biases_random_uniform(neural_network: PyNeuralNetwork, min_b: float, max_b: float) -> None:
     min_b_arg = ctypes.c_double(min_b)
     max_b_arg = ctypes.c_double(max_b)
     c_lib.initBiasesRandomUniform(neural_network.c_nn_ptr, min_b_arg, max_b_arg)
 
-def init_biases_constant(neural_network: NeuralNetwork, bias_v: float) -> None:
+def init_biases_constant(neural_network: PyNeuralNetwork, bias_v: float) -> None:
     bias_arg = ctypes.c_double(bias_v)
     c_lib.initBiasesConstant(neural_network.c_nn_ptr, bias_arg)
 
 # Training methods
     
-def train_neural_network(neural_network: NeuralNetwork,
+def train_neural_network(neural_network: PyNeuralNetwork,
                          inputs: list[list[float]],
                          labels: list[list[float]],
                          batch_size: int,

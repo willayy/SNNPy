@@ -1,7 +1,7 @@
 from __future__ import annotations
 import ctypes
 
-class CNeuron(ctypes.Structure):
+class Neuron(ctypes.Structure):
     '''
         Python copy representing the Neuron struct in the shared library
     '''
@@ -13,10 +13,10 @@ class CNeuron(ctypes.Structure):
             ("connecttions", ctypes.c_int),
             ("weights", ctypes.POINTER(ctypes.c_double)),
             ("activationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
-            ("connectedNeurons", ctypes.POINTER(ctypes.POINTER(CNeuron))),
+            ("connectedNeurons", ctypes.POINTER(ctypes.POINTER(Neuron))),
         ]        
 
-class CNeuralNetwork(ctypes.Structure):
+class NeuralNetwork(ctypes.Structure):
     '''
         Python copy representing the NeuralNetwork struct in the shared library
     '''
@@ -30,11 +30,11 @@ class CNeuralNetwork(ctypes.Structure):
         ("inputLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
         ("hiddenLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
         ("outputLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
-        ("neurons", ctypes.POINTER(ctypes.POINTER(CNeuron))),
-        ("outputLayer", ctypes.POINTER(ctypes.POINTER(CNeuron)))
+        ("neurons", ctypes.POINTER(ctypes.POINTER(Neuron))),
+        ("outputLayer", ctypes.POINTER(ctypes.POINTER(Neuron)))
     ]
         
-class CNeuronGradient(ctypes.Structure):
+class NeuronGradient(ctypes.Structure):
     '''
         Python copy representing the NeuronGradient struct in the shared library
     '''
@@ -44,30 +44,30 @@ class CNeuronGradient(ctypes.Structure):
         ("biasGradient", ctypes.c_double),
     ]
 
-class CGradientVector(ctypes.Structure):
+class GradientVector(ctypes.Structure):
     '''
         Python copy representing the GradientVector struct in the shared library
     '''
     _fields_ = [
         ("nrOfNeurons", ctypes.c_int),
-        ("gradients", ctypes.POINTER(ctypes.POINTER(CNeuronGradient)))
+        ("gradients", ctypes.POINTER(ctypes.POINTER(NeuronGradient)))
     ]
 
-class CBatch(ctypes.Structure):
+class Batch(ctypes.Structure):
     '''
         Python copy representing the Batch struct in the shared library
     '''
     _fields_ = [
         ("batchSize", ctypes.c_int),
-        ("gradientVectors", ctypes.POINTER(ctypes.POINTER(CGradientVector)))
+        ("gradientVectors", ctypes.POINTER(ctypes.POINTER(GradientVector)))
     ]
 
-class NeuralNetwork:
+class PyNeuralNetwork:
     '''
         A Python object wrapper for a C NeuralNetwork struct from the shared library
     '''
     def __init__(self, nr_of_inputs: int, nr_of_layers: int, neurons_per_layer: int, nr_of_outputs: int):
-        self.c_nn_ptr = ctypes.pointer(CNeuralNetwork())
+        self.c_nn_ptr = ctypes.pointer(NeuralNetwork())
         self.nr_of_inputs = nr_of_inputs
         self.nr_of_layers = nr_of_layers
         self.neurons_per_layer = neurons_per_layer
