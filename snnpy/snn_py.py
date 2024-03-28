@@ -98,44 +98,25 @@ def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer
     atexit.register(_cleanup_nn, neural_network)
     return neural_network
 
-def set_input_layer_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
+def set_activation_functions(neural_network: NeuralNetwork, input_layer: str, hidden_layer: str, output_layer: str) -> None:
     '''
-        Sets the activation function for the input layer
+        Sets the activation function for the layers of the neural network, all hidden layers will have the same activation function
         ### Args:
             * #### "relu": Rectified Linear Unit
             * #### "sigmoid": Sigmoid
             * #### "tanh": Hyperbolic Tangent
             * #### "linear": Linear
     '''
-    activation_function = _get_activation_function(activation_function)
-    activation_function_derivative = _get_activation_function_derivative(activation_function)
-    c_lib.setInputLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
+    input_layer = _get_activation_function(input_layer)
+    input_layer_derivative = _get_activation_function_derivative(input_layer)
+    hidden_layer = _get_activation_function(hidden_layer)
+    hidden_layer_derivative = _get_activation_function_derivative(hidden_layer)
+    output_layer = _get_activation_function(output_layer)
+    output_layer_derivative = _get_activation_function_derivative(output_layer)
 
-def set_hidden_layer_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
-    '''
-        Sets the activation function for the hidden layers
-        ### Args:
-            * #### "relu": Rectified Linear Unit
-            * #### "sigmoid": Sigmoid
-            * #### "tanh": Hyperbolic Tangent
-            * #### "linear": Linear
-    '''
-    activation_function = _get_activation_function(activation_function)
-    activation_function_derivative = _get_activation_function_derivative(activation_function)
-    c_lib.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
-  
-def set_output_layer_activation_function(neural_network: NeuralNetwork, activation_function: str) -> None:
-    '''
-        Sets the activation function for the output layer
-        ### Args:
-            * #### "relu": Rectified Linear Unit
-            * #### "sigmoid": Sigmoid
-            * #### "tanh": Hyperbolic Tangent
-            * #### "linear": Linear
-    '''
-    activation_function = _get_activation_function(activation_function)
-    activation_function_derivative = _get_activation_function_derivative(activation_function)
-    c_lib.setOutputLayerActivationFunction(neural_network.c_nn_ptr, activation_function, activation_function_derivative)
+    c_lib.setInputLayerActivationFunction(neural_network.c_nn_ptr, input_layer, input_layer_derivative)
+    c_lib.setHiddenLayerActivationFunction(neural_network.c_nn_ptr, hidden_layer, hidden_layer_derivative)
+    c_lib.setOutputLayerActivationFunction(neural_network.c_nn_ptr, output_layer, output_layer_derivative)
 
 def init_weights_xavier_normal(neural_network: NeuralNetwork) -> None:
     c_lib.initWeightsXavierNormal(neural_network.c_nn_ptr)

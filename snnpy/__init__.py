@@ -1,9 +1,7 @@
 import platform, os, ctypes
 
-
-
 def _find_lib(extension: str) -> ctypes.CDLL:
-    shared_lib_path: str = os.path.join(os.path.dirname(__file__), f"sharedlib//libSNNPy.{extension}")
+    shared_lib_path: str = os.path.join(os.path.dirname(__file__), f"sharedlib//libSNN.{extension}")
     if not os.path.isfile(shared_lib_path):
         raise FileNotFoundError(f"Shared library not found at {shared_lib_path}")
     c_lib = ctypes.CDLL(shared_lib_path)
