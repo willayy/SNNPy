@@ -36,7 +36,7 @@
          * @param neuronsPerLayer: the number of neurons per layer in the network.
          * @param neurons: the neurons in the network. */
         struct NeuralNetwork {
-
+            
             int nrOfInputNeurons;
             int nrOfHiddenNeurons;
             int nrOfOutputNeurons;

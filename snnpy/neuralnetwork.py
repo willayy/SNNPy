@@ -1,5 +1,7 @@
+from __future__ import annotations
 from snnpy import c_lib
 import ctypes
+
 
 class Neuron(ctypes.Structure):
     '''
@@ -10,9 +12,9 @@ class Neuron(ctypes.Structure):
             ("A", ctypes.c_double),
             ("Z", ctypes.c_double),
             ("bias", ctypes.c_double),
-            ("connecttions", ctypes.c_int),
+            ("connections", ctypes.c_int),
             ("weights", ctypes.POINTER(ctypes.c_double)),
-            ("activationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
+            ("activationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
             ("connectedNeurons", ctypes.POINTER(ctypes.POINTER(Neuron))),
         ]        
 
@@ -28,12 +30,12 @@ class NeuralNetwork(ctypes.Structure):
         ("nrOfHiddenLayers", ctypes.c_int),
         ("neuronsPerLayer", ctypes.c_int),
         ("costFunction", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int)),
-        ("costFunctionDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double, ctypes.c_double)),
+        ("regularizationDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double, ctypes.c_double)),
         ("regularization", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(Neuron)), ctypes.c_int)),
         ("regularizationDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)),
-        ("inputLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
-        ("hiddenLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
-        ("outputLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
+        ("inputLayerActivationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
+        ("hiddenLayerActivationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
+        ("outputLayerActivationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
         ("neurons", ctypes.POINTER(ctypes.POINTER(Neuron))),
         ("outputLayer", ctypes.POINTER(ctypes.POINTER(Neuron)))
     ]
@@ -57,7 +59,7 @@ class GradientVector(ctypes.Structure):
         ("gradients", ctypes.POINTER(ctypes.POINTER(NeuronGradient)))
     ]
 
-class Batch(ctypes.Structure):
+class GradientBatch(ctypes.Structure):
     '''
         Python copy representing the Batch struct in the shared library
     '''
@@ -71,7 +73,8 @@ class PyNeuralNetwork:
         A Python object wrapper for a C NeuralNetwork struct from the shared library
     '''
     def __init__(self, nr_of_inputs: int, nr_of_layers: int, neurons_per_layer: int, nr_of_outputs: int):
-        self.c_nn_ptr = ctypes.cast(c_lib.createNeuralNetworkPtr(), ctypes.POINTER(NeuralNetwork))
+        temp_struct = NeuralNetwork()
+        self.c_nn_ptr = ctypes.pointer(temp_struct)
         self.nr_of_inputs = nr_of_inputs
         self.nr_of_layers = nr_of_layers
         self.neurons_per_layer = neurons_per_layer

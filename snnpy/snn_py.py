@@ -10,7 +10,7 @@ def _cleanup_nn(neural_network: PyNeuralNetwork):
     '''
     c_lib.freeNeuralNetwork(neural_network.c_nn_ptr)
 
-def _get_activation_function(name: str) -> ctypes.pointer:
+def _get_activation_function(name: str) -> ctypes.POINTER:
     '''
         Returns the activation function with the specified name
     '''
@@ -33,7 +33,7 @@ def _get_activation_function(name: str) -> ctypes.pointer:
 
     return func
 
-def _get_activation_function_derivative(name: str) -> ctypes.pointer:
+def _get_activation_function_derivative(name: str) -> ctypes.POINTER:
     '''
         Returns the derivative of the activation function with the specified name
     '''
@@ -56,7 +56,7 @@ def _get_activation_function_derivative(name: str) -> ctypes.pointer:
     
     return func
 
-def _get_cost_function(name: str) -> ctypes.pointer:
+def _get_cost_function(name: str) -> ctypes.POINTER:
     '''
         Returns the cost function with the specified name
     '''
@@ -77,7 +77,7 @@ def _get_cost_function(name: str) -> ctypes.pointer:
 
     return func
 
-def _get_cost_function_derivative(name: str) -> ctypes.pointer:
+def _get_cost_function_derivative(name: str) -> ctypes.POINTER:
     '''
         Returns the derivative of the cost function with the specified name
     '''
@@ -98,7 +98,7 @@ def _get_cost_function_derivative(name: str) -> ctypes.pointer:
     
     return func
 
-def _get_regularization(name: str) -> ctypes.pointer:
+def _get_regularization(name: str) -> ctypes.POINTER:
     '''
         Returns the regularization function with the specified name
     '''
@@ -120,7 +120,7 @@ def _get_regularization(name: str) -> ctypes.pointer:
 
     return func
 
-def _get_regularization_derivative(name: str) -> ctypes.pointer:
+def _get_regularization_derivative(name: str) -> ctypes.POINTER:
     '''
         Returns the derivative of the regularization function with the specified name
     '''
@@ -142,7 +142,7 @@ def _get_regularization_derivative(name: str) -> ctypes.pointer:
 
     return func
 
-def _python_2d_list_to_c_array(py_list: list[list[float]]) -> ctypes.pointer:
+def _python_2d_list_to_c_array(py_list: list[list[float]]) -> ctypes.POINTER:
     '''
         Converts a 2D python list to a 2D C array
     '''

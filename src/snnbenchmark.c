@@ -10,7 +10,7 @@
 
 int main() {
     
-    NeuralNetwork * nn = createNeuralNetworkPtr();
+    NeuralNetwork * nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
     initNeuralNetwork(nn, 2, 1, 2, 2);
     setInputLayerActivationFunction(nn, &linear, &linearDerivative);
     setHiddenLayerActivationFunction(nn, &sigmoid, &sigmoidDerivative);

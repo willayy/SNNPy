@@ -58,12 +58,6 @@ void initNeuralNetwork(NeuralNetwork * nn, int nrOfInputs, int nrOfLayers, int n
 }
 
 /**
- * Creates a neural network pointer */
-NeuralNetwork * createNeuralNetworkPtr() {
-    return (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
-}
-
-/**
  * Sets the activation function for the input layer of the neural network.
  * @param nn: the neural network to set the activation function for.
  * @param activationFunction: the activation function to set for the input layer.
