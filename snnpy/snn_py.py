@@ -1,6 +1,6 @@
 import atexit, ctypes
 from snnpy import c_lib
-from snnpy.neuralnetwork import PyNeuralNetwork, Neuron
+from snnpy.neuralnetwork import PyNeuralNetwork
 
 # Inner module private functions
 
@@ -181,8 +181,10 @@ def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer
     '''
         Creates a neural network with the specified number of inputs, hidden layers, neurons per layer and outputs
     '''
+
     if not all(isinstance(arg, int) for arg in [nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs]):
         raise TypeError("create_neural_network arguments must be integers")
+    
     neural_network: PyNeuralNetwork = PyNeuralNetwork(nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
     c_lib.initNeuralNetwork(neural_network.c_nn_ptr, nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
     atexit.register(_cleanup_nn, neural_network)

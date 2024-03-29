@@ -10,7 +10,7 @@
 
 int main() {
     
-    NeuralNetwork * nn = (NeuralNetwork *) malloc(sizeof(NeuralNetwork));
+    NeuralNetwork * nn = createNeuralNetworkPtr();
     initNeuralNetwork(nn, 2, 1, 2, 2);
     setInputLayerActivationFunction(nn, &linear, &linearDerivative);
     setHiddenLayerActivationFunction(nn, &sigmoid, &sigmoidDerivative);
@@ -29,15 +29,5 @@ int main() {
 
     trainNeuralNetworkOnBatch(nn, input, labels, 20000, 1, 0.08, 0.01, 0, 1);
 
-    double * result = inputDataToNeuralNetwork(nn, input[0]);
-    printf("Result: %f %f\n", result[0], result[1]);
-
     freeNeuralNetwork(nn);
-    free(input[0]);
-    free(input[1]);
-    free(input);
-    free(labels[0]);
-    free(labels[1]);
-    free(labels);
-    free(result);
 }

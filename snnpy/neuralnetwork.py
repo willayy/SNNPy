@@ -1,4 +1,4 @@
-from __future__ import annotations
+from snnpy import c_lib
 import ctypes
 
 class Neuron(ctypes.Structure):
@@ -27,6 +27,10 @@ class NeuralNetwork(ctypes.Structure):
         ("nrOfNeurons", ctypes.c_int),
         ("nrOfHiddenLayers", ctypes.c_int),
         ("neuronsPerLayer", ctypes.c_int),
+        ("costFunction", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int)),
+        ("costFunctionDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double, ctypes.c_double)),
+        ("regularization", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(Neuron)), ctypes.c_int)),
+        ("regularizationDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)),
         ("inputLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
         ("hiddenLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
         ("outputLayerActivationFunction", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
@@ -67,7 +71,7 @@ class PyNeuralNetwork:
         A Python object wrapper for a C NeuralNetwork struct from the shared library
     '''
     def __init__(self, nr_of_inputs: int, nr_of_layers: int, neurons_per_layer: int, nr_of_outputs: int):
-        self.c_nn_ptr = ctypes.pointer(NeuralNetwork())
+        self.c_nn_ptr = ctypes.cast(c_lib.createNeuralNetworkPtr(), ctypes.POINTER(NeuralNetwork))
         self.nr_of_inputs = nr_of_inputs
         self.nr_of_layers = nr_of_layers
         self.neurons_per_layer = neurons_per_layer

@@ -3,6 +3,8 @@
 #ifndef neuralNetworkInit_h
     #define neuralNetworkInit_h
 
+        NeuralNetwork * createNeuralNetworkPtr();
+
         void initNeuralNetwork(NeuralNetwork * nn, int nrOfInputs, int nrOfLayers, int neuronsPerLayer, int nrOfOutputs);
 
         void setInputLayerActivationFunction(NeuralNetwork * nn, dblA_dblR activationFunction, dblA_dblR activationFunctionDerivative);
