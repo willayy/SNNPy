@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include "neuralNetworkTraining.h"
-
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"
 #include "costFunctions.h"
@@ -12,6 +11,10 @@
 #include "randomValueGenerator.h"
 #include "nnMemManagement.h"
 
+/**
+ * Initializes a neuron gradient struct from a given number of connected neurons.
+ * @param ng The neuron gradient pointer to initialize.
+ * @param nrOfConnectedNeurons The number of connected neurons. */
 void initGradient(NeuronGradient * ng, int nrOfConnectedNeurons) {
     ng->nrOfWeights = nrOfConnectedNeurons;
     if (nrOfConnectedNeurons > 0) {
@@ -23,6 +26,10 @@ void initGradient(NeuronGradient * ng, int nrOfConnectedNeurons) {
     ng->biasGradient = 0;
 }
 
+/**
+ * Initializes a gradient vector struct from a given vector pointer.
+ * @param gv The gradient vector pointer to initialize.
+ * @param size The size of the gradient vector. */
 void initGradientVector(GradientVector * gv, int size) {
     gv->nrOfNeurons = size;
     gv->gradients = (NeuronGradient **) malloc(sizeof(NeuronGradient *) * (gv->nrOfNeurons));
@@ -31,6 +38,10 @@ void initGradientVector(GradientVector * gv, int size) {
     }
 }
 
+/**
+ * Initializes a gradient batch struct from a given batch pointer.
+ * @param gb The gradient batch pointer to initialize.
+ * @param batchSize The size of the batch. */
 void initGradientBatch(GradientBatch * gb, int batchSize) {
     gb->batchSize = batchSize;
     gb->gradientVectors = (GradientVector **) malloc(sizeof(GradientVector *) * batchSize);
