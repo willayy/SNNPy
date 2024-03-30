@@ -1,33 +1,17 @@
 # SNNPy
 This is a Python module with api's to a C implemented configurable FFN neural network. 
 
-This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand. It does not feature parallelism, hardware accelaration or any usage of optimized BLAS algorithms. 
-And such it is a pretty naive implementation of a neural network.
+This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand. It does not feature parallelism, hardware accelaration, its memory ineffective and its a naive implementation.
 
-The neural network has the following features.
-- Xavier initiation of weights using box mueller transform to generate normally distributed random variables.
-- Uniform random initialization of weights.
-- Uniform random initialization of weights.
-- Simple forward propogation algorithm.
-- Simple back propogation algorithm.
-- Batch training.
-- Batch randomzitaion (ensuring that the training examples arent always in the same order).
-- 4 activation functions (linear, sigmoid, ReLU, TanH).
-- Possibility to use different activation functions in the input, hidden and output layer.
-- 2 cost functions (cross entropy cost, and mean square cost).
-- Configurable learning rates.
-- Fully configurable feed forward network structures (only requirement being there should be at least 1 input, 1 hidden layer neuron and 1 output neuron).
-- Gradient batch averaging.
-- L1 and L2 Regularization
+For more info about features check release.
   
 #### Dependencies
-CMake is heavily recommended as the build tool for this source code.
+CMake is recommended as the build tool for this source code.
 No other external dependencies.
 
 #### Installation/Building
 - Download source code.
-- (Recommended) build SNNpy-benchmark executable to further test integrity and to benchmark software
-- Build the shared libraries for the python module using CMake (recommended build tool).
+- Build the shared libraries for the python module using CMake.
 - Start using python module!
 
 #### This project was developed and tested using:
@@ -36,4 +20,62 @@ No other external dependencies.
 - Build System: CMake 3.28.1
 
 #### Usage
-(PLACEHOLDER COMING SOON)
+Python example
+```Python
+  from snnpy import snn_py
+  
+  # Define the dataset inputs
+  inputs: list[list[float]] = [[0,0,0,0],
+                               [0,0,0,1],
+                               [0,0,1,0],
+                               [0,0,1,1],
+                               [0,1,0,0],
+                               [0,1,0,1],
+                               [0,1,1,0],
+                               [0,1,1,1],
+                               [1,0,0,0],
+                               [1,0,0,1],
+                               [1,0,1,0],
+                               [1,0,1,1],
+                               [1,1,0,0],
+                               [1,1,0,1],
+                               [1,1,1,0],
+                               [1,1,1,1]]
+  
+  # Define the dataset labels
+  outputs: list[list[float]] = [[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                                [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                                [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                                [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+                                [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+                                [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+                                [0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+                                [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+                                [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+                                [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                                [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+                                [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+                                [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+                                [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]]
+  
+  snn_py.set_rng_seed(0) # Set the seed for the random number generator
+  
+  neural_network = snn_py.create_neural_network(4,1,4,16) # Create a neural network model
+  
+  snn_py.set_activation_functions(neural_network, 'linear', 'relu', 'sigmoid') # Set the activation functions for each layer (layers* in the case of hidden layers)
+  snn_py.set_cost_function(neural_network, 'cross_entropy') # Set the cost function for the model
+  snn_py.set_regularization(neural_network, 'no_reg') # Set the regularization for the model
+  snn_py.init_weights_xavier_normal(neural_network) # Initialize the weights of the model
+  snn_py.init_biases_constant(neural_network, 0.1) # Initialize the biases of the model
+  
+  # Train the model on a batch from the dataset
+  snn_py.train_neural_network(neural_network, inputs, outputs, 16, 250000, 0.08, 0.01)
+  
+  # Test the model on a batch from the dataset
+  result = snn_py.predict(neural_network, inputs[5])
+  result = [int(num) for num in result]
+  print(f"Input: {inputs[5]} Prediction: {result} Expected: {outputs[5]}")
+  input("Press Enter to continue...")
+```
