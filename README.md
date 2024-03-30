@@ -20,7 +20,7 @@ No other external dependencies.
 - Build System: CMake 3.28.1
 
 #### Usage
-Python example
+Python example of a neural network that classifies binary numbers into integers
 ```Python
   from snnpy import snn_py
   
