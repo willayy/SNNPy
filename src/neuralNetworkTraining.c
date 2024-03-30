@@ -1,13 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "neuralNetworkTraining.h"
 #include "neuralNetworkOperations.h"
 #include "neuralNetworkStructs.h"
-#include "costFunctions.h"
-#include "activationFunctions.h"
 #include "neuralNetworkUtility.h"
-#include "funcPtrs.h"
 #include "randomValueGenerator.h"
 #include "nnMemManagement.h"
 

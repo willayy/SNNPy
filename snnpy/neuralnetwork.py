@@ -1,7 +1,10 @@
 from __future__ import annotations
-from snnpy import c_lib
 import ctypes
 
+# defining function types from the shared library
+DBLA_DBLR = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)
+DBLA_DBLR_DBLR = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double, ctypes.c_double)
+DBLPA_DBLPA_INTA_DBLR = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int)
 
 class Neuron(ctypes.Structure):
     '''
@@ -14,9 +17,11 @@ class Neuron(ctypes.Structure):
             ("bias", ctypes.c_double),
             ("connections", ctypes.c_int),
             ("weights", ctypes.POINTER(ctypes.c_double)),
-            ("activationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
+            ("activationFunctions", ctypes.POINTER(DBLA_DBLR)),
             ("connectedNeurons", ctypes.POINTER(ctypes.POINTER(Neuron))),
         ]        
+
+NA_INTA_DBLR = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(Neuron)), ctypes.c_int)
 
 class NeuralNetwork(ctypes.Structure):
     '''
@@ -29,13 +34,13 @@ class NeuralNetwork(ctypes.Structure):
         ("nrOfNeurons", ctypes.c_int),
         ("nrOfHiddenLayers", ctypes.c_int),
         ("neuronsPerLayer", ctypes.c_int),
-        ("costFunction", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int)),
-        ("regularizationDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double, ctypes.c_double)),
-        ("regularization", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.POINTER(ctypes.POINTER(Neuron)), ctypes.c_int)),
-        ("regularizationDerivative", ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)),
-        ("inputLayerActivationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
-        ("hiddenLayerActivationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
-        ("outputLayerActivationFunctions", ctypes.POINTER((ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)))),
+        ("costFunction", DBLPA_DBLPA_INTA_DBLR),
+        ("regularizationDerivative", DBLA_DBLR_DBLR),
+        ("regularization", NA_INTA_DBLR),
+        ("regularizationDerivative", DBLA_DBLR),
+        ("inputLayerActivationFunctions", ctypes.POINTER(DBLA_DBLR)),
+        ("hiddenLayerActivationFunctions", ctypes.POINTER(DBLA_DBLR)),
+        ("outputLayerActivationFunctions", ctypes.POINTER(DBLA_DBLR)),
         ("neurons", ctypes.POINTER(ctypes.POINTER(Neuron))),
         ("outputLayer", ctypes.POINTER(ctypes.POINTER(Neuron)))
     ]

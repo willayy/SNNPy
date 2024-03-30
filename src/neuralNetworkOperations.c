@@ -1,11 +1,7 @@
 #include <stdlib.h>
-
 #include "neuralNetworkOperations.h"
-
-#include "neuralNetworkUtility.h"
 #include "neuralNetworkInit.h"
 #include "neuralNetworkStructs.h"
-#include "activationFunctions.h"
 
 void propogateForward(NeuralNetwork * nn, double * inputData) {
 

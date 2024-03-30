@@ -1,5 +1,5 @@
-#include "neuralNetworkStructs.h"
 #include <stdlib.h>
+#include "neuralNetworkStructs.h"
 
 void freeNeuron(Neuron * n) {
     free(n->weights);

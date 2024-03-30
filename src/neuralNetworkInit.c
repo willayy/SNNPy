@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-
 #include "neuralNetworkInit.h"
-
 #include "neuralNetworkStructs.h"
 #include "randomValueGenerator.h"
 #include "neuralNetworkUtility.h"

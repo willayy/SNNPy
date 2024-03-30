@@ -1,7 +1,6 @@
+#include <math.h>
 #include "costFunctions.h"
 #include "neuralNetworkStructs.h"
-#include <math.h>
-#include <stdlib.h>
 
 /**
  * Calculates the mean square cost of the neural network on a given input and desired output. 

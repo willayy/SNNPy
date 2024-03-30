@@ -1,7 +1,6 @@
-#include "randomValueGenerator.h"
 #include <stdlib.h>
-#include <time.h>
 #include <math.h>
+#include "randomValueGenerator.h"
 
 static double pi = 3.14159265358979323846;
 

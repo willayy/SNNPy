@@ -1,5 +1,6 @@
+#include <stdlib.h>
+#include <math.h>
 #include "neuralNetworkStructs.h"
-#include "neuralNetworkUtility.h"
 #include "neuralNetworkInit.h"
 #include "randomValueGenerator.h"
 #include "neuralNetworkOperations.h"
@@ -8,10 +9,7 @@
 #include "activationFunctions.h"
 #include "nnMemManagement.h"
 #include "costFunctions.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <math.h>
+
 
 int runTests() {
 
@@ -90,8 +88,8 @@ int runTests() {
 
     double * nnoutput = inputDataToNeuralNetwork(nn, input);
 
-    testSumRandomValueGenerator += dbl_assertBetween(0.80, 0.85, nnoutput[0], "");
-    testSumRandomValueGenerator += dbl_assertBetween(0.80, 0.85, nnoutput[1], "");
+    testSumForwardBackPropogation += dbl_assertBetween(0.80, 0.85, nnoutput[0], "");
+    testSumForwardBackPropogation += dbl_assertBetween(0.80, 0.85, nnoutput[1], "");
 
     GradientVector * gv = computeGradients(nn, desOutput, &sqrCostFunctionDerivative);
 
