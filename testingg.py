@@ -47,4 +47,10 @@ snn_py.init_weights_xavier_normal(neural_network) # Initialize the weights of th
 snn_py.init_biases_constant(neural_network, 0.1) # Initialize the biases of the model
 
 # Train the model on a batch from the dataset
-snn_py.train_neural_network(neural_network, inputs, outputs, 16, 10000, 0.08, 0.01)
+snn_py.train_neural_network(neural_network, inputs, outputs, 16, 250000, 0.08, 0.01)
+
+# Test the model on a batch from the dataset
+result = snn_py.predict(neural_network, inputs[5])
+result = [int(num) for num in result]
+print(f"Input: {inputs[5]} Prediction: {result} Expected: {outputs[5]}")
+input("Press Enter to continue...")

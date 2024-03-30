@@ -1,17 +1,10 @@
-import atexit, ctypes as ct
+import ctypes as ct
 from snnpy import c_lib
 from snnpy.neuralnetwork import PyNeuralNetwork, DBLA_DBLR, DBLPA_DBLPA_INTA_DBLR, DBLA_DBLR_DBLR, NA_INTA_DBLR
 
-# Inner module private functions
+# module private functions
 
-def _cleanup_nn(neural_network: PyNeuralNetwork):
-    '''
-        Cleans up the memory allocated for a neural network at script exit
-    '''
-    c_lib.freeNeuralNetwork(neural_network.c_nn_ptr)
-    print("Allocated memory for neural network freed")
-
-def _get_activation_function(name: str) -> ct.POINTER:
+def _get_activation_function(name: str) -> ct.CFUNCTYPE:
     '''
         Returns the activation function with the specified name
     '''
@@ -32,7 +25,7 @@ def _get_activation_function(name: str) -> ct.POINTER:
 
     return func
 
-def _get_activation_function_derivative(name: str) -> ct.POINTER:
+def _get_activation_function_derivative(name: str) -> ct.CFUNCTYPE:
     '''
         Returns the derivative of the activation function with the specified name
     '''
@@ -138,11 +131,8 @@ def _python_matrix_to_c_array_of_ptr(py_list: list[list[float]]) -> ct.Array[ct.
     for inner_list in py_list:
         if len(inner_list) != len(py_list[0]):
             raise ValueError("All inner lists must have the same length")
-    
+        
     dbl_ptr = (ct.POINTER(ct.c_double) * len(py_list))(*[(ct.c_double * len(n))(*n) for n in py_list])
-
-    for pdbl in dbl_ptr:
-        print(pdbl[:4])
 
     return dbl_ptr
 
@@ -152,7 +142,9 @@ def set_rng_seed(seed: int) -> None:
     '''
         Assures that the random number generator is initialized
     '''
-    arg = ct.c_int(seed)
+    if seed < 0:
+        raise ValueError("Seed must be a positive integer")
+    arg = ct.c_uint(seed)
     c_lib.setRngSeed(arg)
 
 def get_rng_seed() -> int:
@@ -171,7 +163,6 @@ def create_neural_network(nr_inputs: int, nr_hidden_layers: int, neurons_p_layer
     
     neural_network: PyNeuralNetwork = PyNeuralNetwork(nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
     c_lib.initNeuralNetwork(neural_network.c_nn_ptr, nr_inputs, nr_hidden_layers, neurons_p_layer, nr_outputs)
-    atexit.register(_cleanup_nn, neural_network)
     return neural_network
 
 def set_activation_functions(neural_network: PyNeuralNetwork, input_layer: str, hidden_layer: str, output_layer: str) -> None:
@@ -301,9 +292,33 @@ def train_neural_network(neural_network: PyNeuralNetwork,
     lambda_reg = ct.c_double(lambda_reg)
     batch_size = ct.c_int(batch_size)
     amount_epochs = ct.c_int(amount_epochs)
-
     verbose = ct.c_int(1) if verbose else ct.c_int(0)
 
-    c_lib.trainNeuralNetworkOnBatch(neural_network.c_nn_ptr, double_ptr_inputs, double_ptr_labels, amount_epochs, 
-                                    batch_size, learing_rate_w, learning_rate_b, lambda_reg, verbose)
+    try:
+        c_lib.trainNeuralNetworkOnBatch(neural_network.c_nn_ptr, double_ptr_inputs, double_ptr_labels, 
+                                        amount_epochs, batch_size, learing_rate_w, learning_rate_b, lambda_reg, 
+                                        verbose)
+    except Exception as e:
+        print(e)
     
+# Prediction methods
+    
+def predict(neural_network: PyNeuralNetwork, inputs: list[float]) -> list[float]:
+    '''
+        Predicts the output of the neural network for the specified inputs
+    '''
+    if len(inputs) != neural_network.nr_of_inputs:
+        raise ValueError("inputs must have the same length for each element")
+    
+    double_ptr_inputs = (ct.c_double * len(inputs))(*inputs)
+    
+    try:
+        result = c_lib.inputDataToNeuralNetwork(neural_network.c_nn_ptr, double_ptr_inputs)
+    except Exception as e:
+        print(e)
+
+    py_list = [result[i] for i in range(neural_network.nr_of_outputs)]
+
+    c_lib.snn_free(result)
+
+    return py_list

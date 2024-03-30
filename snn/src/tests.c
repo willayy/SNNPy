@@ -90,12 +90,7 @@ int runTests() {
 
     testSumForwardBackPropogation += dbl_assertBetween(0.80, 0.85, nnoutput[0], "");
     testSumForwardBackPropogation += dbl_assertBetween(0.80, 0.85, nnoutput[1], "");
-
-    GradientVector * gv = computeGradients(nn, desOutput, &sqrCostFunctionDerivative);
-
-    // TODO: Control that all gradient values are the same as manually calculated values.
     
-    freeGradientVector(gv);
     free(nnoutput);
     freeNeuralNetwork(nn);
 

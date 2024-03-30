@@ -7,5 +7,4 @@
 
         int numberOfConnectedNeurons(NeuralNetwork * nn, int neuron);
 
-        int findBiggestOutputIndex(double * output, int outputSize);
 #endif

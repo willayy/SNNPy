@@ -1,8 +1,5 @@
-# CMakeLists.txt
-
 # Minimum required CMake version
 cmake_minimum_required(VERSION 3.20)
-
 
 # Project name
 project(
@@ -42,8 +39,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
 
 if (WIN32) # Windows output directory for shared library
-  set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
-  set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+  set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../snnpy/sharedlib)
+  set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../snnpy/sharedlib)
 endif()
 
 if (UNIX) # Linux or MacOS output directory for shared library
@@ -51,7 +48,7 @@ if (UNIX) # Linux or MacOS output directory for shared library
 endif()
 
 # Set the C standard to C17
- target_compile_features(${PROJECT_NAME} PRIVATE c_std_17)
+target_compile_features(${PROJECT_NAME} PRIVATE c_std_17)
 
 # Link the executable to the library
 target_link_libraries(${PROJECT_NAME} testing)

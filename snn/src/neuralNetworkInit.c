@@ -6,6 +6,10 @@
 #include "randomValueGenerator.h"
 #include "neuralNetworkUtility.h"
 
+/**
+ * Initializes a neuron.
+ * @param n: the neuron struct pointer to initialize.
+ * @param nrOfConnections: the number of connections the neuron has. */
 void initNeuron(Neuron * n, int nrOfConnections) {
     n->A = 0;
     n->Z = 0;
@@ -17,7 +21,8 @@ void initNeuron(Neuron * n, int nrOfConnections) {
 }
 
 /**
- * Creates a neural network.
+ * Initializes a neural network.
+ * @param nn: the neural network struct pointer to initialize.
  * @param nrOfParameters: the number of parameters in the network.
  * @param nrOfLayers: the number of layers in the network.
  * @param neuronsPerLayer: the number of neurons per layer in the network.
