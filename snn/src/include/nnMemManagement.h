@@ -3,6 +3,8 @@
 #ifndef nnMemManagement_h
     #define nnMemManagement_h
 
+    void freeDblPtr(double * ptr);
+
     void freeNeuralNetwork(NeuralNetwork * nn);
 
     void freeNeuron(Neuron * n);

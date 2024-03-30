@@ -41,3 +41,7 @@ void freeGradientBatch(GradientBatch * gb) {
     free(gb->gradientVectors);
     free(gb);
 }
+
+void freeDblPtr(double * ptr) {
+    free(ptr);
+}

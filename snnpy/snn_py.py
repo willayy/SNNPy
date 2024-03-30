@@ -4,7 +4,7 @@ from snnpy.neuralnetwork import PyNeuralNetwork, DBLA_DBLR, DBLPA_DBLPA_INTA_DBL
 
 # module private functions
 
-def _get_activation_function(name: str) -> ct.CFUNCTYPE:
+def _get_activation_function(name: str):
     '''
         Returns the activation function with the specified name
     '''
@@ -25,7 +25,7 @@ def _get_activation_function(name: str) -> ct.CFUNCTYPE:
 
     return func
 
-def _get_activation_function_derivative(name: str) -> ct.CFUNCTYPE:
+def _get_activation_function_derivative(name: str):
     '''
         Returns the derivative of the activation function with the specified name
     '''
@@ -46,7 +46,7 @@ def _get_activation_function_derivative(name: str) -> ct.CFUNCTYPE:
     
     return func
 
-def _get_cost_function(name: str) -> ct.CFUNCTYPE:
+def _get_cost_function(name: str):
     '''
         Returns the cost function with the specified name
     '''
@@ -65,7 +65,7 @@ def _get_cost_function(name: str) -> ct.CFUNCTYPE:
 
     return func
 
-def _get_cost_function_derivative(name: str) -> ct.CFUNCTYPE:
+def _get_cost_function_derivative(name: str):
     '''
         Returns the derivative of the cost function with the specified name
     '''
@@ -84,7 +84,7 @@ def _get_cost_function_derivative(name: str) -> ct.CFUNCTYPE:
     
     return func
 
-def _get_regularization(name: str) -> ct.CFUNCTYPE:
+def _get_regularization(name: str):
     '''
         Returns the regularization function with the specified name
     '''
@@ -104,7 +104,7 @@ def _get_regularization(name: str) -> ct.CFUNCTYPE:
 
     return func
 
-def _get_regularization_derivative(name: str) -> ct.CFUNCTYPE:
+def _get_regularization_derivative(name: str):
     '''
         Returns the derivative of the regularization function with the specified name
     '''
@@ -124,7 +124,7 @@ def _get_regularization_derivative(name: str) -> ct.CFUNCTYPE:
 
     return func
 
-def _python_matrix_to_c_array_of_ptr(py_list: list[list[float]]) -> ct.Array[ct._Pointer]:
+def _python_matrix_to_c_array_of_ptr(py_list: list[list[float]]) -> ct.Array[type[ct._Pointer]]:
     '''
         Converts a 2D python list to a 2D C array
     '''
@@ -319,6 +319,6 @@ def predict(neural_network: PyNeuralNetwork, inputs: list[float]) -> list[float]
 
     py_list = [result[i] for i in range(neural_network.nr_of_outputs)]
 
-    c_lib.snn_free(result)
+    c_lib.freeDblPtr(result)
 
     return py_list
