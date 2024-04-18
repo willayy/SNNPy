@@ -1,5 +1,5 @@
 # SNNPy
-This is a Python module with api's to a C implemented configurable FFN neural network. 
+This is a Python module with api's to a C implemented configurable FFN neural network model. 
 
 This NeuralNetwork modeling software was made for learnings-sake and is not made for performance in the first hand. It does not feature parallelism, hardware accelaration, its memory ineffective and its a naive implementation.
 
