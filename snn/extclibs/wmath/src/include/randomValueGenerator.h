@@ -1,4 +1,5 @@
 #ifndef randomValueGenerator_h
+
     #define randomValueGenerator_h
 
         int getRngSeed();
@@ -12,4 +13,5 @@
         double boxMuellerTransform(double mean, double stddev);
 
         void fisherYatesShuffle(int * arr, int n);
+        
 #endif

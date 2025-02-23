@@ -1,6 +1,8 @@
-#include "neuralNetworkStructs.h"
+#include "vectors.h"
+
 
 #ifndef costFunctions_h
+
     #define costFunctions_h
 
         double sqrCostFunctionDerivative(double output, double desiredOutput);
@@ -11,11 +13,11 @@
 
         double crossEntropyCostFunction(double * output, double * desiredOutput, int outputSize);
 
-        double noRegularization(Neuron ** nv, int nrOfNeurons);
+        double noRegularization(Matrix * m, int nrOfNeurons);
 
-        double l1Regularization(Neuron ** nv, int nrOfNeurons);
+        double l1Regularization(Matrix * m, int nrOfNeurons);
 
-        double l2Regularization(Neuron ** nv, int nrOfNeurons);
+        double l2Regularization(Matrix * m, int nrOfNeurons);
 
         double noRegularizationDerivative(double weight);
 

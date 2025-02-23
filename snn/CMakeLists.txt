@@ -5,53 +5,75 @@ cmake_minimum_required(VERSION 3.20)
 project(
   SNN
   LANGUAGES C
-  VERSION 3.0.0
+  VERSION 4.0.0
   DESCRIPTION "A neural network model implemented in C"
 )  
 
-# Adding the testing library
-add_library(
-  testing STATIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/testing.h
-)
+# Set the C standard to C23
+set(CMAKE_C_STANDARD 23)
 
-# Set the output directory for the archive testing library
-set_target_properties(testing PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
-)
+# Set the C standard required by the project
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Add shared library
-add_library(
-  ${PROJECT_NAME} SHARED
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/nnMemManagement.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkInit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkTraining.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/activationFunctions.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkOperations.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/costFunctions.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/neuralNetworkUtility.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/randomValueGenerator.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/tests.c
-)
-set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/extclibs/testing-0.0.1/src/)
-
-if (WIN32) # Windows output directory for shared library
-  set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../snnpy/sharedlib)
-  set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../snnpy/sharedlib)
+# When compile is set to debug with -g flag compile the tests into an executable
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  set(BUILD_TESTS ON)
+else()
+  set(BUILD_TESTS OFF)
 endif()
 
-if (UNIX) # Linux or MacOS output directory for shared library
-  set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/snnpy/sharedlib)
+# wmath soure files
+set(
+  WMATH_SOURCE 
+  extclibs/wmath/src/activationFunctions.c
+  extclibs/wmath/src/costFunctions.c
+  extclibs/wmath/src/randomValueGenerator.c
+)
+
+# wmath header directory
+include_directories(WMATH_INCLUDE extclibs/wmath/src/include)
+
+# Add the wmath library
+add_library(wmath ${WMATH_SOURCE})
+
+# Include the source directory
+target_include_directories(wmath PRIVATE ${WMATH_INCLUDE})
+
+# if debug build tests
+if (BUILD_TESTS)
+  
+  # wtest source files
+  set(
+    WTEST_SOURCE
+    extclibs/wtest/src/testing.c
+  )
+
+  # wtest header directory
+  include_directories(WTEST_INCLUDE extclibs/wtest/src/include)
+
+  # Add the wtest library
+  add_library(wtest ${WTEST_SOURCE})
+
+  # Include the header directory
+  target_include_directories(wtest PRIVATE ${WTEST_INCLUDE})
+
+  # test source files
+  set(
+    TEST_SOURCE
+    test/test.c
+  )
+
+  # header directory for the tests
+  include_directories(TEST_INCLUDE src/include)
+
+  # Add the test executable
+  add_executable(test ${TEST_SOURCE})
+
+  # include the heaeder directory
+  target_include_directories(test PRIVATE ${TEST_SOURCE})
+
+  # Link the wtest library to the test executable
+  target_link_libraries(test wtest)
+  target_link_libraries((test wmath))
+
 endif()
-
-# Set the C standard to C17
-target_compile_features(${PROJECT_NAME} PRIVATE c_std_17)
-
-# Link the executable to the library
-target_link_libraries(${PROJECT_NAME} testing)
-
-
-

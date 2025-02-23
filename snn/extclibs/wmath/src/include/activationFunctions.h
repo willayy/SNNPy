@@ -1,4 +1,5 @@
 #ifndef activationFunctions_h
+
     #define activationFunctions_h
 
         double linear(double x);
@@ -16,4 +17,5 @@
         double hyperbolicTangent(double x);
 
         double hyperbolicTangentDerivative(double x);
+        
 #endif
